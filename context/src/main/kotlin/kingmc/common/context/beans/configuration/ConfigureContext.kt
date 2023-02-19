@@ -1,6 +1,6 @@
 package kingmc.common.context.beans.configuration
 
-import com.ktil.annotation.hasAnnotation
+import kingmc.util.annotation.hasAnnotation
 import kingmc.common.context.Context
 import kingmc.common.context.annotation.Configuration
 import kingmc.common.context.beans.BeanDefinition

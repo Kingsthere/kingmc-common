@@ -1,6 +1,6 @@
 package kingmc.common.context.process
 
-import com.ktil.annotation.hasAnnotation
+import kingmc.util.annotation.hasAnnotation
 import kingmc.common.context.Context
 import kingmc.common.context.HierarchicalContext
 import kingmc.common.context.LifecycleContext

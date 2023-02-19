@@ -1,7 +1,7 @@
 package kingmc.common.context
 
-import com.ktil.annotation.getAnnotation
-import com.ktil.annotation.hasAnnotation
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.hasAnnotation
 import kingmc.common.context.annotation.Component
 import kingmc.util.Utility
 import java.util.*

@@ -1,5 +1,8 @@
 package kingmc.common;
 
+/**
+ * A class for adapting mainly kingmc apis
+ */
 public class OpenAPI {
     private OpenAPI() {
         // This part of code shouldn't execute

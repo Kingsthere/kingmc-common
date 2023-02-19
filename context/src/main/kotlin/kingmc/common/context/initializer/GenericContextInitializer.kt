@@ -1,10 +1,10 @@
 package kingmc.common.context.initializer
 
-import com.ktil.annotation.getAnnotation
-import com.ktil.annotation.getAnnotations
-import com.ktil.annotation.hasAnnotation
-import com.ktil.reflect.findFunctionsByAnnotation
-import com.ktil.reflect.findMutablePropertiesByAnnotation
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.getAnnotations
+import kingmc.util.annotation.hasAnnotation
+import kingmc.util.reflect.findFunctionsByAnnotation
+import kingmc.util.reflect.findMutablePropertiesByAnnotation
 import kingmc.common.context.BeansUtil
 import kingmc.common.context.Context
 import kingmc.common.context.GenericApplicationContext

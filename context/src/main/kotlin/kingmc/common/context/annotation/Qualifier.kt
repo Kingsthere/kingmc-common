@@ -1,6 +1,6 @@
 package kingmc.common.context.annotation
 
-import com.ktil.annotation.Extendable
+import kingmc.util.annotation.Extendable
 
 /**
  * Use this annotation to present the name

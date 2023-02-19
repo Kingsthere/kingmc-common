@@ -1,3 +1,5 @@
+val secret_username: String by project
+val secret_password: String by project
 val kingmc_version: String by project
 
 group = "net.kingmc.common"
@@ -24,22 +26,5 @@ dependencies {
 sourceSets {
     main {
         java.srcDirs("src/main/kotlin", "src/main/java")
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
-
-    publications {
-        create<MavenPublication>("structure") {
-            groupId = group.toString()
-            artifactId = project.name
-            version = version.toString()
-
-            from(components.getByName("java"))
-        }
-
     }
 }

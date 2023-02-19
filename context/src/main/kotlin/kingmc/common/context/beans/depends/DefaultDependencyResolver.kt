@@ -1,9 +1,9 @@
 package kingmc.common.context.beans.depends
 
-import com.ktil.annotation.getAnnotation
-import com.ktil.annotation.getAnnotations
-import com.ktil.annotation.hasAnnotation
-import com.ktil.reflect.findPropertiesByAnnotation
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.getAnnotations
+import kingmc.util.annotation.hasAnnotation
+import kingmc.util.reflect.findPropertiesByAnnotation
 import kingmc.common.context.BeansUtil
 import kingmc.common.context.annotation.Autowired
 import kingmc.common.context.annotation.Import

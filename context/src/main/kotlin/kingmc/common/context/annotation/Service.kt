@@ -1,6 +1,6 @@
 package kingmc.common.context.annotation
 
-import com.ktil.annotation.Extended
+import kingmc.util.annotation.Extended
 import java.lang.annotation.Inherited
 
 /**

@@ -1,6 +1,6 @@
 package kingmc.common.context.resource
 
-import com.ktil.annotation.Extendable
+import kingmc.util.annotation.Extendable
 
 /**
  * [Resource] annotation to declare a resource required by extension

@@ -23,23 +23,6 @@ sourceSets {
     }
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
-
-    publications {
-        create<MavenPublication>("common") {
-            groupId = group.toString()
-            artifactId = project.name
-            version = version.toString()
-
-            from(components.getByName("java"))
-        }
-
-    }
-}
-
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

@@ -1,6 +1,6 @@
 package kingmc.common.context
 
-import com.ktil.annotation.getAnnotation
+import kingmc.util.annotation.getAnnotation
 import kingmc.common.context.annotation.Qualifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

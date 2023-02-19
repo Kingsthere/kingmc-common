@@ -27,20 +27,3 @@ sourceSets {
         java.srcDirs("src/main/kotlin", "src/main/java")
     }
 }
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
-
-    publications {
-        create<MavenPublication>("file") {
-            groupId = group.toString()
-            artifactId = project.name
-            version = version.toString()
-
-            from(components.getByName("java"))
-        }
-
-    }
-}

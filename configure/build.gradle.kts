@@ -21,9 +21,8 @@ dependencies {
     implementation(project(":common"))
 
     // The version of night config
-    val nightConfig = "3.6.5"
+    val nightConfig = "3.6.6"
     // Night config
-    // Effective config framework in java
     api(group = "com.electronwill.night-config", name = "core", version = nightConfig)
     // Night config toml addon
     api(group = "com.electronwill.night-config", name = "toml", version = nightConfig)
@@ -34,22 +33,5 @@ dependencies {
 sourceSets {
     main {
         java.srcDirs("src/main/kotlin", "src/main/java")
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
-
-    publications {
-        create<MavenPublication>("configure") {
-            groupId = group.toString()
-            artifactId = project.name
-            version = version.toString()
-
-            from(components.getByName("java"))
-        }
-
     }
 }

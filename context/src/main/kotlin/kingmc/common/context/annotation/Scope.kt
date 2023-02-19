@@ -1,6 +1,6 @@
 package kingmc.common.context.annotation
 
-import com.ktil.annotation.Extendable
+import kingmc.util.annotation.Extendable
 import kingmc.common.context.Context
 import kingmc.common.context.beans.BeanScope
 import java.lang.annotation.Inherited
