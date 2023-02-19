@@ -26,3 +26,31 @@ fun Context.checkElementCondition(element: KAnnotatedElement): Boolean {
         true
     }
 }
+
+/**
+ * Find a bean in this context by [T], returns `null` if this
+ * context can't find any bean by [T]
+ *
+ * @since 0.0.6
+ * @author kingsthere
+ * @return The bean found
+ */
+inline fun <reified T : Any> Context.findBean(): Any? {
+    val clazz = T::class
+    return if (hasBean(clazz)) {
+        getBean(clazz)
+    } else {
+        null
+    }
+}
+
+/**
+ * Find all beans in this context by [T]
+ *
+ * @since 0.0.6
+ * @author kingsthere
+ * @return The bean found as a `List`
+ */
+inline fun <reified T : Any> Context.findBeans(): List<Any> {
+    return getBeans(T::class)
+}
