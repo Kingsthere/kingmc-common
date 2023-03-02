@@ -10,7 +10,7 @@ version = kingmc_version
 plugins {
     `maven-publish`
     signing
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.8.10"
 }
 
 allprojects {
@@ -39,7 +39,7 @@ allprojects {
         api(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = "1.6.4")
         api("commons-io:commons-io:2.11.0")
 
-        val kotlinVersion = "1.7.20"
+        val kotlinVersion = "1.8.10"
         // Kotlin
         implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
         implementation(kotlin("reflect"))

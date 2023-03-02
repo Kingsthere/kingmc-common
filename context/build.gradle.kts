@@ -20,7 +20,6 @@ repositories {
 dependencies {
     implementation(project(":common"))
     implementation(project(":structure"))
-    implementation(project(":environment"))
 }
 
 sourceSets {
