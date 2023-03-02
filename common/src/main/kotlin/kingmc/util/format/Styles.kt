@@ -8,7 +8,7 @@ package kingmc.util.format
  * @see FormatStyle
  */
 object BracketStyle : FormatStyle {
-    private val regex = "(\\{\\s+?(\\S*)\\s+?})".toRegex()
+    private val regex = "\\{\\s*?(\\S*)\\s*?}".toRegex()
 
     /**
      * Find the formats that defined in specified string

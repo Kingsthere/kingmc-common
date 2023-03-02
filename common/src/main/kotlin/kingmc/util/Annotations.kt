@@ -5,6 +5,8 @@ package kingmc.util
  */
 @DslMarker
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+@MustBeDocumented
 annotation class KingMCDsl
 
 /**
@@ -24,6 +26,8 @@ annotation class KingMCDsl
     AnnotationTarget.PROPERTY_SETTER,
     AnnotationTarget.PROPERTY_SETTER
 )
+@Retention
+@MustBeDocumented
 annotation class InternalAPI
 
 /**
@@ -58,8 +62,9 @@ annotation class InternalAPI
 @Singleton
 @Retention
 @Target(
-    AnnotationTarget.CLASS
+    AnnotationTarget.CLASS, AnnotationTarget.FILE
 )
+@MustBeDocumented
 annotation class Utility
 
 /**
@@ -98,6 +103,7 @@ annotation class Utility
 @Target(
     AnnotationTarget.CLASS
 )
+@MustBeDocumented
 annotation class Singleton
 
 /**
@@ -112,4 +118,5 @@ annotation class Singleton
 @Target(
     AnnotationTarget.CLASS
 )
+@MustBeDocumented
 annotation class SubclassSingleton

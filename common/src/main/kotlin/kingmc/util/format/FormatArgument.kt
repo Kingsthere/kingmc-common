@@ -26,7 +26,7 @@ sealed interface FormatArgument<E> {
 /**
  * Create and return a format argument implementation
  */
-fun <E> formatArgument(index: Int, value: E, name: String? = null) =
+fun <E> FormatArgument(index: Int, value: E, name: String? = null) =
     FormatArgumentImpl(index, value, name)
 
 class FormatArgumentImpl<E>(override val index: Int, override val value: E, override val name: String? = null) : FormatArgument<E>

@@ -4,7 +4,7 @@ import kingmc.common.application.Application
 import kingmc.common.application.WithApplication
 import kingmc.common.application.currentApplication
 import kingmc.util.KingMCDsl
-import kingmc.util.format.EnableFormat
+import kingmc.util.format.Formatted
 import net.kyori.adventure.text.Component
 import kotlin.reflect.KClass
 
@@ -29,28 +29,28 @@ interface LoggerManager {
      *
      * @since 0.0.3
      */
-    fun logger(): LoggerWrapper
+    fun logger(): Logger
 
     /**
      * Provide a named logger in current application
      *
      * @since 0.0.3
      */
-    fun logger(name: String): LoggerWrapper
+    fun logger(name: String): Logger
 
     /**
      * Provide a logger from class in current application
      *
      * @since 0.0.3
      */
-    fun logger(clazz: Class<*>): LoggerWrapper
+    fun logger(clazz: Class<*>): Logger
 
     /**
      * Provide a logger from kotlin class in current application
      *
      * @since 0.0.3
      */
-    fun logger(clazz: KClass<*>): LoggerWrapper
+    fun logger(clazz: KClass<*>): Logger
 }
 
 /**
@@ -61,7 +61,7 @@ interface LoggerManager {
  */
 @KingMCDsl
 @WithApplication
-fun logger(): LoggerWrapper {
+fun logger(): Logger {
     try {
         return currentApplication().loggers.logger()
     } catch (e: IllegalStateException) {
@@ -77,7 +77,7 @@ fun logger(): LoggerWrapper {
  */
 @KingMCDsl
 @WithApplication
-fun logger(name: String): LoggerWrapper {
+fun logger(name: String): Logger {
     try {
         return currentApplication().loggers.logger(name)
     } catch (e: IllegalStateException) {
@@ -91,7 +91,7 @@ fun logger(name: String): LoggerWrapper {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun info(msg: String? = null) {
     if (msg != null) {
@@ -105,7 +105,7 @@ fun info(msg: String? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun warn(msg: String? = null) {
     if (msg != null) {
@@ -119,7 +119,7 @@ fun warn(msg: String? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun error(msg: String? = null) {
     if (msg != null) {
@@ -133,7 +133,7 @@ fun error(msg: String? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun debug(msg: String? = null) {
     if (msg != null) {
@@ -147,7 +147,7 @@ fun debug(msg: String? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun trace(msg: String? = null) {
     if (msg != null) {
@@ -161,7 +161,7 @@ fun trace(msg: String? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun info(component: Component? = null) {
     if (component != null) {
@@ -175,7 +175,7 @@ fun info(component: Component? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun warn(component: Component? = null) {
     if (component != null) {
@@ -189,7 +189,7 @@ fun warn(component: Component? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun error(component: Component? = null) {
     if (component != null) {
@@ -203,7 +203,7 @@ fun error(component: Component? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun debug(component: Component? = null) {
     if (component != null) {
@@ -217,7 +217,7 @@ fun debug(component: Component? = null) {
  * @since 0.0.3
  */
 @KingMCDsl
-@EnableFormat
+@Formatted
 @WithApplication
 fun trace(component: Component? = null) {
     if (component != null) {

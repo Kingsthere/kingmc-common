@@ -6,7 +6,7 @@ package kingmc.util.annotation.model
  * (in annotation) with aliases than a [AnnotationAttribute] describe more than
  * one raw annotation attributes
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  * @see AnnotationNode
  */

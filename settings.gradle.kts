@@ -4,7 +4,7 @@ rootProject.name = "common"
 pluginManagement {
     plugins {
         id("net.kingmc.gradle-plugin") version "0.0.4"
-        kotlin("jvm") version "1.7.10"
+        kotlin("jvm") version "1.8.10"
     }
     repositories {
         mavenLocal()

@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * Abstract implementation of [AnnotationNodeFactory] cached the [AnnotationNode]
  * that created in this factory
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  * @see AnnotationNodeFactory
  */

@@ -6,7 +6,7 @@ package kingmc.util.annotation.model
  *  + The [name] of the attribute
  *  + The method to get this attribute from an [AnnotationContext]
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 interface RawAnnotationAttribute {

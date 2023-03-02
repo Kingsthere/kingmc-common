@@ -1,4 +1,8 @@
+@file:Utility
+
 package kingmc.util.key
+
+import kingmc.util.Utility
 
 /**
  * Create a key by using the string with specify

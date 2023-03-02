@@ -10,6 +10,7 @@ import java.time.Duration
  * @since 0.0.1
  * @author kingsthere
  */
+@Utility
 object Ticks {
     /**
      * Converts ticks into a [Duration].

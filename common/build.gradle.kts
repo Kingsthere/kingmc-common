@@ -10,6 +10,7 @@ plugins {
 
 java {
     withSourcesJar()
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {

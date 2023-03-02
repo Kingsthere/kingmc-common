@@ -4,7 +4,7 @@ package kingmc.util.annotation.model
  * A superinterface to describe a node on annotation, it uses
  * tree structure to describe the model of an annotation
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 interface AnnotationNode {

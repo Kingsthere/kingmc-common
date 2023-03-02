@@ -3,7 +3,7 @@ package kingmc.common.context
 import kingmc.common.context.beans.BeanDefinition
 import kingmc.common.context.beans.BeansException
 import kingmc.util.errorprone.CanIgnoreReturnValue
-import kingmc.util.format.EnableFormat
+import kingmc.util.format.Formatted
 import kingmc.util.format.FormatContextHolder
 import java.io.Closeable
 import java.io.Serializable
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * @author kingsthere
  * @since 0.0.1
  */
-@EnableFormat
+@Formatted
 interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>, Closeable {
     /**
      * Check a bean with specified type is existed

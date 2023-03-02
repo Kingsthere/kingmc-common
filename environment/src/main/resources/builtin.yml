@@ -1,0 +1,4 @@
+kingmc:
+  environment:
+    kotlin: 1.8.10
+    kotlinx-coroutine: 1.6.4

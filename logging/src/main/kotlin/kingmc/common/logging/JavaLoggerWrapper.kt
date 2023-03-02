@@ -3,13 +3,13 @@ package kingmc.common.logging
 import net.kyori.adventure.text.Component
 import java.util.logging.Level
 
-class JavaLoggerWrapper(private val logger: JavaLogger) : LoggerWrapper {
+class JavaLoggerWrapper(private val logger: JavaLogger) : Logger {
     override fun logInfo(msg: String) {
         this.logger.info(msg)
     }
 
     override fun logInfo(component: Component) {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 
     override fun logWarn(msg: String) {
@@ -17,7 +17,7 @@ class JavaLoggerWrapper(private val logger: JavaLogger) : LoggerWrapper {
     }
 
     override fun logWarn(component: Component) {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 
     /**
@@ -30,7 +30,7 @@ class JavaLoggerWrapper(private val logger: JavaLogger) : LoggerWrapper {
     }
 
     override fun logError(component: Component) {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 
     /**
@@ -43,7 +43,7 @@ class JavaLoggerWrapper(private val logger: JavaLogger) : LoggerWrapper {
     }
 
     override fun logDebug(component: Component) {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 
     override fun logTrace(msg: String) {
@@ -51,7 +51,7 @@ class JavaLoggerWrapper(private val logger: JavaLogger) : LoggerWrapper {
     }
 
     override fun logTrace(component: Component) {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 
 }

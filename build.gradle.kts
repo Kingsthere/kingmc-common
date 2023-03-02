@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val kingmc_version: String by project
-val secret_username: String by project
-val secret_password: String by project
+val ossrhUsername: String by project
+val ossrhPassword: String by project
 
 group = "net.kingmc"
 version = kingmc_version
@@ -48,20 +50,21 @@ allprojects {
 
     publishing {
         repositories {
+            mavenLocal()
             maven {
                 name = "SNAPSHOT"
                 url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 credentials {
-                    username = secret_username
-                    password = secret_password
+                    username = ossrhUsername
+                    password = ossrhPassword
                 }
             }
             maven {
                 name = "Release"
                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
-                    username = secret_username
-                    password = secret_password
+                    username = ossrhUsername
+                    password = ossrhPassword
                 }
             }
         }
@@ -107,10 +110,17 @@ allprojects {
     java {
         withSourcesJar()
         withJavadocJar()
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     signing {
         sign(publishing.publications["kingmc"])
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 
     tasks.withType<Javadoc> {

@@ -1,5 +1,5 @@
-val secret_username: String by project
-val secret_password: String by project
+val ossrhUsername: String by project
+val ossrhPassword: String by project
 val kingmc_version: String by project
 
 group = "net.kingmc.common"

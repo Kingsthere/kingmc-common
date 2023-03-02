@@ -11,6 +11,7 @@ package kingmc.common.application
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.TYPE,
+    AnnotationTarget.CONSTRUCTOR,
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.ANNOTATION_CLASS
 )

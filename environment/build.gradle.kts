@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":logging"))
+    implementation(project(":application"))
     implementation(project(":file"))
 
     // Jar Relocator

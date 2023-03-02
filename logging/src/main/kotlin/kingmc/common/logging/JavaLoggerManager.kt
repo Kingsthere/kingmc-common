@@ -1,5 +1,6 @@
 package kingmc.common.logging
 
+import kingmc.common.logging.slf4j.Slf4jLoggerWrapper
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
@@ -12,7 +13,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(): LoggerWrapper =
+    override fun logger(): Logger =
         defaultLogger
 
     /**
@@ -20,7 +21,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(name: String): LoggerWrapper =
+    override fun logger(name: String): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(name))
 
     /**
@@ -28,7 +29,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(clazz: Class<*>): LoggerWrapper =
+    override fun logger(clazz: Class<*>): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(clazz))
 
     /**
@@ -36,6 +37,6 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(clazz: KClass<*>): LoggerWrapper =
+    override fun logger(clazz: KClass<*>): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(clazz.java))
 }

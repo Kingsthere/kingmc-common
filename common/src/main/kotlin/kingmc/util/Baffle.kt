@@ -67,14 +67,3 @@ interface Baffle<T> {
         fun cooldown(duration: Duration): Builder<T>
     }
 }
-
-/**
- * To annotate with an object that could
- * add to a [Baffle] and apply cooldown
- *
- * @since 0.0.1
- * @author kingsthere
- */
-@Retention
-@Target(AnnotationTarget.CLASS)
-annotation class EnableBaffle

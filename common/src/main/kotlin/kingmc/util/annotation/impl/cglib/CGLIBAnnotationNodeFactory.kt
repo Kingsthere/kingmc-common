@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * A abstract implementation of [AnnotationNodeFactory]
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 object CGLIBAnnotationNodeFactory : CachedAnnotationNodeFactory() {

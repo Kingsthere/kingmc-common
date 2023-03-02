@@ -1,5 +1,5 @@
 /**
- * This package is about the standard interface to
+ * A package about the standard interface to
  * specify the builders designing mode.
  *
  * @author kingsthere

@@ -5,7 +5,7 @@ package kingmc.util.annotation
  * an annotation is **extendable** then it can be inherited by [Extended] annotation
  * to inherit attributes from parent annotation
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 @Retention

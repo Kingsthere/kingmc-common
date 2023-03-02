@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  * Extended [AnnotationNode] exposed the [annotationClass] that this
  * annotation node load from
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 abstract class GenericAnnotationNode : AnnotationNode {

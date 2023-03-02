@@ -1,3 +1,5 @@
+@file:Utility
+
 package kingmc.util
 
 import java.util.regex.Matcher

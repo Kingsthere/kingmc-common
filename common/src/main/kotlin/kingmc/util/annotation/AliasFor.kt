@@ -5,7 +5,7 @@ import kotlin.reflect.KClass
 /**
  * Annotation to declare an alias of a annotation attribute
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 @Retention

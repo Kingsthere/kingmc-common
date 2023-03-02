@@ -1,5 +1,7 @@
 package kingmc.util.json
 
+import kingmc.util.json.gson.StandardGson
+
 /**
  * Serialize an object to json
  *
@@ -7,7 +9,7 @@ package kingmc.util.json
  * @author kingsthere
  */
 fun Any.serializeToJson(): String =
-    Gsons.standard.toJson(this)
+    StandardGson.standard.toJson(this)
 
 /**
  * Deserialize an object from json
@@ -16,5 +18,5 @@ fun Any.serializeToJson(): String =
  * @author kingsthere
  */
 inline fun <reified T : Any> String.deserializeFromJson(): T =
-    Gsons.standard.fromJson(this, T::class.java)
+    StandardGson.standard.fromJson(this, T::class.java)
 

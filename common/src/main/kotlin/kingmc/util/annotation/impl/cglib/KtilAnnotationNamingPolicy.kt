@@ -6,7 +6,7 @@ import net.sf.cglib.core.Predicate
 /**
  * The default name policy to generate proxied annotations
  *
- * @since 0.1
+ * @since 0.0.7
  * @author kingsthere
  */
 object KtilAnnotationNamingPolicy : NamingPolicy {
