@@ -1,6 +1,6 @@
 package kingmc.common.context.process
 
-import kingmc.util.annotation.hasAnnotation
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectRBTreeMap
 import kingmc.common.context.Context
 import kingmc.common.context.HierarchicalContext
 import kingmc.common.context.LifecycleContext
@@ -9,10 +9,11 @@ import kingmc.common.context.beans.getOwningSingletonBeans
 import kingmc.common.context.beans.getSingletonBeans
 import kingmc.common.context.initializer.BeanProcessingException
 import kingmc.util.InstantiateException
+import kingmc.util.annotation.hasAnnotation
 import java.util.*
 
 val Context.processors: MutableMap<Byte, MutableSet<BeanProcessor>> by lazy {
-    TreeMap { p0, p1 -> p0 - p1 }
+    Byte2ObjectRBTreeMap(compareBy { it })
 }
 
 /**
@@ -101,19 +102,19 @@ fun Context.processBean(instance: Any, lifecycle: Int) {
 }
 
 /**
- * End processing for every beans
+ * Call after processing for every bean processors
  *
  * @since 0.0.2
- * @param lifecycle the lifecycle is end processing these beans
+ * @param lifecycle the lifecycle is processing these beans
  * @see processors
  * @see processBean
  */
-fun Context.processEnd(lifecycle: Int) {
+fun Context.afterProcess(lifecycle: Int) {
     for (batchPriorityProcessor in processors) {
         for (beanProcessor in batchPriorityProcessor.value) {
             if (beanProcessor.lifecycle == lifecycle) {
                 try {
-                    beanProcessor.end(this)
+                    beanProcessor.afterProcess(this)
                 } catch (e: Exception) {
                     throw BeanProcessingException("An exception occurred while end processing by processor $beanProcessor (processor: $beanProcessor lifecycle: $lifecycle)", e, beanProcessor)
                 }
@@ -138,6 +139,21 @@ fun Context.disposeBean(instance: Any) {
 }
 
 /**
+ * Call after processing for every bean processors
+ *
+ * @since 0.0.2
+ * @see processors
+ * @see processBean
+ */
+fun Context.afterDispose() {
+    for (batchPriorityProcessor in processors) {
+        for (beanProcessor in batchPriorityProcessor.value) {
+            beanProcessor.afterProcess(this)
+        }
+    }
+}
+
+/**
  * Insert lifecycle for process beans using the bean
  * processor in this context
  *
@@ -149,7 +165,7 @@ fun LifecycleContext.insertProcessBeanLifecycle(lifecycleLength: Int) {
         this.lifecycle().insertPlan(index) {
             try {
                 this.processBeans(index)
-                this.processEnd(index)
+                this.afterProcess(index)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

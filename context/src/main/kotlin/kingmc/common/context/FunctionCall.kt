@@ -1,11 +1,18 @@
 package kingmc.common.context
 
-import kingmc.util.annotation.getAnnotation
 import kingmc.common.context.annotation.Qualifier
+import kingmc.util.annotation.getAnnotation
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
+/**
+ * Call a [function] with context, argument to call the function will wire from receiver context
+ *
+ * @receiver the context to call function
+ * @param function the function to call
+ * @param ins the instance to call the function
+ */
 fun <R> Context.callFunctionWithContext(function: KFunction<R>, ins: Any?): R {
     val parameters = function.parameters
     if (parameters.size != 1) {

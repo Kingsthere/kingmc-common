@@ -21,7 +21,9 @@ class AnnotatedGenericBeanDefinition(
     override val name: String,
     override val dependencies: DependencyDescriptor,
     override val scope: BeanScope,
-    private val isAbstract: Boolean
+    private val isAbstract: Boolean,
+    override val deprecated: Boolean,
+    override val primary: Boolean
 ) : GenericBeanDefinition(beanClass) {
 
     /**

@@ -1,7 +1,9 @@
 package kingmc.common.context
 
 import kingmc.common.context.beans.*
+import kingmc.common.context.format.ContextFormatContext
 import kingmc.util.*
+import kingmc.util.format.FormatContext
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
 import kotlin.reflect.KAnnotatedElement
@@ -10,7 +12,7 @@ import kotlin.reflect.full.isSubclassOf
 
 /**
  * Generic implement for [ApplicationContext] to load
- * beans from [Project][kingmc.common.structure.Project]
+ * beans from [Project][kingmc.common.structure.ClassSource]
  *
  * @since 0.0.1
  * @author kingsthere
@@ -30,7 +32,7 @@ abstract class GenericApplicationContext(override val name: String = "unnamed") 
                 this@GenericApplicationContext.parents.forEach {
                     it.asMap()
                         .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
-                        .forEach { (name, bean) -> this.put(name, bean) }
+                        .forEach { (name, bean) -> this[name] = bean }
                 }
             }
         }
@@ -69,6 +71,11 @@ abstract class GenericApplicationContext(override val name: String = "unnamed") 
     internal val instanceMap: InstanceMap = SingletonMap()
 
     /**
+     * The format context of this context
+     */
+     private val _formatContext: FormatContext = ContextFormatContext(this)
+
+    /**
      * Register a bean definition into this application context
      *
      * @since 0.0.2
@@ -103,6 +110,13 @@ abstract class GenericApplicationContext(override val name: String = "unnamed") 
     }
 
     /**
+     * Get the format context that this holder holding
+     */
+    override fun getFormatContext(): FormatContext {
+        return _formatContext
+    }
+
+    /**
      * Check a bean with specified type is existed
      * in this ioc container
      *
@@ -134,16 +148,30 @@ abstract class GenericApplicationContext(override val name: String = "unnamed") 
      * @return the bean got, `null` if the bean
      *         specified is not valid in this container
      */
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Any> getBean(clazz: KClass<out T>): T {
+        var deprecatedBeanDefinition: BeanDefinition? = null
+        var secondaryBeanDefinition: BeanDefinition? = null
         this.beanDefinitions.forEach { (_, definition) ->
             if (definition is GenericBeanDefinition) {
                 if (definition.beanClass.isSubclassOf(clazz)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return getBeanInstance(definition) as T
+                    if (definition.primary) {
+                        return getBeanInstance(definition) as T
+                    } else if (!definition.deprecated) {
+                        secondaryBeanDefinition = definition
+                    } else {
+                        deprecatedBeanDefinition = definition
+                    }
                 }
             }
         }
-        throw NoBeanDefFoundException("No bean definition class assignable of $clazz found")
+        return if (secondaryBeanDefinition != null) {
+            getBeanInstance(secondaryBeanDefinition!!) as T
+        } else if (deprecatedBeanDefinition != null) {
+            getBeanInstance(deprecatedBeanDefinition!!) as T
+        } else {
+            throw NoBeanDefFoundException("No bean definition class assignable of $clazz found")
+        }
     }
 
     override fun <T : Any> getBeans(clazz: KClass<out T>): List<T> {
@@ -244,31 +272,31 @@ abstract class GenericApplicationContext(override val name: String = "unnamed") 
                 return getRawBeanInstance(definition.implementations().firstOrNull()
                     ?: throw IllegalArgumentException("No implementation of this abstract bean found"))
             }
-            return if (definition.scope == BeanScope.SINGLETON) {
-                ContextDefiner.defineBeanClass(definition.beanClass.java, this)
-                // Instantiate the bean singleton instance isolated in this context
-                definition.beanClass.instance(instanceMap).also { instance -> ContextDefiner.defineBeanInstance(instance, this) }
-            } else if (definition.scope == BeanScope.SHARED) {
-                if (definition.context !== this) {
-                    // If the shared bean is from other context
-                    val sourceContext = definition.context
-                    if (sourceContext is GenericApplicationContext) {
-                        ContextDefiner.defineBeanClass(definition.beanClass.java, sourceContext)
-                        val raw = definition.beanClass.instance(sourceContext.instanceMap).also { instance -> ContextDefiner.defineBeanInstance(instance, this) }
-                        raw
-                    } else {
-                        sourceContext.getBeanInstance(definition)
-                    }
-                } else {
-                    ContextDefiner.defineBeanClass(definition.beanClass.java, this)
-                    definition.beanClass.instance(instanceMap).also { instance -> ContextDefiner.defineBeanInstance(instance, this) }
+            when (definition.scope) {
+                BeanScope.SINGLETON -> {
+                    // Instantiate the bean singleton instance isolated in this context
+                    return ContextDefiner.runNotifyBeanToObject(this, definition.beanClass.java) { definition.beanClass.instance(instanceMap) }
                 }
-            } else if (definition.scope == BeanScope.GLOBAL) {
-                definition.beanClass.instance(GlobalBeanInstanceMap)
-            } else {
-                ContextDefiner.defineBeanClass(definition.beanClass.java, this)
-                // Instantiate prototype bean
-                definition.beanClass.instance(PrototypeMap).also { instance -> ContextDefiner.defineBeanInstance(instance, this) }
+                BeanScope.SHARED -> {
+                    return if (definition.context !== this) {
+                        // If the shared bean is from other context
+                        val sourceContext = definition.context
+                        if (sourceContext is GenericApplicationContext) {
+                            ContextDefiner.runNotifyBeanToObject(sourceContext, definition.beanClass.java) { definition.beanClass.instance(sourceContext.instanceMap) }
+                        } else {
+                            sourceContext.getBeanInstance(definition)
+                        }
+                    } else {
+                        ContextDefiner.runNotifyBeanToObject(this, definition.beanClass.java) { definition.beanClass.instance(instanceMap) }
+                    }
+                }
+                BeanScope.GLOBAL -> {
+                    return definition.beanClass.instance(GlobalBeanInstanceMap)
+                }
+                else -> {
+                    // Instantiate prototype bean
+                    return ContextDefiner.runNotifyBeanToObject(this, definition.beanClass.java) { definition.beanClass.instance(PrototypeMap) }
+                }
             }
         } else if (definition is AnnotatedGenericBeanDefinition) {
             return callFunctionWithContext(definition.beanProvider, getBeanInstance(definition.configurationBean))!!

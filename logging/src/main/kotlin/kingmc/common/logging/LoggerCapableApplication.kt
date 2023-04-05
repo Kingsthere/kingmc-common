@@ -8,7 +8,7 @@ import kingmc.common.application.Application
  * @since 0.0.3
  * @author kingsthere
  */
-interface LoggerCapableApplication {
+interface LoggerCapableApplication : Application {
     /**
      * The loggers
      */

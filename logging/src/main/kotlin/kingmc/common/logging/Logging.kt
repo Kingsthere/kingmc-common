@@ -3,8 +3,10 @@ package kingmc.common.logging
 import kingmc.common.application.Application
 import kingmc.common.application.WithApplication
 import kingmc.common.application.currentApplication
+import kingmc.common.application.formatContext
 import kingmc.util.KingMCDsl
 import kingmc.util.format.Formatted
+import kingmc.util.format.formatWithContext
 import net.kyori.adventure.text.Component
 import kotlin.reflect.KClass
 
@@ -14,7 +16,7 @@ import kotlin.reflect.KClass
  * @since 0.0.3
  * @author kingsthere
  */
-val Application<*>.loggers
+val Application.loggers
     get() = (this as LoggerCapableApplication).loggers
 
 /**
@@ -95,7 +97,7 @@ fun logger(name: String): Logger {
 @WithApplication
 fun info(msg: String? = null) {
     if (msg != null) {
-        logger().logInfo(msg)
+        logger().logInfo(msg.formatWithContext(context = currentApplication().formatContext))
     }
 }
 
@@ -109,7 +111,7 @@ fun info(msg: String? = null) {
 @WithApplication
 fun warn(msg: String? = null) {
     if (msg != null) {
-        logger().logWarn(msg)
+        logger().logWarn(msg.formatWithContext(context = currentApplication().formatContext))
     }
 }
 
@@ -123,7 +125,7 @@ fun warn(msg: String? = null) {
 @WithApplication
 fun error(msg: String? = null) {
     if (msg != null) {
-        logger().logError(msg)
+        logger().logError(msg.formatWithContext(context = currentApplication().formatContext))
     }
 }
 
@@ -137,7 +139,7 @@ fun error(msg: String? = null) {
 @WithApplication
 fun debug(msg: String? = null) {
     if (msg != null) {
-        logger().logDebug(msg)
+        logger().logDebug(msg.formatWithContext(context = currentApplication().formatContext))
     }
 }
 
@@ -151,7 +153,7 @@ fun debug(msg: String? = null) {
 @WithApplication
 fun trace(msg: String? = null) {
     if (msg != null) {
-        logger().logTrace(msg)
+        logger().logTrace(msg.formatWithContext(context = currentApplication().formatContext))
     }
 }
 

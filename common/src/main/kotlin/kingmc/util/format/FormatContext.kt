@@ -37,6 +37,78 @@ interface FormatContext : Iterable<FormatArgument<*>> {
      * @return the argument got, or `null` if the argument with name [name] is not found
      */
     fun getOrNull(name: String): FormatArgument<*>?
+
+    /**
+     * Returns a new format context with all arguments hold by this format context and
+     * extra arguments from [formatContext]
+     */
+    fun with(formatContext: FormatContext): FormatContext
+}
+
+/**
+ * A [FormatContext] format implemented few functions
+ *
+ * @since 0.0.6
+ * @author kingsthere
+ */
+open class SimpleFormatContext(val parent: FormatContext? = null) : FormatContext {
+    /**
+     * Gets a format argument by index
+     *
+     * @throws UnsupportedFormatArgumentException if the argument with [index] is not found
+     * @return the argument found
+     */
+    override fun get(index: Int): FormatArgument<*> {
+        return getImplemented(index) ?: parent?.get(index) ?: throw UnsupportedFormatArgumentException("Argument with name $index is not found")
+    }
+
+    /**
+     * Gets a format argument by name
+     *
+     * @throws UnsupportedFormatArgumentException if the argument with [name] is not found
+     * @return the argument found
+     */
+    override fun get(name: String): FormatArgument<*> {
+        return getImplemented(name) ?: parent?.get(name) ?: throw UnsupportedFormatArgumentException("Argument with name $name is not found")
+    }
+
+    /**
+     * Gets a format argument by index
+     *
+     * @return the argument got, or `null` if this argument with specifies [index] is not found
+     */
+    override fun getOrNull(index: Int): FormatArgument<*>? {
+        return getImplemented(index) ?: parent?.get(index)
+    }
+
+    /**
+     * Gets a format argument by name
+     *
+     * @return the argument got, or `null` if the argument with name [name] is not found
+     */
+    override fun getOrNull(name: String): FormatArgument<*>? {
+        return getImplemented(name) ?: parent?.get(name)
+    }
+
+    /**
+     * Returns a new format context with all arguments hold by this format context and
+     * extra arguments from [formatContext]
+     */
+    override fun with(formatContext: FormatContext): FormatContext {
+        return SimpleFormatContext(formatContext)
+    }
+
+    /**
+     * Returns an iterator over the elements of this object.
+     */
+    override fun iterator(): Iterator<FormatArgument<*>> {
+        throw UnsupportedOperationException()
+    }
+
+    open fun getImplemented(name: String): FormatArgument<*>? { return null }
+
+    open fun getImplemented(index: Int): FormatArgument<*>? { return null }
+
 }
 
 /**
@@ -68,22 +140,22 @@ interface MutableFormatContext : FormatContext, MutableList<FormatArgument<*>>
  * @since 0.0.4
  * @author kingsthere
  */
-open class ListFormatArguments(val arguments: List<FormatArgument<*>> = listOf()) :
-    FormatContext{
-    override fun get(index: Int): FormatArgument<*> {
-        return arguments.find { it.index == index } ?: throw UnsupportedFormatArgumentException("Argument with index $index is not found")
-    }
-
-    override fun get(name: String): FormatArgument<*> {
-        return arguments.find { it.name == name } ?: throw UnsupportedFormatArgumentException("Argument with name $name is not found")
-    }
-
-    override fun getOrNull(index: Int): FormatArgument<*>? {
+open class ListFormatArguments(val arguments: List<FormatArgument<*>> = listOf(), parent: FormatContext? = null) :
+    SimpleFormatContext(parent) {
+    override fun getImplemented(index: Int): FormatArgument<*>? {
         return arguments.find { it.index == index }
     }
 
-    override fun getOrNull(name: String): FormatArgument<*>? {
+    override fun getImplemented(name: String): FormatArgument<*>? {
         return arguments.find { it.name == name }
+    }
+
+    /**
+     * Returns a new format context with all arguments hold by this format context and
+     * extra arguments from [formatContext]
+     */
+    override fun with(formatContext: FormatContext): FormatContext {
+        return ListFormatArguments(arguments, formatContext)
     }
 
     override fun iterator(): Iterator<FormatArgument<*>> {

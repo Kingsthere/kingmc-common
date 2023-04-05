@@ -45,6 +45,20 @@ interface BeanDefinition {
     val scope: BeanScope
 
     /**
+     * `true` if this bean is deprecated
+     *
+     * @since 0.0.7
+     */
+    val deprecated: Boolean
+
+    /**
+     * `true` if this bean is primary
+     *
+     * @since 0.0.7
+     */
+    val primary: Boolean
+
+    /**
      * Return `true` if this bean is a singleton
      */
     fun isSingleton(): Boolean

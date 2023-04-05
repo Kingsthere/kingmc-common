@@ -10,7 +10,7 @@ import kingmc.util.KingMCDsl
  * @author kingsthere
  */
 @KingMCDsl
-val Any.application: GenericApplication
+val Any.application: Application
     get() = if (context is ApplicationExposedContext) {
         (context as ApplicationExposedContext).application
     } else {

@@ -18,7 +18,7 @@ fun CoroutineDispatcher(): CoroutineDispatcher {
 }
 
 /**
- * Gets an async minecraft coroutine dispatcher from current context
+ * Gets an async minecraft coroutine dispatcher from current application
  *
  * @since 0.0.4
  * @author kingsthere
@@ -29,7 +29,7 @@ val asyncMinecraftCoroutineDispatcher: AsyncMinecraftCoroutineDispatcher
     get() = currentApplication().context.getBean(AsyncMinecraftCoroutineDispatcher::class)
 
 /**
- * Gets an async minecraft coroutine dispatcher from current context
+ * Gets an async minecraft coroutine dispatcher from current application
  *
  * @since 0.0.4
  * @author kingsthere
@@ -38,24 +38,25 @@ val asyncMinecraftCoroutineDispatcher: AsyncMinecraftCoroutineDispatcher
 @get:WithApplication
 val syncMinecraftCoroutineDispatcher: SyncMinecraftCoroutineDispatcher
     get() = currentApplication().context.getBean(SyncMinecraftCoroutineDispatcher::class)
+
 /**
- * Gets an async minecraft coroutine dispatcher from application
+ * Gets an async minecraft coroutine dispatcher for current application
  *
  * @since 0.0.4
  * @author kingsthere
  * @see MinecraftScheduler
  */
 @get:WithApplication
-val Application<*>.asyncMinecraftCoroutineDispatcher: AsyncMinecraftCoroutineDispatcher
+val Application.asyncMinecraftCoroutineDispatcher: AsyncMinecraftCoroutineDispatcher
     get() = context.getBean(AsyncMinecraftCoroutineDispatcher::class)
 
 /**
- * Gets an async minecraft coroutine dispatcher from current context
+ * Gets an async minecraft coroutine dispatcher for current application
  *
  * @since 0.0.4
  * @author kingsthere
  * @see MinecraftScheduler
  */
 @get:WithApplication
-val Application<*>.syncMinecraftCoroutineDispatcher: SyncMinecraftCoroutineDispatcher
+val Application.syncMinecraftCoroutineDispatcher: SyncMinecraftCoroutineDispatcher
     get() = context.getBean(SyncMinecraftCoroutineDispatcher::class)

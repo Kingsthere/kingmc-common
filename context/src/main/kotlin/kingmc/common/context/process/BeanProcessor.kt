@@ -37,6 +37,12 @@ interface BeanProcessor {
     fun process(context: Context, bean: Any): Boolean { return false }
 
     /**
+     * After processing, called **after** [process] all the beans through
+     * a context
+     */
+    fun afterProcess(context: Context) {  }
+
+    /**
      * Called when a bean removed from context
      *
      * @param bean the bean to process
@@ -46,10 +52,9 @@ interface BeanProcessor {
     fun dispose(context: Context, bean: Any) {  }
 
     /**
-     * End processing, called **after** [process] all the beans through
-     * a context
+     * Called after [dispose] all beans through a context
      */
-    fun end(context: Context) {  }
+    fun afterDispose(context: Context) {  }
 
     companion object {
         /**

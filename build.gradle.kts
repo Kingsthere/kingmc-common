@@ -32,11 +32,12 @@ allprojects {
         api(group = "net.kyori", name = "adventure-text-minimessage", version = "4.11.0")
         api(group = "net.kyori", name = "adventure-text-serializer-gson", version = "4.11.0")
         api(group = "net.kyori", name = "adventure-text-serializer-legacy", version = "4.11.0")
-        api(group = "com.github.ben-manes.caffeine", name = "caffeine", version = "2.9.1")
-        api(group = "net.sf.trove4j", name = "trove4j", version = "3.0.3")
         api(group = "com.google.code.gson", name = "gson", version = "2.9.0")
-        api(group = "com.google.inject", name = "guice", version = "5.1.0")
         api(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = "1.6.4")
+        api("org.yaml:snakeyaml:2.0")
+        api("com.github.ben-manes.caffeine:caffeine:2.9.1")
+        api("com.google.guava:guava:31.1-jre")
+        api("it.unimi.dsi:fastutil:8.5.12")
         api("commons-io:commons-io:2.11.0")
 
         val kotlinVersion = "1.8.10"
@@ -120,7 +121,7 @@ allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-            useK2 = true
+            // useK2 = true
         }
     }
 

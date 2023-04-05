@@ -2,7 +2,7 @@ package kingmc.common.context.initializer
 
 import kingmc.common.context.Context
 import kingmc.common.context.beans.BeanDefinition
-import kingmc.common.structure.Project
+import kingmc.common.structure.ClassSource
 import java.util.function.Predicate
 import kotlin.reflect.KAnnotatedElement
 
@@ -29,9 +29,9 @@ interface ContextInitializer {
     fun addElementFilter(filter: Predicate<KAnnotatedElement>)
 
     /**
-     * Add a bean source([Project]) to this context
+     * Add a bean source([ClassSource]) to this context
      */
-    fun addSource(project: Project)
+    fun addSource(classSource: ClassSource)
 
     /**
      * Invoke this context initializer and finish initializing of target context

@@ -25,10 +25,9 @@ dependencies {
     val nightConfig = "3.6.6"
     // Night config
     api(group = "com.electronwill.night-config", name = "core", version = nightConfig)
-    // Night config toml addon
     api(group = "com.electronwill.night-config", name = "toml", version = nightConfig)
-    // Night config yaml addon
     api(group = "com.electronwill.night-config", name = "yaml", version = nightConfig)
+    api(group = "com.electronwill.night-config", name = "hocon", version = nightConfig)
 }
 
 sourceSets {

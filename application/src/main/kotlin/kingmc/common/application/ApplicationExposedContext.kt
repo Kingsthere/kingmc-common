@@ -10,5 +10,5 @@ interface ApplicationExposedContext {
     /**
      * The application of this context
      */
-    val application: GenericApplication
+    val application: Application
 }

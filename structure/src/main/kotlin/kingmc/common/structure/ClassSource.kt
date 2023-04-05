@@ -1,31 +1,17 @@
 package kingmc.common.structure
 
+import kingmc.util.Reloadable
 import java.util.function.Predicate
 import java.util.stream.Collectors
 
 /**
- * A project is a set of sources for defining classes...
- *
- *
- * The classes in the project stores should only contain
- * the unique code in your own project, not the dependencies
- * or shadows
+ * Indicate a source provide classes
  *
  * @see Class
  * @since 0.0.1
  * @author kingsthere
  */
-interface Project {
-    /**
-     * Gets a class from this project
-     *
-     * @return the project got, `null` if the
-     *         class is not define in this project
-     * @since 0.0.2
-     * @author kingsthere
-     */
-    fun <T : Any> getClass(name: String): Class<T>?
-
+interface ClassSource : Reloadable {
     /**
      * Gets all classes in this project as a [List]
      *
@@ -56,14 +42,6 @@ interface Project {
         // results by stream api using the predicate specified
         return this.getClasses().stream().filter(predicate).collect(Collectors.toList())
     }
-
-    /**
-     * Check if the specifies class is defined in this project
-     *
-     * @since 0.0.2
-     * @author kingsthere
-     */
-    operator fun contains(clazz: Class<*>): Boolean
 
     /**
      * Invoke this function to get all pluggable

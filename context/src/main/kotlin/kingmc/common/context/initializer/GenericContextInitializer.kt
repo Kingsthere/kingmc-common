@@ -1,10 +1,5 @@
 package kingmc.common.context.initializer
 
-import kingmc.util.annotation.getAnnotation
-import kingmc.util.annotation.getAnnotations
-import kingmc.util.annotation.hasAnnotation
-import kingmc.util.reflect.findFunctionsByAnnotation
-import kingmc.util.reflect.findMutablePropertiesByAnnotation
 import kingmc.common.context.BeansUtil
 import kingmc.common.context.Context
 import kingmc.common.context.GenericApplicationContext
@@ -16,9 +11,15 @@ import kingmc.common.context.condition.ConditionalOnBean
 import kingmc.common.context.condition.ConditionalOnBeanMissing
 import kingmc.common.context.condition.ConditionalOnClass
 import kingmc.common.context.condition.ConditionalOnClassMissing
-import kingmc.common.context.process.disposeBean
+import kingmc.common.context.process.afterDispose
 import kingmc.common.context.process.loadProcessors
-import kingmc.common.structure.Project
+import kingmc.common.context.process.disposeBean
+import kingmc.common.structure.ClassSource
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.getAnnotations
+import kingmc.util.annotation.hasAnnotation
+import kingmc.util.reflect.findFunctionsByAnnotation
+import kingmc.util.reflect.findMutablePropertiesByAnnotation
 import java.util.function.Predicate
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
@@ -144,10 +145,10 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
     }
 
     /**
-     * Add a bean source([Project]) to this context
+     * Add a bean source([ClassSource]) to this context
      */
-    override fun addSource(project: Project) {
-        val classes = project.getClasses()
+    override fun addSource(classSource: ClassSource) {
+        val classes = classSource.getClasses()
         sources.addAll(classes)
         classes.forEach { clazz ->
             try {
@@ -206,7 +207,9 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
             dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
             scope = scope,
             isAbstract = beanClass.isAbstract,
-            name = BeansUtil.getBeanName(beanClass)
+            name = BeansUtil.getBeanName(beanClass),
+            deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
+            primary = beanClass.annotations.any { it.annotationClass == Primary::class }
         )
 
         this.whenBeanDefine(beanDefinition)
@@ -245,7 +248,9 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
                 dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
                 scope = BeanScope.PROTOTYPE,
                 isAbstract = false,
-                name = beanName
+                name = beanName,
+                deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
+                primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class }
             )
 
             this.whenBeanDefine(beanDefinition)
@@ -445,6 +450,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
                 // Dispose single bean logic
                 context.disposeBean(beanInstance)
             }
+        context.afterDispose()
         // Close context
         context.close()
     }

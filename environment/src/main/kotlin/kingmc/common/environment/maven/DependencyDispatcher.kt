@@ -4,7 +4,7 @@ import kingmc.common.application.WithApplication
 import kingmc.common.environment.AbstractXmlParser
 import kingmc.common.environment.ClassAppender.addPath
 import kingmc.common.environment.maven.model.*
-import kingmc.common.logging.info
+import kingmc.common.logging.Logger
 import me.lucko.jarrelocator.JarRelocator
 import org.apache.commons.io.FileUtils
 import org.w3c.dom.Document
@@ -30,19 +30,19 @@ import javax.xml.parsers.ParserConfigurationException
  * @since 0.0.6
  * @author kingsthere
  */
-class DependencyDispatcher(val root: File): AbstractXmlParser() {
+class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParser() {
     /**
      * Install a [dependency] from specifies [repositories]
      */
     @WithApplication
     fun installDependency(dependency: Dependency, repositories: Collection<Repository>, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope) {
-        info("Installing dependency $dependency")
+        logger.logInfo("Installing dependency $dependency")
         fun injectClasspath(file: File, downloadedDependency: DownloadedDependency) {
             if (relocations.isEmpty()) {
-                info("Adding $file to classpath")
+                logger.logInfo("Adding $file to classpath")
                 addPath(file.toPath())
             } else {
-                info("Relocating $dependency")
+                logger.logInfo("Relocating $dependency ($relocations)")
                 val relocated = File(file.path + "-" + relocations.hashCode() + ".jar")
                 if (!relocated.exists() || relocated.length() == 0L) {
                     try {
@@ -59,10 +59,11 @@ class DependencyDispatcher(val root: File): AbstractXmlParser() {
                             relocationMap
                         ).run()
                     } catch (e: IOException) {
+                        e.printStackTrace()
                         throw IllegalStateException(String.format("Unable to relocate %s%n", dependency), e)
                     }
-                    info("Adding $relocated to classpath")
                 }
+                logger.logInfo("Adding $relocated to classpath")
                 addPath(relocated.toPath())
             }
             downloadedDependency.transitive.forEach {
@@ -124,7 +125,7 @@ class DependencyDispatcher(val root: File): AbstractXmlParser() {
                             }
                         } catch (ex: ParseException) {
                             ex.addSuppressed(exception)
-                            throw IOException("Unable to find packaging information in pom.xml", ex)
+                            throw IOException("Unable to find packaging logger.logInformation in pom.xml", ex)
                         }
                     } catch (ex: ParserConfigurationException) {
                         ex.addSuppressed(exception)
@@ -210,14 +211,14 @@ class DependencyDispatcher(val root: File): AbstractXmlParser() {
         val url = URL(
             String.format(
                 "%s/%s/%s/%s/%s",
-                repository.url,
+                repository.url.removeSuffix("/"),
                 dependency.groupId.replace('.', '/'),
                 dependency.artifactId,
                 dependency.version,
                 out.name
             )
         )
-        info("Downloading $dependency from $url to $out")
+        logger.logInfo("[${Thread.currentThread().name}] Downloading $dependency from $url to $out")
         FileUtils.copyURLToFile(url, out)
     }
 

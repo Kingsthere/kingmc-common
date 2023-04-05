@@ -3,24 +3,9 @@ package kingmc.common.environment
 import kingmc.common.environment.maven.MavenDependency
 
 @MavenDependency(
-    groupId = "cglib",
-    artifactId = "cglib",
-    version = "3.2.2"
-)
-@MavenDependency(
     groupId = "com.esotericsoftware",
     artifactId = "reflectasm",
     version = "1.11.9"
-)
-@MavenDependency(
-    groupId = "com.github.ben-manes.caffeine",
-    artifactId = "caffeine",
-    version = "2.9.1"
-)
-@MavenDependency(
-    groupId = "net.sf.trove4j",
-    artifactId = "trove4j",
-    version = "3.0.3"
 )
 @MavenDependency(
     groupId = "net.kyori",
@@ -48,18 +33,23 @@ import kingmc.common.environment.maven.MavenDependency
     version = "2.9.0"
 )
 @MavenDependency(
-    groupId = "com.electronwill.night-config",
-    artifactId = "core",
-    version = "3.6.5"
+    groupId = "it.unimi.dsi",
+    artifactId = "fastutil",
+    version = "8.5.12"
 )
 @MavenDependency(
-    groupId = "com.electronwill.night-config",
-    artifactId = "yaml",
-    version = "3.6.5"
+    groupId = "com.google.guava",
+    artifactId = "guava",
+    version = "31.1-jre"
 )
 @MavenDependency(
-    groupId = "com.electronwill.night-config",
-    artifactId = "toml",
-    version = "3.6.5"
+    groupId = "com.github.ben-manes.caffeine",
+    artifactId = "caffeine",
+    version = "2.9.1"
+)
+@MavenDependency(
+    groupId = "org.yaml",
+    artifactId = "snakeyaml",
+    version = "2.0"
 )
 object KingMCEnvironment

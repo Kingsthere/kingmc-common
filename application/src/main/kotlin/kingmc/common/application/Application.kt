@@ -4,28 +4,29 @@ import kingmc.common.context.Context
 
 /**
  * An application is the central class for using kingmc api, you
- * run the kingmc framework with [kingmc.common.boot.ApplicationBoot] and it gives out of
- * an [Application]
+ * run the kingmc framework and all controls should be passed through
+ * the [Application]. Application instances should be available everywhere,
+ * such as separate extensions, drivers... they should all have an
+ * isolated application, so kingmc can easily enable/disable them, for
+ * example: When the isolated extension disables all the things that should
+ * be disabled by the extension using this api call, such as:
+ *  + Scheduled tasks
+ *  + Listeners
+ *  + Commands
  *
  *
- * Application provide you programming interfaces to use the apis
- * in kingmc framework
- *
- *
- * A project(that uses kingmc framework) could have many [Application]
- * created if you want, for example you want to create plugin modules/extensions,
- * then you can use [kingmc.common.boot.ApplicationBoot] to load them and simply manage then
- * using [Application] to shut down, run, reload...
+ * When a server have multiple extensions, this could prevent problems such as
+ *  + Compatible
  *
  * @since 0.0.2
  * @author kingsthere
  * @param TContext the type of context that loading this application
  */
-interface Application<TContext : Context> {
+interface Application {
     /**
-     * The [TContext] that loading this application
+     * The `Context` that this application loading beans from
      */
-    val context: TContext
+    val context: Context
 
     /**
      * The environment of this application
@@ -38,7 +39,15 @@ interface Application<TContext : Context> {
     val name: String
 
     /**
-     * Called to dispose/terminate this application
+     * Shutdown this application
      */
-    fun dispose()
+    fun shutdown()
+
+    /**
+     * Add a shutdown hook to this application, the [shutdownHook] will
+     * be executed when this application [shutdown]
+     *
+     * @param shutdownHook the shutdown hook to execute when this application [shutdown]
+     */
+    fun addShutdownHook(shutdownHook: () -> Unit)
 }

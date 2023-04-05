@@ -62,4 +62,8 @@ class Version(source: String) : Comparable<Version> {
     override fun hashCode(): Int {
         return version.contentHashCode()
     }
+
+    override fun toString(): String {
+        return "Version(version=${version.contentToString()})"
+    }
 }

@@ -15,6 +15,8 @@ import kingmc.util.format.Formatted
 annotation class MavenDependency(
     /**
      * The group id of this maven dependency
+     *
+     * You can add `!` sign to dots to prevent shadow plugins relocate the groupId
      */
     @Formatted
     val groupId: String,
@@ -34,12 +36,17 @@ annotation class MavenDependency(
     val version: String = "RELEASE",
 
     /**
-     * The specifies repository of this maven dependency
+     * The classifier of this dependency
      */
-    val repository: MavenRepository = MavenRepository("{ kingmc.environment.maven-repository }"),
+    val classifier: String = "",
 
     /**
-     * The scope of this maven dependency, only dependencies scopped [scopes] can apply
+     * The url of specifies repository of this maven dependency
      */
-    val scopes: Array<DependencyScope> = [DependencyScope.RUNTIME]
+    val repository: String = "{ kingmc.environment.maven-repository }",
+
+    /**
+     * The scope of this maven dependency, only dependencies scopped [scope] can apply
+     */
+    val scope: DependencyScope = DependencyScope.RUNTIME
 )

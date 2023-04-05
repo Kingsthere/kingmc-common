@@ -9,22 +9,39 @@ import java.util.concurrent.ConcurrentHashMap
  * A map define the context by the class loader of the classes
  */
 object ContextDefiner : MutableMap<Class<*>, Context> by ConcurrentHashMap() {
+    /**
+     * A `ThreadLocal` to notify the beans when they instantiated which context created them
+     */
+    val contextNotification: ThreadLocal<Context> = ThreadLocal()
+
+    @Synchronized
+    fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
+        defineBeanClass(clazz, context)
+        contextNotification.set(context)
+        val instance = block.invoke(context)
+        defineBeanInstance(instance, context)
+        contextNotification.remove()
+        return instance
+    }
+
+    @Synchronized
     fun defineBeanInstance(obj: Any, context: Context) {
         if (obj is ContextAware) {
             obj.context = context
         }
     }
 
-    fun defineBeanClass(obj: Class<*>, context: Context) {
+    @Synchronized
+    fun defineBeanClass(clazz: Class<*>, context: Context) {
         // So an instantiated bean won't define to a context twice
-        if (obj !in this) {
-            put(obj, context)
+        if (clazz !in this) {
+            put(clazz, context)
         }
     }
 }
 
 /**
- * The context of current object that is injected to
+ * The context of current object that is instantiating this
  *
  * @since 0.0.1
  * @author kingsthere
@@ -32,12 +49,18 @@ object ContextDefiner : MutableMap<Class<*>, Context> by ConcurrentHashMap() {
  *         bean is not injected into any ioc container
  */
 @KingMCDsl
+@get:Synchronized
 val Any.context: Context
     get() {
         return if (this is ContextAware) {
             this.context
         } else {
-            ContextDefiner[this::class.java] ?: throw UnsupportedOperationException()
+            val notification = ContextDefiner.contextNotification.get()
+            if (notification != null) {
+                return notification
+            } else {
+                checkNotNull(ContextDefiner[this::class.java]) { "No context of this(${this::class}) defined" }
+            }
         }
     }
 

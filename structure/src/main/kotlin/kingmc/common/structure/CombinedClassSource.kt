@@ -7,15 +7,15 @@ package kingmc.common.structure
  * @since 0.0.1
  * @author kingsthere
  */
-interface CombinedProject : Project {
+interface CombinedClassSource : ClassSource {
     /**
      * Combine a project to this
      */
-    fun combine(project: Project)
+    fun combine(classSource: ClassSource)
 
     companion object {
-        fun of(vararg projects: Project): CombinedProject {
-            return SimpleCombinedProject(*projects)
+        fun of(vararg classSources: ClassSource): CombinedClassSource {
+            return CombinedClassSourceImpl(*classSources)
         }
     }
 }

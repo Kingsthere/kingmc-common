@@ -1,35 +1,47 @@
 package kingmc.common.application
 
-import kingmc.common.context.Context
 import kingmc.util.KingMCDsl
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+/**
+ * A `ApplicationManager` is responsible for binding applications to current
+ * thread and get bound application to current thread
+ *
+ * @since 0.0.3
+ * @author kingsthere
+ */
 interface ApplicationManager {
 
-    fun currentOrNull(): Application<*>?
+    fun currentOrNull(): Application?
 
-    fun bindApplicationToThread(application: Application<*>?)
+    fun bindApplicationToThread(application: Application?)
 
     companion object {
-        fun currentOrNull(): Application<*>? = applicationManager.currentOrNull()
+        fun currentOrNull(): Application? = applicationManager.currentOrNull()
 
-        fun bindApplicationToThread(application: Application<*>?) = applicationManager.bindApplicationToThread(application)
+        fun bindApplicationToThread(application: Application?) = applicationManager.bindApplicationToThread(application)
 
-        fun current(): Application<*> = applicationManager.currentOrNull() ?: throw IllegalStateException()
+        fun current(): Application = applicationManager.currentOrNull() ?: throw IllegalStateException()
     }
 }
 
+/**
+ * Implemented [ApplicationManager] using [ThreadLocal]
+ *
+ * @since 0.0.3
+ * @author kingsthere
+ */
 class ThreadLocalApplicationManager : ApplicationManager {
-    private val threadLocal = ThreadLocal<Application<*>>()
+    private val threadLocal = ThreadLocal<Application>()
 
-    override fun currentOrNull(): Application<*>? {
+    override fun currentOrNull(): Application? {
         return threadLocal.get()
     }
 
-    override fun bindApplicationToThread(application: Application<*>?) {
+    override fun bindApplicationToThread(application: Application?) {
         if (application != null) {
             threadLocal.set(application)
         } else {
@@ -60,9 +72,25 @@ internal val applicationManager: ApplicationManager by lazy {
     ThreadLocalApplicationManager()
 }
 
+/**
+ * Run a block of action surround with application, the codes surrounded with `application()`
+ * should run like this
+ * ```
+ * // Application set to ApplicationManager
+ * application {
+ *     actionsWithApplication()
+ * } // Application removed from ApplicationManager
+ * ```
+ *
+ * Whether to use `application {  }` to surround these operation depends on whether
+ * the function involved in the code has a [WithApplication] annotation
+ *
+ * @param application the application set to the ApplicationManager
+ * @param action the action to run with application set
+ */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-fun <R> Any.application(application: Application<*> = this.application, action: @WithApplication Application<out Context>.() -> R): R {
+fun <R> Any.application(application: Application = this.application, action: @WithApplication Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val result: AtomicReference<R> = AtomicReference()
     keepAndRestoreApplicationRefAfterRun {
@@ -72,9 +100,25 @@ fun <R> Any.application(application: Application<*> = this.application, action: 
     return result.get()
 }
 
+/**
+ * Run a block of suspended action surround with application, the codes surrounded with `application()`
+ * should run like this
+ * ```
+ * // Application set to ApplicationManager
+ * suspendAction {
+ *     suspendActionsWithApplication()
+ * } // Application removed from ApplicationManager
+ * ```
+ *
+ * Whether to use `suspendApplication {  }` to surround these operation depends on whether
+ * the function involved in the code has a [WithApplication] annotation
+ *
+ * @param application the application set to the ApplicationManager
+ * @param action the action to run with application set
+ */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-suspend fun <R> Any.suspendApplication(application: Application<*> = this.application, action: @WithApplication suspend Application<out Context>.() -> R): R {
+suspend fun <R> Any.suspendApplication(application: Application = this.application, action: @WithApplication suspend Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val result: AtomicReference<R> = AtomicReference()
     keepAndRestoreApplicationRefAfterRunSuspend {
@@ -84,8 +128,19 @@ suspend fun <R> Any.suspendApplication(application: Application<*> = this.applic
     return result.get()
 }
 
-fun currentApplicationOrNull(): Application<*>? =
+/**
+ * Gets the current application from `ApplicationManager`
+ *
+ * @return application or `null` if application is not set in current thread
+ */
+fun currentApplicationOrNull(): Application? =
     ApplicationManager.currentOrNull()
 
-fun currentApplication(): Application<*> =
+/**
+ * Gets the current application from `ApplicationManager`
+ *
+ * @throws IllegalStateException if the `Application` is not set
+ * @return application
+ */
+fun currentApplication(): Application =
     ApplicationManager.currentOrNull() ?: throw IllegalStateException("Application is not set, you must call application() before using this statement (Did you forget add application {  } before running this statement?)")

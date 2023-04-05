@@ -1,6 +1,7 @@
 package kingmc.common.environment.maven.relocate
 
 import kingmc.common.environment.ExperimentalEnvironmentApi
+import kingmc.util.format.Formatted
 
 /**
  * Annotation to declare a relocation of a maven dependency
@@ -17,10 +18,12 @@ annotation class Relocate(
     /**
      * The pattern to relocate
      */
+    @Formatted
     val pattern: String,
 
     /**
      * The relocated pattern after relocate
      */
+    @Formatted
     val relocatedPattern: String
 )

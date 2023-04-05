@@ -1,27 +1,14 @@
 package kingmc.common.structure
 
-class SimpleCombinedProject(vararg projects: Project) : CombinedProject {
-    private val combined: MutableSet<Project> = projects.toMutableSet()
+class CombinedClassSourceImpl(vararg classSources: ClassSource) : CombinedClassSource {
+    private val combined: MutableSet<ClassSource> = classSources.toMutableSet()
 
     /**
      * Combine a project to this
      */
-    override fun combine(project: Project) {
-        this.combined.add(project)
+    override fun combine(classSource: ClassSource) {
+        this.combined.add(classSource)
     }
-
-    /**
-     * Get a class from this project
-     *
-     * @return the project got, `null` if the
-     *         class is not define in this project
-     * @since 0.0.2
-     * @author kingsthere
-     */
-    override fun <T : Any> getClass(name: String): Class<T>? =
-        this.combined
-            .map { it.getClass<T>(name) }
-            .find { it != null }
 
     /**
      * Invoke this function to get all classes
@@ -41,21 +28,6 @@ class SimpleCombinedProject(vararg projects: Project) : CombinedProject {
     }
 
     /**
-     * Check if the specified class is defined in this project
-     *
-     * @since 0.0.2
-     * @author kingsthere
-     */
-    override fun contains(clazz: Class<*>): Boolean {
-        for (combined in this.combined) {
-            if (clazz in combined) {
-                return true
-            }
-        }
-        return false
-    }
-
-    /**
      * Invoke this function to get all pluggable
      * in this project as a [Set]
      *
@@ -66,5 +38,12 @@ class SimpleCombinedProject(vararg projects: Project) : CombinedProject {
     @ExperimentalStructureApi
     override fun getPluggable(): Set<Pluggable> {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * Reload
+     */
+    override fun reload() {
+        this.combined.forEach { it.reload() }
     }
 }

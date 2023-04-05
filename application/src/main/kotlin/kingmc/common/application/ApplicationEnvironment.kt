@@ -1,8 +1,5 @@
 package kingmc.common.application
 
-import kotlinx.coroutines.CoroutineScope
-import kotlin.coroutines.CoroutineContext
-
 /**
  * Represents an environment in which [Application] runs
  *
@@ -10,7 +7,7 @@ import kotlin.coroutines.CoroutineContext
  * @author kingsthere
  * @see Application
  */
-interface ApplicationEnvironment : CoroutineScope {
+interface ApplicationEnvironment {
 
     /**
      * [ClassLoader] used to load application.
@@ -18,9 +15,4 @@ interface ApplicationEnvironment : CoroutineScope {
      * Useful for various reflection-based services, like dependency injection.
      */
     val classLoader: ClassLoader
-
-    /**
-     * Parent coroutine context for an application
-     */
-    override val coroutineContext: CoroutineContext
 }

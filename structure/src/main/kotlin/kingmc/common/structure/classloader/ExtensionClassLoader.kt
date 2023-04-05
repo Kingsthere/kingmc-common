@@ -1,4 +1,4 @@
-package kingmc.common.structure.plugin
+package kingmc.common.structure.classloader
 
 import java.io.File
 import java.io.IOException
@@ -10,12 +10,12 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet
 
 /**
- * The class loader to load the plugin extensions
+ * A class loader to load the extensions
  *
  * @since 0.0.1
  * @author kingsthere
  */
-class PluginClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arrayOf(file.toURI().toURL()), parent) {
+class ExtensionClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arrayOf(file.toURI().toURL()), parent) {
     fun addToClassloaders() {
         loaders.add(this)
     }
@@ -47,12 +47,12 @@ class PluginClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arrayO
             if (checkOther) {
                 val var4: Iterator<*> = loaders.iterator()
                 while (true) {
-                    var loader: PluginClassLoader
+                    var loader: ExtensionClassLoader
                     do {
                         if (!var4.hasNext()) {
                             throw ClassNotFoundException(name)
                         }
-                        loader = var4.next() as PluginClassLoader
+                        loader = var4.next() as ExtensionClassLoader
                     } while (loader === this)
                     try {
                         return loader.loadClass0(name, resolve, false)
@@ -70,7 +70,7 @@ class PluginClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arrayO
     }
 
     companion object {
-        private val loaders: MutableSet<PluginClassLoader?> = CopyOnWriteArraySet<PluginClassLoader?>()
+        private val loaders: MutableSet<ExtensionClassLoader?> = CopyOnWriteArraySet<ExtensionClassLoader?>()
 
         init {
             registerAsParallelCapable()

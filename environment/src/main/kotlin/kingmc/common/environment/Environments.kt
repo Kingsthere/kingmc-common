@@ -14,26 +14,21 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 /**
- * The dependency dispatcher of current environment
- */
-lateinit var dependencyDispatcher: DependencyDispatcher
-
-/**
  * Load dependencies for this class
  *
  * @since 0.0.6
  * @author kingsthere
  */
 @OptIn(ExperimentalEnvironmentApi::class)
-fun KClass<*>.loadDependencies(formatContext: FormatContext) {
+fun KClass<*>.loadDependencies(dependencyDispatcher: DependencyDispatcher, formatContext: FormatContext) {
     val relocations: MutableSet<JarRelocation> = mutableSetOf()
     getAnnotationsWithFormattedProperty<Relocate>(formatContext).forEach {
-        relocations.add(JarRelocation(it.pattern, it.relocatedPattern))
+        relocations.add(JarRelocation(it.pattern.replace("!", ""), it.relocatedPattern))
     }
     getAnnotationsWithFormattedProperty<MavenDependency>(formatContext).forEach {
         val dependency = Dependency(it.groupId, it.artifactId, it.version, DependencyScope.RUNTIME)
-        val repository = Repository(it.repository.url)
-        dependencyDispatcher.installDependency(dependency, setOf(repository), relocations, *it.scopes)
+        val repository = Repository(it.repository)
+        dependencyDispatcher.installDependency(dependency, setOf(repository), relocations, it.scope)
     }
 }
 
@@ -44,16 +39,16 @@ fun KClass<*>.loadDependencies(formatContext: FormatContext) {
  * @author kingsthere
  */
 @OptIn(ExperimentalEnvironmentApi::class)
-suspend fun KClass<*>.loadDependenciesSuspend(formatContext: FormatContext) = coroutineScope {
+suspend fun KClass<*>.loadDependenciesSuspend(dependencyDispatcher: DependencyDispatcher, formatContext: FormatContext) = coroutineScope {
     val relocations: MutableSet<JarRelocation> = mutableSetOf()
     getAnnotationsWithFormattedProperty<Relocate>(formatContext).forEach {
-        relocations.add(JarRelocation(it.pattern, it.relocatedPattern))
+        relocations.add(JarRelocation(it.pattern.replace("!", ""), it.relocatedPattern))
     }
     getAnnotationsWithFormattedProperty<MavenDependency>(formatContext).forEach {
         val dependency = Dependency(it.groupId, it.artifactId, it.version, DependencyScope.RUNTIME)
-        val repository = Repository(it.repository.url)
+        val repository = Repository(it.repository)
         launch {
-            dependencyDispatcher.installDependency(dependency, setOf(repository), relocations, *it.scopes)
+            dependencyDispatcher.installDependency(dependency, setOf(repository), relocations, it.scope)
         }
     }
 }
