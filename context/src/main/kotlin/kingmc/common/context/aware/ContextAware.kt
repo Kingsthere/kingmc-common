@@ -11,9 +11,7 @@ import kingmc.common.context.Context
  */
 interface ContextAware {
     /**
-     * The context to bean
-     *
-     * **IMPLEMENT NOTE:** Use `lateinit` keyword to implement this property
+     * Set the context to this bean
      */
-    var context: Context
+    fun setContext(context: Context)
 }

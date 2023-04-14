@@ -1,43 +1,28 @@
 package kingmc.common.context
 
-import kingmc.common.context.aware.ContextAware
+import com.koloboke.collect.map.IntObjMap
+import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import kingmc.util.KingMCDsl
 import kingmc.util.Lifecycle
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * A map define the context by the class loader of the classes
  */
-object ContextDefiner : MutableMap<Class<*>, Context> by ConcurrentHashMap() {
-    /**
-     * A `ThreadLocal` to notify the beans when they instantiated which context created them
-     */
-    val contextNotification: ThreadLocal<Context> = ThreadLocal()
+object ContextDefiner {
+    val value: MutableMap<Class<*>, IntObjMap<Context>> = HashObjObjMaps.newMutableMap()
 
-    @Synchronized
     fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
-        defineBeanClass(clazz, context)
-        contextNotification.set(context)
-        val instance = block.invoke(context)
-        defineBeanInstance(instance, context)
-        contextNotification.remove()
+        val instance = block(context)
+        getOrCreateBeanClassInstanceContexts(clazz).put(instance.hashCode(), context)
         return instance
     }
 
-    @Synchronized
-    fun defineBeanInstance(obj: Any, context: Context) {
-        if (obj is ContextAware) {
-            obj.context = context
-        }
+    fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): IntObjMap<Context> {
+        return value.computeIfAbsent(clazz) { HashIntObjMaps.newMutableMap() }
     }
 
-    @Synchronized
-    fun defineBeanClass(clazz: Class<*>, context: Context) {
-        // So an instantiated bean won't define to a context twice
-        if (clazz !in this) {
-            put(clazz, context)
-        }
-    }
+    fun getContextFor(obj: Any): Context? = value[obj]?.get(obj.hashCode())
 }
 
 /**
@@ -49,19 +34,9 @@ object ContextDefiner : MutableMap<Class<*>, Context> by ConcurrentHashMap() {
  *         bean is not injected into any ioc container
  */
 @KingMCDsl
-@get:Synchronized
 val Any.context: Context
     get() {
-        return if (this is ContextAware) {
-            this.context
-        } else {
-            val notification = ContextDefiner.contextNotification.get()
-            if (notification != null) {
-                return notification
-            } else {
-                checkNotNull(ContextDefiner[this::class.java]) { "No context of this(${this::class}) defined" }
-            }
-        }
+        return checkNotNull(ContextDefiner.getContextFor(this)) { "No context defined for $this" }
     }
 
 /**
@@ -76,5 +51,5 @@ val Any.context: Context
 val Any.contextLifecycle: Lifecycle<Runnable>
     get() {
         return (context as? LifecycleContext)?.lifecycle()
-            ?: throw UnsupportedOperationException("Current context not supported for lifecycle")
+            ?: throw UnsupportedOperationException("Current context does not supported for lifecycle")
     }
