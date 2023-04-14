@@ -10,6 +10,7 @@ package kingmc.common.application
 @Retention
 @Target(
     AnnotationTarget.FUNCTION,
+    // For lambda / function types
     AnnotationTarget.TYPE,
     AnnotationTarget.CONSTRUCTOR,
     AnnotationTarget.PROPERTY_GETTER,
