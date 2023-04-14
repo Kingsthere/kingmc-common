@@ -4,6 +4,7 @@ import kingmc.common.context.beans.*
 import kingmc.common.context.format.ContextFormatContext
 import kingmc.util.*
 import kingmc.util.format.FormatContext
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
 import kotlin.reflect.KAnnotatedElement
@@ -18,7 +19,7 @@ import kotlin.reflect.full.isSubclassOf
  * @author kingsthere
  * @see ApplicationContext
  */
-abstract class GenericApplicationContext(override val name: String = "unnamed") : ApplicationContext {
+abstract class GenericApplicationContext(override val properties: Properties, override val name: String = "unnamed") : ApplicationContext {
     /**
      * Protected bean definitions
      *

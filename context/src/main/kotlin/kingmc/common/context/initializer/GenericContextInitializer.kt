@@ -7,13 +7,10 @@ import kingmc.common.context.HierarchicalContext
 import kingmc.common.context.annotation.*
 import kingmc.common.context.beans.*
 import kingmc.common.context.beans.depends.DefaultDependencyResolver
-import kingmc.common.context.condition.ConditionalOnBean
-import kingmc.common.context.condition.ConditionalOnBeanMissing
-import kingmc.common.context.condition.ConditionalOnClass
-import kingmc.common.context.condition.ConditionalOnClassMissing
+import kingmc.common.context.condition.*
 import kingmc.common.context.process.afterDispose
-import kingmc.common.context.process.loadProcessors
 import kingmc.common.context.process.disposeBean
+import kingmc.common.context.process.loadProcessors
 import kingmc.common.structure.ClassSource
 import kingmc.util.annotation.getAnnotation
 import kingmc.util.annotation.getAnnotations
@@ -115,6 +112,11 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
                 } catch (_: Exception) {  }
             }
             return@Predicate true
+        }
+        if (element.hasAnnotation<ConditionalOnProperty>()) {
+            val condition = element.getAnnotation<ConditionalOnProperty>()!!
+            val propertyValue = context.properties.getProperty(condition.property)
+            return@Predicate propertyValue == condition.value
         }
         return@Predicate true
     }

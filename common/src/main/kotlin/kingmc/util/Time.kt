@@ -1,6 +1,7 @@
 package kingmc.util
 
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Standard game tick utilities, in minecraft a game
@@ -20,8 +21,9 @@ object Ticks {
      * @return a duration
      * @since 0.0.1
      */
+    @Deprecated("Use extension Int.ticks instead")
     fun duration(ticks: Long): Duration {
-        return Duration.ofMillis(ticks * SINGLE_TICK_DURATION_MS)
+        return (ticks * SINGLE_TICK_DURATION_MS).milliseconds
     }
 
     /**
@@ -38,3 +40,21 @@ object Ticks {
      */
     const val SINGLE_TICK_DURATION_MS = (1000 / TICKS_PER_SECOND).toLong()
 }
+
+/**
+ * The value of this duration expressed as a whole number of game ticks (20 per second)
+ */
+val Duration.inTicks: Long
+    get() = this.inWholeMilliseconds / Ticks.SINGLE_TICK_DURATION_MS
+
+/**
+ * Returns a Duration equal to this `Int` number of ticks
+ */
+val Int.ticks: Duration
+    get() = ((this * Ticks.SINGLE_TICK_DURATION_MS).milliseconds)
+
+/**
+ * Returns a Duration equal to this `Long` number of ticks
+ */
+val Long.ticks: Duration
+    get() = ((this * Ticks.SINGLE_TICK_DURATION_MS).milliseconds)

@@ -1,6 +1,7 @@
 package kingmc.common.application
 
 import kingmc.common.context.Context
+import java.util.*
 
 /**
  * An application is the central class for using kingmc api, you
@@ -51,3 +52,9 @@ interface Application {
      */
     fun addShutdownHook(shutdownHook: () -> Unit)
 }
+
+/**
+ * Gets the properties of this application
+ */
+val Application.properties: Properties
+    get() = this.context.properties
