@@ -33,9 +33,9 @@ import kingmc.common.environment.maven.MavenDependency
     version = "2.9.0"
 )
 @MavenDependency(
-    groupId = "com.koloboke",
-    artifactId = "koloboke-impl-common-jdk8",
-    version = "1.0.0"
+    groupId = "it.unimi.dsi",
+    artifactId = "fastutil",
+    version = "8.5.12"
 )
 @MavenDependency(
     groupId = "com.google.guava",

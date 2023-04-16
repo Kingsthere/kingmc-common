@@ -1,6 +1,5 @@
 package kingmc.common.context.process
 
-import it.unimi.dsi.fastutil.bytes.Byte2ObjectRBTreeMap
 import kingmc.common.context.Context
 import kingmc.common.context.HierarchicalContext
 import kingmc.common.context.LifecycleContext
@@ -13,7 +12,7 @@ import kingmc.util.annotation.hasAnnotation
 import java.util.*
 
 val Context.processors: MutableMap<Byte, MutableSet<BeanProcessor>> by lazy {
-    Byte2ObjectRBTreeMap(compareBy { it })
+    TreeMap(compareBy { it })
 }
 
 /**

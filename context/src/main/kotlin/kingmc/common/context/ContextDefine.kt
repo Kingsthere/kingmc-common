@@ -1,8 +1,5 @@
 package kingmc.common.context
 
-import com.koloboke.collect.map.IntObjMap
-import com.koloboke.collect.map.hash.HashIntObjMaps
-import com.koloboke.collect.map.hash.HashObjObjMaps
 import kingmc.util.KingMCDsl
 import kingmc.util.Lifecycle
 
@@ -10,19 +7,22 @@ import kingmc.util.Lifecycle
  * A map define the context by the class loader of the classes
  */
 object ContextDefiner {
-    val value: MutableMap<Class<*>, IntObjMap<Context>> = HashObjObjMaps.newMutableMap()
+    val value: MutableMap<Class<*>, MutableMap<Int, Context>> = mutableMapOf()
+    val contextNotification: ThreadLocal<Context> = ThreadLocal()
 
     fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
+        contextNotification.set(context)
         val instance = block(context)
-        getOrCreateBeanClassInstanceContexts(clazz).put(instance.hashCode(), context)
+        getOrCreateBeanClassInstanceContexts(clazz)[instance.hashCode()] = context
+        contextNotification.remove()
         return instance
     }
 
-    fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): IntObjMap<Context> {
-        return value.computeIfAbsent(clazz) { HashIntObjMaps.newMutableMap() }
+    fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): MutableMap<Int, Context> {
+        return value.computeIfAbsent(clazz) { HashMap() }
     }
 
-    fun getContextFor(obj: Any): Context? = value[obj]?.get(obj.hashCode())
+    fun getContextFor(obj: Any): Context? = value[obj::class.java]?.get(obj.hashCode())
 }
 
 /**
@@ -36,7 +36,7 @@ object ContextDefiner {
 @KingMCDsl
 val Any.context: Context
     get() {
-        return checkNotNull(ContextDefiner.getContextFor(this)) { "No context defined for $this" }
+        return checkNotNull(ContextDefiner.getContextFor(this) ?: ContextDefiner.contextNotification.get()) { "No context defined for $this" }
     }
 
 /**

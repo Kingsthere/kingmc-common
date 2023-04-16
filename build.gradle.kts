@@ -37,8 +37,7 @@ allprojects {
         api("org.yaml:snakeyaml:2.0")
         api("com.github.ben-manes.caffeine:caffeine:2.9.1")
         api("com.google.guava:guava:31.1-jre")
-        implementation("com.koloboke:koloboke-compile:0.5.1")
-        api("com.koloboke:koloboke-api-jdk8:1.0.0")
+        api("it.unimi.dsi:fastutil:8.5.12")
         api("commons-io:commons-io:2.11.0")
 
         val kotlinVersion = "1.8.10"
@@ -54,7 +53,7 @@ allprojects {
         repositories {
             mavenLocal()
             maven {
-                name = "SNAPSHOT"
+                name = "Snapshot"
                 url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 credentials {
                     username = ossrhUsername
