@@ -13,7 +13,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(): Logger =
+    override fun createLogger(): Logger =
         defaultLogger
 
     /**
@@ -21,7 +21,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(name: String): Logger =
+    override fun createLogger(name: String): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(name))
 
     /**
@@ -29,7 +29,7 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(clazz: Class<*>): Logger =
+    override fun createLogger(clazz: Class<*>): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(clazz))
 
     /**
@@ -37,6 +37,6 @@ class JavaLoggerManager(
      *
      * @since 0.0.3
      */
-    override fun logger(clazz: KClass<*>): Logger =
+    override fun createLogger(clazz: KClass<*>): Logger =
         Slf4jLoggerWrapper(LoggerFactory.getLogger(clazz.java))
 }

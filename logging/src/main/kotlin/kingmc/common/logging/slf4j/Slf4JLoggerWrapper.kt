@@ -25,8 +25,16 @@ class Slf4jLoggerWrapper(private val logger: Slf4jLogger) : Logger {
         this.logger.error(msg)
     }
 
+    override fun logError(msg: String, throwable: Throwable) {
+        this.logger.error(msg, throwable)
+    }
+
     override fun logError(component: Component) {
         (this.logger as ComponentLogger).error(component)
+    }
+
+    override fun logError(component: Component, throwable: Throwable) {
+        (this.logger as ComponentLogger).error(component, throwable)
     }
 
     override fun logDebug(msg: String) {

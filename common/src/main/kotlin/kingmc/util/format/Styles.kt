@@ -1,14 +1,14 @@
 package kingmc.util.format
 
 /**
- * Format style, use `{}` to match formats, for
+ * A Format style uses `{}` to match formats, for
  * example: { 0 } {1} {test}
  *
  * @since 0.0.3
  * @see FormatStyle
  */
 object BracketStyle : FormatStyle {
-    private val regex = "\\{\\s*?(\\S*)\\s*?}".toRegex()
+    override val regex = "\\{\\s*?(\\S*)\\s*?}".toRegex()
 
     /**
      * Find the formats that defined in specified string
