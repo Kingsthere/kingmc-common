@@ -124,8 +124,12 @@ internal class KeyImpl(namespace: String, value: String) : Key {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is net.kyori.adventure.key.Key) return false
-        return namespace == other.namespace() && value == other.value()
+        if (other !is KeyImpl) return false
+
+        if (namespace != other.namespace) return false
+        if (value != other.value) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
@@ -218,7 +222,7 @@ fun Key(string: String, character: Char = ':'): Key {
     val index = string.indexOf(character)
     val namespace = if (index >= 1) string.substring(0, index) else MINECRAFT_NAMESPACE
     val value = if (index >= 0) string.substring(index + 1) else string
-    return KeyPool.get(namespace, value)
+    return KeyImpl(namespace, value)
 }
 
 /**
@@ -231,7 +235,7 @@ fun Key(string: String, character: Char = ':'): Key {
  * @since 4.4.0
  */
 fun Key(namespaced: Namespaced, @Pattern(KeyImpl.VALUE_PATTERN) value: String): Key {
-    return KeyPool.get(namespaced.namespace(), value)
+    return KeyImpl(namespaced.namespace(), value)
 }
 
 /**
@@ -247,5 +251,5 @@ fun Key(
     @Pattern(KeyImpl.NAMESPACE_PATTERN) namespace: String,
     @Pattern(KeyImpl.VALUE_PATTERN) value: String
 ): Key {
-    return KeyPool.get(namespace, value)
+    return KeyImpl(namespace, value)
 }

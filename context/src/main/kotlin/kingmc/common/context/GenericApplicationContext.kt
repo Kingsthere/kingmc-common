@@ -13,7 +13,7 @@ import kotlin.reflect.full.isSubclassOf
 
 /**
  * Generic implement for [ApplicationContext] to load
- * beans from [Project][kingmc.common.structure.ClassSource]
+ * beans from [ClassSource][kingmc.common.structure.ClassSource]
  *
  * @since 0.0.1
  * @author kingsthere
@@ -232,7 +232,13 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
      * @return the beans got
      */
     override fun getBeans(): Collection<Any> {
-        return beanDefinitions.values.map { getBeanInstance(it) }
+        return beanDefinitions.values.mapNotNull {
+            try {
+                getBeanInstance(it)
+            } catch (e: Exception) {
+                null
+            }
+        }
     }
 
     override fun getProtectedBeans(): List<BeanDefinition> {
@@ -327,7 +333,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
      * Returns an iterator over the elements of this object.
      */
     override fun iterator(): Iterator<BeanDefinition> {
-        return (this.protectedBeanDefinitions.values + this.parents.flatten()).iterator()
+        return (this.beanDefinitions.values).iterator()
     }
 
     override fun inheritParent(context: Context) {
@@ -343,7 +349,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
     }
 
     override fun toString(): String {
-        return "GenericApplicationContext(definitions=$protectedBeanDefinitions, parents=$parents, name=$name)"
+        return "GenericApplicationContext(beans=${beanDefinitions.size}, parents=$parents, name=$name)"
     }
 
     override fun equals(other: Any?): Boolean {

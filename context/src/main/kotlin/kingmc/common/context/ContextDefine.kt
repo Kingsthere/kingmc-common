@@ -13,7 +13,7 @@ object ContextDefiner {
     fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
         contextNotification.set(context)
         val instance = block(context)
-        getOrCreateBeanClassInstanceContexts(clazz)[instance.hashCode()] = context
+        getOrCreateBeanClassInstanceContexts(clazz)[System.identityHashCode(instance)] = context
         contextNotification.remove()
         return instance
     }
@@ -22,7 +22,7 @@ object ContextDefiner {
         return value.computeIfAbsent(clazz) { HashMap() }
     }
 
-    fun getContextFor(obj: Any): Context? = value[obj::class.java]?.get(obj.hashCode())
+    fun getContextFor(obj: Any): Context? = value[obj::class.java]?.get(System.identityHashCode(obj))
 }
 
 /**

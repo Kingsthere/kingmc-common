@@ -2,7 +2,7 @@ package kingmc.common.environment.maven.model
 
 import kingmc.util.format.FormatContext
 import kingmc.util.format.Formatted
-import kingmc.util.format.format
+import kingmc.util.format.formatWithContext
 
 /**
  * A data class represents a relocation
@@ -24,4 +24,4 @@ data class JarRelocation(
 
 @Formatted
 fun jarRelocation(pattern: String, relocatedPattern: String, formatContext: FormatContext) =
-    JarRelocation(formatContext.format(pattern), formatContext.format(relocatedPattern))
+    JarRelocation(formatContext.formatWithContext(pattern), formatContext.formatWithContext(relocatedPattern))

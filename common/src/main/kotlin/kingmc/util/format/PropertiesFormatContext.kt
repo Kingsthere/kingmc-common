@@ -11,7 +11,7 @@ import java.util.*
 class PropertiesFormatContext(val properties: Properties): ListFormatArguments(buildList {
     var index = 0
     properties.forEach { t, u ->
-        add(FormatArgument(index, u, t.toString()))
+        add(FormatArgument(t, u.toString()))
         index++
     }
 })

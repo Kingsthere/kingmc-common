@@ -1,5 +1,6 @@
 package kingmc.common.context.initializer
 
+import io.github.classgraph.ClassGraph
 import kingmc.common.context.BeansUtil
 import kingmc.common.context.Context
 import kingmc.common.context.GenericApplicationContext
@@ -10,6 +11,7 @@ import kingmc.common.context.beans.depends.DefaultDependencyResolver
 import kingmc.common.context.condition.*
 import kingmc.common.context.process.afterDispose
 import kingmc.common.context.process.disposeBean
+import kingmc.common.context.process.inheritProcessors
 import kingmc.common.context.process.loadProcessors
 import kingmc.common.structure.ClassSource
 import kingmc.util.annotation.getAnnotation
@@ -31,6 +33,8 @@ import kotlin.reflect.full.isSubclassOf
  * @author kingsthere
  */
 open class GenericContextInitializer(override val context: HierarchicalContext) : HierarchicalContextInitializer {
+    val classGraph = ClassGraph()
+
     protected var filter: Predicate<BeanDefinition> = Predicate { bean ->
         val annotations = bean.annotations
         // @ConditionalOnBean logic
@@ -124,6 +128,8 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
     protected val sources: MutableList<Class<*>> = mutableListOf()
     protected val initializingBeans: MutableMap<String, BeanDefinition> =
         linkedMapOf()
+    protected val scopedBeans: MutableMap<String, BeanDefinition> =
+        linkedMapOf()
 
     /**
      * Add a filter to filter beans
@@ -144,6 +150,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
      */
     override fun addParent(context: Context) {
         this.context.inheritParent(context)
+        this.context.inheritProcessors(context)
     }
 
     /**
@@ -156,8 +163,10 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
             try {
                 defineBean(clazz)?.let { bean ->
                     this.initializingBeans[bean.name] = bean
+                    this.scopedBeans[bean.name] = bean
                     defineBeansFromConfiguration(bean).forEach { configuredBean ->
                         this.initializingBeans[configuredBean.name] = configuredBean
+                        this.scopedBeans[configuredBean.name] = configuredBean
                     }
                 }
             }
@@ -179,7 +188,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
 
         try {
             // If the bean is annotated with @Ignore then ignore
-            if (beanClass.hasAnnotation<Ignore>()) {
+            if (beanClass.hasAnnotation<DisableScan>()) {
                 return null
             }
 
@@ -385,7 +394,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
     }
 
     fun findBeanByClass(beanClass: KClass<*>): BeanDefinition? {
-        return initializingBeans.values.find { beanClass.isSubclassOf(it.beanClass) }
+        return scopedBeans.values.find { beanClass.isSubclassOf(it.beanClass) }
     }
 
     /**

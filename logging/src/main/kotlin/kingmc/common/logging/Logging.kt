@@ -6,7 +6,7 @@ import kingmc.common.application.currentApplication
 import kingmc.common.application.formatContext
 import kingmc.util.KingMCDsl
 import kingmc.util.format.Formatted
-import kingmc.util.format.format
+import kingmc.util.format.formatWithContext
 import net.kyori.adventure.text.Component
 import kotlin.reflect.KClass
 
@@ -96,7 +96,7 @@ fun Logger(name: String): Logger {
 @Formatted
 @WithApplication
 fun info(@Formatted msg: String) {
-    Logger().logInfo(msg.format(context = currentApplication().formatContext))
+    Logger().logInfo(msg.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -108,7 +108,7 @@ fun info(@Formatted msg: String) {
 @Formatted
 @WithApplication
 fun warn(@Formatted msg: String) {
-    Logger().logWarn(msg.format(context = currentApplication().formatContext))
+    Logger().logWarn(msg.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -120,7 +120,7 @@ fun warn(@Formatted msg: String) {
 @Formatted
 @WithApplication
 fun error(@Formatted msg: String) {
-    Logger().logError(msg.format(context = currentApplication().formatContext))
+    Logger().logError(msg.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -132,7 +132,7 @@ fun error(@Formatted msg: String) {
 @Formatted
 @WithApplication
 fun error(@Formatted msg: String, throwable: Throwable) {
-    Logger().logError(msg.format(context = currentApplication().formatContext), throwable)
+    Logger().logError(msg.formatWithContext(context = currentApplication().formatContext), throwable)
 }
 
 /**
@@ -144,7 +144,7 @@ fun error(@Formatted msg: String, throwable: Throwable) {
 @Formatted
 @WithApplication
 fun debug(@Formatted msg: String) {
-    Logger().logDebug(msg.format(context = currentApplication().formatContext))
+    Logger().logDebug(msg.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -156,7 +156,7 @@ fun debug(@Formatted msg: String) {
 @Formatted
 @WithApplication
 fun trace(@Formatted msg: String) {
-    Logger().logTrace(msg.format(context = currentApplication().formatContext))
+    Logger().logTrace(msg.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -168,7 +168,7 @@ fun trace(@Formatted msg: String) {
 @Formatted
 @WithApplication
 fun info(@Formatted component: Component) {
-    Logger().logInfo(component.format(context = currentApplication().formatContext))
+    Logger().logInfo(component.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -180,7 +180,7 @@ fun info(@Formatted component: Component) {
 @Formatted
 @WithApplication
 fun warn(@Formatted component: Component) {
-    Logger().logWarn(component.format(context = currentApplication().formatContext))
+    Logger().logWarn(component.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -192,7 +192,7 @@ fun warn(@Formatted component: Component) {
 @Formatted
 @WithApplication
 fun error(@Formatted component: Component) {
-    Logger().logError(component.format(context = currentApplication().formatContext))
+    Logger().logError(component.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -204,7 +204,7 @@ fun error(@Formatted component: Component) {
 @Formatted
 @WithApplication
 fun error(@Formatted component: Component, throwable: Throwable) {
-    Logger().logError(component.format(context = currentApplication().formatContext), throwable)
+    Logger().logError(component.formatWithContext(context = currentApplication().formatContext), throwable)
 }
 
 /**
@@ -216,7 +216,7 @@ fun error(@Formatted component: Component, throwable: Throwable) {
 @Formatted
 @WithApplication
 fun debug(@Formatted component: Component) {
-    Logger().logDebug(component.format(context = currentApplication().formatContext))
+    Logger().logDebug(component.formatWithContext(context = currentApplication().formatContext))
 }
 
 /**
@@ -228,5 +228,5 @@ fun debug(@Formatted component: Component) {
 @Formatted
 @WithApplication
 fun trace(@Formatted component: Component) {
-    Logger().logTrace(component.format(context = currentApplication().formatContext))
+    Logger().logTrace(component.formatWithContext(context = currentApplication().formatContext))
 }

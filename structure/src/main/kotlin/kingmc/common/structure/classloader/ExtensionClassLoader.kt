@@ -73,7 +73,7 @@ class ExtensionClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arr
         private val loaders: MutableSet<ExtensionClassLoader?> = CopyOnWriteArraySet<ExtensionClassLoader?>()
 
         init {
-            registerAsParallelCapable()
+            // registerAsParallelCapable()
         }
     }
 }

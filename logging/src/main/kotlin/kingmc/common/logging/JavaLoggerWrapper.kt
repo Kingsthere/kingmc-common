@@ -29,7 +29,15 @@ class JavaLoggerWrapper(private val logger: JavaLogger) : Logger {
         this.logger.log(Level.SEVERE, msg)
     }
 
+    override fun logError(msg: String, throwable: Throwable) {
+        this.logger.log(Level.SEVERE, msg, throwable)
+    }
+
     override fun logError(component: Component) {
+        throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
+    }
+
+    override fun logError(component: Component, throwable: Throwable) {
         throw UnsupportedOperationException("This JavaLogger is not capable for logging components")
     }
 

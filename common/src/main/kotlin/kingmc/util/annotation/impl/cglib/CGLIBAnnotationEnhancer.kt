@@ -5,7 +5,7 @@ import kingmc.util.annotation.impl.GenericAnnotationNode
 import kingmc.util.annotation.model.GenericAnnotationContext
 import kingmc.util.format.FormatContext
 import kingmc.util.format.FormatStyle
-import kingmc.util.format.format
+import kingmc.util.format.formatWithContext
 import net.sf.cglib.proxy.Enhancer
 import net.sf.cglib.proxy.MethodInterceptor
 import net.sf.cglib.proxy.MethodProxy
@@ -84,7 +84,7 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
                     ?: method.defaultValue ?: throw IllegalStateException("Unable to find annotation attribute ${method.name}")
                 return if (value is String) {
                     // Format string
-                    value.format(formatStyle, formatContext)
+                    value.formatWithContext(formatStyle, formatContext)
                 } else {
                     value
                 }

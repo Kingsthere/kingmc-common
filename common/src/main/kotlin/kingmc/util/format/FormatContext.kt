@@ -9,27 +9,12 @@ package kingmc.util.format
  */
 interface FormatContext : Iterable<FormatArgument<*>> {
     /**
-     * Gets a format argument by index
-     *
-     * @throws UnsupportedFormatArgumentException if the argument with [index] is not found
-     * @return the argument found
-     */
-    operator fun get(index: Int): FormatArgument<*>
-
-    /**
      * Gets a format argument by name
      *
      * @throws UnsupportedFormatArgumentException if the argument with [name] is not found
      * @return the argument found
      */
     operator fun get(name: String): FormatArgument<*>
-
-    /**
-     * Gets a format argument by index
-     *
-     * @return the argument got, or `null` if this argument with specifies [index] is not found
-     */
-    fun getOrNull(index: Int): FormatArgument<*>?
 
     /**
      * Gets a format argument by name
@@ -46,22 +31,12 @@ interface FormatContext : Iterable<FormatArgument<*>> {
 }
 
 /**
- * A [FormatContext] format implemented few functions
+ * A abstract [FormatContext] format implementation
  *
  * @since 0.0.6
  * @author kingsthere
  */
-open class SimpleFormatContext(val parent: FormatContext? = null) : FormatContext {
-    /**
-     * Gets a format argument by index
-     *
-     * @throws UnsupportedFormatArgumentException if the argument with [index] is not found
-     * @return the argument found
-     */
-    override fun get(index: Int): FormatArgument<*> {
-        return getImplemented(index) ?: parent?.get(index) ?: throw UnsupportedFormatArgumentException("Argument with name $index is not found")
-    }
-
+open class AbstractFormatContext(val parent: FormatContext? = null) : FormatContext {
     /**
      * Gets a format argument by name
      *
@@ -70,15 +45,6 @@ open class SimpleFormatContext(val parent: FormatContext? = null) : FormatContex
      */
     override fun get(name: String): FormatArgument<*> {
         return getImplemented(name) ?: parent?.get(name) ?: throw UnsupportedFormatArgumentException("Argument with name $name is not found")
-    }
-
-    /**
-     * Gets a format argument by index
-     *
-     * @return the argument got, or `null` if this argument with specifies [index] is not found
-     */
-    override fun getOrNull(index: Int): FormatArgument<*>? {
-        return getImplemented(index) ?: parent?.get(index)
     }
 
     /**
@@ -95,7 +61,7 @@ open class SimpleFormatContext(val parent: FormatContext? = null) : FormatContex
      * extra arguments from [formatContext]
      */
     override fun with(formatContext: FormatContext): FormatContext {
-        return SimpleFormatContext(formatContext)
+        return AbstractFormatContext(formatContext)
     }
 
     /**
@@ -106,8 +72,6 @@ open class SimpleFormatContext(val parent: FormatContext? = null) : FormatContex
     }
 
     open fun getImplemented(name: String): FormatArgument<*>? { return null }
-
-    open fun getImplemented(index: Int): FormatArgument<*>? { return null }
 
 }
 
@@ -140,11 +104,8 @@ interface MutableFormatContext : FormatContext, MutableList<FormatArgument<*>>
  * @since 0.0.4
  * @author kingsthere
  */
-open class ListFormatArguments(val arguments: List<FormatArgument<*>> = listOf(), parent: FormatContext? = null) :
-    SimpleFormatContext(parent) {
-    override fun getImplemented(index: Int): FormatArgument<*>? {
-        return arguments.find { it.index == index }
-    }
+open class ListFormatArguments(open val arguments: List<FormatArgument<*>> = listOf(), parent: FormatContext? = null) :
+    AbstractFormatContext(parent) {
 
     override fun getImplemented(name: String): FormatArgument<*>? {
         return arguments.find { it.name == name }

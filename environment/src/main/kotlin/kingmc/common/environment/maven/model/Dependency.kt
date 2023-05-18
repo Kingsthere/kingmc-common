@@ -4,7 +4,7 @@ import kingmc.common.environment.AbstractXmlParser
 import kingmc.common.environment.maven.DependencyScope
 import kingmc.util.format.FormatContext
 import kingmc.util.format.Formatted
-import kingmc.util.format.format
+import kingmc.util.format.formatWithContext
 import org.w3c.dom.Element
 
 /**
@@ -61,8 +61,8 @@ class Dependency : AbstractXmlParser {
 @Formatted
 fun dependency(groupId: String, artifactId: String, version: String, scope: DependencyScope, formatContext: FormatContext) =
     Dependency(
-        groupId = formatContext.format(groupId),
-        artifactId = formatContext.format(artifactId),
-        version = formatContext.format(version),
+        groupId = formatContext.formatWithContext(groupId),
+        artifactId = formatContext.formatWithContext(artifactId),
+        version = formatContext.formatWithContext(version),
         scope = scope
     )

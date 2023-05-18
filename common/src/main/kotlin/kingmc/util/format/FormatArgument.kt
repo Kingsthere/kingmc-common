@@ -8,14 +8,9 @@ package kingmc.util.format
  */
 sealed interface FormatArgument<E> {
     /**
-     * The index of this format argument
-     */
-    val index: Int
-
-    /**
      * The name of this format argument
      */
-    val name: String?
+    val name: String
 
     /**
      * The value of this format argument
@@ -26,7 +21,7 @@ sealed interface FormatArgument<E> {
 /**
  * Create and return a format argument implementation
  */
-fun <E> FormatArgument(index: Int, value: E, name: String? = null) =
-    FormatArgumentImpl(index, value, name)
+fun <E> FormatArgument(value: E, name: String) =
+    FormatArgumentImpl(value, name)
 
-class FormatArgumentImpl<E>(override val index: Int, override val value: E, override val name: String? = null) : FormatArgument<E>
+class FormatArgumentImpl<E>(override val value: E, override val name: String) : FormatArgument<E>

@@ -13,8 +13,8 @@ import kingmc.common.text.Text
  * @author kingsthere
  * @see FormatStyle
  */
-fun String.format(style: FormatStyle = BracketStyle, context: FormatContext): String {
-    return context.format(this, style)
+fun String.formatWithContext(style: FormatStyle = BracketStyle, context: FormatContext): String {
+    return context.formatWithContext(this, style)
 }
 
 /**
@@ -28,8 +28,8 @@ fun String.format(style: FormatStyle = BracketStyle, context: FormatContext): St
  * @author kingsthere
  * @see FormatStyle
  */
-fun String.format(style: FormatStyle = BracketStyle, context: FormatContextHolder): String {
-    return context.getFormatContext().format(this, style)
+fun String.formatWithContext(style: FormatStyle = BracketStyle, context: FormatContextHolder): String {
+    return context.getFormatContext().formatWithContext(this, style)
 }
 
 /**
@@ -43,10 +43,10 @@ fun String.format(style: FormatStyle = BracketStyle, context: FormatContextHolde
  * @author kingsthere
  * @see FormatStyle
  */
-fun String.format(style: FormatStyle = BracketStyle, vararg contexts: FormatContextHolder): String {
+fun String.formatWithContext(style: FormatStyle = BracketStyle, vararg contexts: FormatContextHolder): String {
     var newValue: String = this
     for (formatContextHolder in contexts) {
-        newValue = formatContextHolder.getFormatContext().format(newValue, style)
+        newValue = formatContextHolder.getFormatContext().formatWithContext(newValue, style)
     }
     return newValue
 }
@@ -62,12 +62,12 @@ fun String.format(style: FormatStyle = BracketStyle, vararg contexts: FormatCont
  * @author kingsthere
  * @see FormatStyle
  */
-fun String.format(style: FormatStyle = BracketStyle, vararg arguments: Any?): String {
+fun String.formatWithContext(style: FormatStyle = BracketStyle, vararg arguments: Any?): String {
     val argumentIndex = 0
     val formatArguments: List<FormatArgument<*>> = arguments.map {
-        FormatArgument(argumentIndex, it)
+        FormatArgument(it, argumentIndex.toString())
     }
-    return this@format.format(style, ListFormatArguments(formatArguments))
+    return this@formatWithContext.formatWithContext(style, ListFormatArguments(formatArguments))
 }
 
 /**
@@ -81,8 +81,8 @@ fun String.format(style: FormatStyle = BracketStyle, vararg arguments: Any?): St
  * @author kingsthere
  * @see FormatStyle
  */
-fun Text.format(style: FormatStyle = BracketStyle, context: FormatContext): Text {
-    return context.format(this, style)
+fun Text.formatWithContext(style: FormatStyle = BracketStyle, context: FormatContext): Text {
+    return context.formatWithContext(this, style)
 }
 
 /**
@@ -96,8 +96,8 @@ fun Text.format(style: FormatStyle = BracketStyle, context: FormatContext): Text
  * @author kingsthere
  * @see FormatStyle
  */
-fun Text.format(style: FormatStyle = BracketStyle, context: FormatContextHolder): Text {
-    return context.getFormatContext().format(this, style)
+fun Text.formatWithContext(style: FormatStyle = BracketStyle, context: FormatContextHolder): Text {
+    return context.getFormatContext().formatWithContext(this, style)
 }
 
 /**
@@ -111,10 +111,10 @@ fun Text.format(style: FormatStyle = BracketStyle, context: FormatContextHolder)
  * @author kingsthere
  * @see FormatStyle
  */
-fun Text.format(style: FormatStyle = BracketStyle, vararg contexts: FormatContextHolder): Text {
+fun Text.formatWithContext(style: FormatStyle = BracketStyle, vararg contexts: FormatContextHolder): Text {
     var newValue: Text = this
     for (formatContextHolder in contexts) {
-        newValue = formatContextHolder.getFormatContext().format(newValue, style)
+        newValue = formatContextHolder.getFormatContext().formatWithContext(newValue, style)
     }
     return newValue
 }
@@ -129,12 +129,12 @@ fun Text.format(style: FormatStyle = BracketStyle, vararg contexts: FormatContex
  * @author kingsthere
  * @see FormatStyle
  */
-fun Text.format(style: FormatStyle = BracketStyle, vararg arguments: Any?): Text {
+fun Text.formatWithContext(style: FormatStyle = BracketStyle, vararg arguments: Any?): Text {
     val argumentIndex = 0
     val formatArguments: List<FormatArgument<*>> = arguments.map {
-        FormatArgument(argumentIndex, it)
+        FormatArgument(it, argumentIndex.toString())
     }
-    return this@format.format(style, ListFormatArguments(formatArguments))
+    return this@formatWithContext.formatWithContext(style, ListFormatArguments(formatArguments))
 }
 
 /**
@@ -148,15 +148,15 @@ fun Text.format(style: FormatStyle = BracketStyle, vararg arguments: Any?): Text
  * @author kingsthere
  * @see FormatStyle
  */
-fun String.format(style: FormatStyle = BracketStyle, formatContext: FormatContext, vararg arguments: Any?): String {
-    return this@format.format(
+fun String.formatWithContext(style: FormatStyle = BracketStyle, formatContext: FormatContext, vararg arguments: Any?): String {
+    return this@formatWithContext.formatWithContext(
         style = style,
         context = formatContext.with(
             ListFormatArguments(
                 arguments.mapIndexed { index, value ->
                     FormatArgument(
-                        index,
                         value,
+                        index.toString()
                     )
                 },
             ),
@@ -175,15 +175,15 @@ fun String.format(style: FormatStyle = BracketStyle, formatContext: FormatContex
  * @author kingsthere
  * @see FormatStyle
  */
-fun Text.format(style: FormatStyle = BracketStyle, formatContext: FormatContext, vararg arguments: Any?): Text {
-    return this@format.format(
+fun Text.formatWithContext(style: FormatStyle = BracketStyle, formatContext: FormatContext, vararg arguments: Any?): Text {
+    return this@formatWithContext.formatWithContext(
         style = style,
         context = formatContext.with(
             ListFormatArguments(
                 arguments.mapIndexed { index, value ->
                     FormatArgument(
-                        index,
                         value,
+                        index.toString()
                     )
                 },
             ),
@@ -197,7 +197,7 @@ fun Text.format(style: FormatStyle = BracketStyle, formatContext: FormatContext,
  * @since 0.0.9
  * @author kingsthere
  */
-fun FormatContext.format(value: String, style: FormatStyle = BracketStyle): String {
+fun FormatContext.formatWithContext(value: String, style: FormatStyle = BracketStyle): String {
     var result = value
     fun formatByMatchResult(matchResult: MatchResult) {
         val formatScopeMatch = matchResult.groups[0]!!
@@ -208,14 +208,7 @@ fun FormatContext.format(value: String, style: FormatStyle = BracketStyle): Stri
             // Get the key of the argument found
             val formatScope = formatScopeMatch.value
             val formatValue = formatValueMatch.value
-            val indexView = formatValue.toIntOrNull()
-            val argument = if (indexView != null) {
-                // Try to find the argument by index if possible
-                find { it.index == indexView }
-            } else {
-                // Try to find the argument by the name
-                find { it.name == formatValue }
-            }
+            val argument = find { it.name == formatValue }
 
             if (argument != null) {
                 result = result.replace(formatScope, argument.value.toString())
@@ -236,18 +229,11 @@ fun FormatContext.format(value: String, style: FormatStyle = BracketStyle): Stri
  * @since 0.0.9
  * @author kingsthere
  */
-fun FormatContext.format(value: Text, style: FormatStyle = BracketStyle): Text {
+fun FormatContext.formatWithContext(value: Text, style: FormatStyle = BracketStyle): Text {
     return value.replaceText { replacement ->
         replacement.match(style.regex.toPattern()).replacement { match, result ->
             val formatValue = match.group(1)
-            val indexView = formatValue.toIntOrNull()
-            val argument = if (indexView != null) {
-                // Try to find the argument by index if possible
-                find { it.index == indexView }
-            } else {
-                // Try to find the argument by the name
-                find { it.name == formatValue }
-            }
+            val argument = find { it.name == formatValue }
             if (argument != null) {
                 result.content(argument.value.toString())
             } else {
@@ -263,5 +249,5 @@ fun FormatContext.format(value: Text, style: FormatStyle = BracketStyle): Text {
  * @since 0.0.9
  * @author kingsthere
  */
-fun FormatContextHolder.format(value: String, style: FormatStyle = BracketStyle): String =
-    getFormatContext().format(value, style)
+fun FormatContextHolder.formatWithContext(value: String, style: FormatStyle = BracketStyle): String =
+    getFormatContext().formatWithContext(value, style)

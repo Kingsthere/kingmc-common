@@ -3,7 +3,7 @@ package kingmc.common.environment.maven.model
 import kingmc.common.environment.AbstractXmlParser
 import kingmc.util.format.FormatContext
 import kingmc.util.format.Formatted
-import kingmc.util.format.format
+import kingmc.util.format.formatWithContext
 import org.w3c.dom.Element
 
 /**
@@ -22,5 +22,5 @@ data class Repository(val url: String): AbstractXmlParser() {
 @Formatted
 fun repository(url: String, formatContext: FormatContext) =
     Repository(
-        url = formatContext.format(url)
+        url = formatContext.formatWithContext(url)
     )

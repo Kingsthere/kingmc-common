@@ -23,6 +23,7 @@ allprojects {
         implementation("org.ow2.asm:asm:9.4")
         implementation("org.ow2.asm:asm-util:9.4")
         implementation("org.ow2.asm:asm-commons:9.4")
+        implementation("io.github.classgraph:classgraph:4.8.158")
         api("com.esotericsoftware:reflectasm:1.11.9")
 
         // Cglib
