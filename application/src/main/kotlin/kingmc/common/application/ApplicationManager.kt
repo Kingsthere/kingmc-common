@@ -77,7 +77,7 @@ internal val applicationManager: ApplicationManager by lazy {
  * should run like this
  * ```
  * // Application set to ApplicationManager
- * application {
+ * withApplication {
  *     actionsWithApplication()
  * } // Application removed from ApplicationManager
  * ```
@@ -89,9 +89,9 @@ internal val applicationManager: ApplicationManager by lazy {
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-fun <R> Any.application(action: @WithApplication Application.() -> R): R {
+fun <R> Any.withApplication(action: @WithApplication Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
-    return application(this.application, action)
+    return withApplication(this.application, action)
 }
 
 /**
@@ -99,7 +99,7 @@ fun <R> Any.application(action: @WithApplication Application.() -> R): R {
  * should run like this
  * ```
  * // Application set to ApplicationManager
- * application {
+ * withApplication {
  *     actionsWithApplication()
  * } // Application removed from ApplicationManager
  * ```
@@ -112,7 +112,7 @@ fun <R> Any.application(action: @WithApplication Application.() -> R): R {
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-fun <R> application(application: Application, action: @WithApplication Application.() -> R): R {
+fun <R> withApplication(application: Application, action: @WithApplication Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val result: AtomicReference<R> = AtomicReference()
     keepAndRestoreApplicationRefAfterRun {
@@ -127,7 +127,7 @@ fun <R> application(application: Application, action: @WithApplication Applicati
  * should run like this
  * ```
  * // Application set to ApplicationManager
- * suspendAction {
+ * withApplicationSuspend {
  *     suspendActionsWithApplication()
  * } // Application removed from ApplicationManager
  * ```
@@ -139,7 +139,7 @@ fun <R> application(application: Application, action: @WithApplication Applicati
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-suspend fun <R> Any.suspendApplication(action: @WithApplication suspend Application.() -> R): R {
+suspend fun <R> Any.withApplicationSuspend(action: @WithApplication suspend Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val application = this.application
     return keepAndRestoreApplicationRefAfterRunSuspend {
@@ -153,7 +153,7 @@ suspend fun <R> Any.suspendApplication(action: @WithApplication suspend Applicat
  * should run like this
  * ```
  * // Application set to ApplicationManager
- * suspendAction {
+ * withApplicationSuspend {
  *     suspendActionsWithApplication()
  * } // Application removed from ApplicationManager
  * ```
@@ -166,7 +166,7 @@ suspend fun <R> Any.suspendApplication(action: @WithApplication suspend Applicat
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-suspend fun <R> suspendApplication(application: Application, action: @WithApplication suspend Application.() -> R): R {
+suspend fun <R> withApplicationSuspend(application: Application, action: @WithApplication suspend Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     return keepAndRestoreApplicationRefAfterRunSuspend {
         ApplicationManager.bindApplicationToThread(application)
