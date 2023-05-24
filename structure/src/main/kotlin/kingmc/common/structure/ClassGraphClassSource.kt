@@ -10,7 +10,6 @@ import io.github.classgraph.ClassGraph
  */
 open class ClassGraphClassSource : ClassSource {
     protected val classGraph: ClassGraph = ClassGraph()
-        .initializeLoadedClasses()
         .enableAnnotationInfo()
         .enableClassInfo()
 

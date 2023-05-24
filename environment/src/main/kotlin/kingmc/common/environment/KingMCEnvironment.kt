@@ -52,4 +52,9 @@ import kingmc.common.environment.maven.MavenDependency
     artifactId = "snakeyaml",
     version = "2.0"
 )
+@MavenDependency(
+    groupId = "io.github.classgraph",
+    artifactId = "classgraph",
+    version = "4.8.158"
+)
 object KingMCEnvironment
