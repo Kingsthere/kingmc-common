@@ -8,7 +8,11 @@ import org.junit.jupiter.api.Test
 class FormatTest {
     @Test
     fun format() {
-        val context = ListFormatArguments(listOf(FormatArgument(1, "Notch", "player"), FormatArgument(1, "Kingsthere", "player2")))
-        assert(context.formatWithContext("Hello { player }, and { player2 }!") == "Hello Notch, and Kingsthere!")
+        val context = ListFormatArguments(listOf(
+            FormatArgument("Notch", "player"),
+            FormatArgument("2", "index"),
+            FormatArgument("Kingsthere", "player2")
+        ))
+        assert(context.formatWithContext("Hello {player}, and {player{index}}!") == "Hello Notch, and Kingsthere!")
     }
 }

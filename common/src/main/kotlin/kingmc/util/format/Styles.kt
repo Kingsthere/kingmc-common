@@ -5,19 +5,6 @@ package kingmc.util.format
  * example: { 0 } {1} {test}
  *
  * @since 0.0.3
- * @see FormatStyle
+ * @see Formatter
  */
-object BracketStyle : FormatStyle {
-    override val regex = "\\{\\s*?(\\S*)\\s*?}".toRegex()
-
-    /**
-     * Find the formats that defined in specified string
-     *
-     * @since 0.0.4
-     */
-    override fun find(value: CharSequence): MatchResult? =
-        regex.find(value)
-
-    override fun matches(value: CharSequence): Boolean =
-        regex.matches(value)
-}
+object BracketStyle : AbstractFormatter('{', '}')

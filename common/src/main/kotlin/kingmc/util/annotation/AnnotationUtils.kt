@@ -7,7 +7,7 @@ import kingmc.util.annotation.model.AnnotationNode
 import kingmc.util.annotation.model.AnnotationNodeFactory
 import kingmc.util.format.BracketStyle
 import kingmc.util.format.FormatContext
-import kingmc.util.format.FormatStyle
+import kingmc.util.format.Formatter
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 
@@ -79,8 +79,8 @@ inline fun <reified T : Annotation> KAnnotatedElement.getAnnotations(): List<T> 
  *
  * @since 0.0.7
  */
-inline fun <reified T : Annotation> KAnnotatedElement.getAnnotationWithFormattedProperty(formatContext: FormatContext, formatStyle: FormatStyle = BracketStyle) =
-    annotations.getAnnotationClass(T::class, formatContext, formatStyle) as? T
+inline fun <reified T : Annotation> KAnnotatedElement.getAnnotationWithFormattedProperty(formatContext: FormatContext, formatter: Formatter = BracketStyle) =
+    annotations.getAnnotationClass(T::class, formatContext, formatter) as? T
 
 /**
  * Get multiple annotations from this class by the type of the annotation
@@ -88,8 +88,8 @@ inline fun <reified T : Annotation> KAnnotatedElement.getAnnotationWithFormatted
  * @since 0.0.7
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : Annotation> KAnnotatedElement.getAnnotationsWithFormattedProperty(formatContext: FormatContext, formatStyle: FormatStyle = BracketStyle): List<T> =
-    annotations.getAnnotationsClass(T::class, formatContext, formatStyle) as List<T>
+inline fun <reified T : Annotation> KAnnotatedElement.getAnnotationsWithFormattedProperty(formatContext: FormatContext, formatter: Formatter = BracketStyle): List<T> =
+    annotations.getAnnotationsClass(T::class, formatContext, formatter) as List<T>
 
 /**
  * Get an annotation from this list of annotations by the type of the annotation
@@ -113,8 +113,8 @@ inline fun <reified T : Annotation> List<Annotation>.getAnnotations(): List<T> =
  *
  * @since 0.0.7
  */
-inline fun <reified T : Annotation> List<Annotation>.getAnnotationWithFormattedProperty(formatContext: FormatContext, formatStyle: FormatStyle = BracketStyle) =
-    getAnnotationClass(T::class, formatContext, formatStyle) as? T
+inline fun <reified T : Annotation> List<Annotation>.getAnnotationWithFormattedProperty(formatContext: FormatContext, formatter: Formatter = BracketStyle) =
+    getAnnotationClass(T::class, formatContext, formatter) as? T
 
 /**
  * Get multiple annotations from this list of annotations by the type of the annotation
@@ -122,8 +122,8 @@ inline fun <reified T : Annotation> List<Annotation>.getAnnotationWithFormattedP
  * @since 0.0.7
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : Annotation> List<Annotation>.getAnnotationsWithFormattedProperty(formatContext: FormatContext, formatStyle: FormatStyle = BracketStyle): List<T> =
-    getAnnotationsClass(T::class, formatContext, formatStyle) as List<T>
+inline fun <reified T : Annotation> List<Annotation>.getAnnotationsWithFormattedProperty(formatContext: FormatContext, formatter: Formatter = BracketStyle): List<T> =
+    getAnnotationsClass(T::class, formatContext, formatter) as List<T>
 
 /**
  * Get an annotation from this class by the type of the annotation
@@ -157,10 +157,10 @@ fun List<Annotation>.getAnnotationsClass(annotationClass: KClass<out Annotation>
  *
  * @since 0.0.7
  */
-fun List<Annotation>.getAnnotationClass(annotationClass: KClass<out Annotation>, formatContext: FormatContext, formatStyle: FormatStyle = BracketStyle): Annotation? {
+fun List<Annotation>.getAnnotationClass(annotationClass: KClass<out Annotation>, formatContext: FormatContext, formatter: Formatter = BracketStyle): Annotation? {
     val annotation = find { annotationClass in DEFAULT_ANNOTATION_FACTORY(it.annotationClass) } ?: return null
     val annotationNode = DEFAULT_ANNOTATION_FACTORY(annotationClass)
-    return DEFAULT_ANNOTATION_ENHANCER(annotation, annotationNode as GenericAnnotationNode, formatContext, formatStyle)
+    return DEFAULT_ANNOTATION_ENHANCER(annotation, annotationNode as GenericAnnotationNode, formatContext, formatter)
 }
 
 /**
@@ -169,10 +169,10 @@ fun List<Annotation>.getAnnotationClass(annotationClass: KClass<out Annotation>,
  *
  * @since 0.0.7
  */
-fun List<Annotation>.getAnnotationsClass(annotationClass: KClass<out Annotation>, formatContext: FormatContext, formatStyle: FormatStyle): List<Annotation> {
+fun List<Annotation>.getAnnotationsClass(annotationClass: KClass<out Annotation>, formatContext: FormatContext, formatter: Formatter): List<Annotation> {
     return filter { annotationClass in DEFAULT_ANNOTATION_FACTORY(it.annotationClass) }
         .map {
             val annotationNode = DEFAULT_ANNOTATION_FACTORY(annotationClass)
-            DEFAULT_ANNOTATION_ENHANCER(it, annotationNode as GenericAnnotationNode, formatContext, formatStyle)
+            DEFAULT_ANNOTATION_ENHANCER(it, annotationNode as GenericAnnotationNode, formatContext, formatter)
         }
 }

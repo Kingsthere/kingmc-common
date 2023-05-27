@@ -4,7 +4,7 @@ import kingmc.util.annotation.AnnotationEnhancer
 import kingmc.util.annotation.impl.GenericAnnotationNode
 import kingmc.util.annotation.model.GenericAnnotationContext
 import kingmc.util.format.FormatContext
-import kingmc.util.format.FormatStyle
+import kingmc.util.format.Formatter
 import kingmc.util.format.formatWithContext
 import net.sf.cglib.proxy.Enhancer
 import net.sf.cglib.proxy.MethodInterceptor
@@ -55,7 +55,7 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
 
     /**
      * Invoke this mocker to instantiate an annotation, the string properties of annotation
-     * will be formatted by [formatContext] in [formatStyle]
+     * will be formatted by [formatContext] in [formatter]
      *
      * @return the mocked annotation instantiated
      */
@@ -63,7 +63,7 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
         annotation: Annotation,
         annotationNode: GenericAnnotationNode,
         formatContext: FormatContext,
-        formatStyle: FormatStyle
+        formatter: Formatter
     ): Annotation {
         val enhancer = Enhancer()
         val context = GenericAnnotationContext(buildMap {
@@ -84,7 +84,7 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
                     ?: method.defaultValue ?: throw IllegalStateException("Unable to find annotation attribute ${method.name}")
                 return if (value is String) {
                     // Format string
-                    value.formatWithContext(formatStyle, formatContext)
+                    value.formatWithContext(formatter, formatContext)
                 } else {
                     value
                 }
