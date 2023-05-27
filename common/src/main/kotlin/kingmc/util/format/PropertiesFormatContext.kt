@@ -8,10 +8,7 @@ import java.util.*
  * @since 0.0.6
  * @author kingsthere
  */
-class PropertiesFormatContext(val properties: Properties): ListFormatArguments(buildList {
-    var index = 0
-    properties.forEach { key, value ->
-        add(FormatArgument(value, key.toString()))
-        index++
-    }
-})
+class PropertiesFormatContext(val properties: Properties): ListFormatArguments() {
+    override val arguments: List<FormatArgument<*>>
+        get() = properties.map { (key, value) -> FormatArgument(value, key.toString()) }
+}
