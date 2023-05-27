@@ -167,8 +167,8 @@ fun trace(@Formatted msg: String) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun info(@Formatted component: Component) {
-    Logger().logInfo(component.formatWithContext(context = currentApplication().formatContext))
+fun info(component: Component) {
+    Logger().logInfo(component)
 }
 
 /**
@@ -179,8 +179,8 @@ fun info(@Formatted component: Component) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun warn(@Formatted component: Component) {
-    Logger().logWarn(component.formatWithContext(context = currentApplication().formatContext))
+fun warn(component: Component) {
+    Logger().logWarn(component)
 }
 
 /**
@@ -191,8 +191,8 @@ fun warn(@Formatted component: Component) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun error(@Formatted component: Component) {
-    Logger().logError(component.formatWithContext(context = currentApplication().formatContext))
+fun error(component: Component) {
+    Logger().logError(component)
 }
 
 /**
@@ -203,8 +203,8 @@ fun error(@Formatted component: Component) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun error(@Formatted component: Component, throwable: Throwable) {
-    Logger().logError(component.formatWithContext(context = currentApplication().formatContext), throwable)
+fun error(component: Component, throwable: Throwable) {
+    Logger().logError(component, throwable)
 }
 
 /**
@@ -215,8 +215,8 @@ fun error(@Formatted component: Component, throwable: Throwable) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun debug(@Formatted component: Component) {
-    Logger().logDebug(component.formatWithContext(context = currentApplication().formatContext))
+fun debug(component: Component) {
+    Logger().logDebug(component)
 }
 
 /**
@@ -227,6 +227,6 @@ fun debug(@Formatted component: Component) {
 @KingMCDsl
 @Formatted
 @WithApplication
-fun trace(@Formatted component: Component) {
-    Logger().logTrace(component.formatWithContext(context = currentApplication().formatContext))
+fun trace(component: Component) {
+    Logger().logTrace(component)
 }

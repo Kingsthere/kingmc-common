@@ -1,7 +1,5 @@
 package kingmc.util.format
 
-import kingmc.common.text.Text
-
 /**
  * Format the receiver by the [Formatter] specified
  *
@@ -63,24 +61,6 @@ fun String.formatWithContext(formatter: Formatter = BracketStyle, vararg context
  * @see Formatter
  */
 fun String.formatWithContext(formatter: Formatter = BracketStyle, vararg arguments: Any?): String {
-    val argumentIndex = 0
-    val formatArguments: List<FormatArgument<*>> = arguments.map {
-        FormatArgument(it, argumentIndex.toString())
-    }
-    return this@formatWithContext.formatWithContext(formatter, ListFormatArguments(formatArguments))
-}
-
-/**
- * Format the receiver by the [Formatter] specified
- *
- * @param style the style to format the text
- * @param arguments extra arguments to format
- * @return formatted text
- * @since 0.0.9
- * @author kingsthere
- * @see Formatter
- */
-fun Text.formatWithContext(formatter: Formatter = BracketStyle, vararg arguments: Any?): Text {
     val argumentIndex = 0
     val formatArguments: List<FormatArgument<*>> = arguments.map {
         FormatArgument(it, argumentIndex.toString())
