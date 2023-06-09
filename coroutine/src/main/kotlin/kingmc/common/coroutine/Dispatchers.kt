@@ -6,16 +6,16 @@ import kingmc.common.application.currentApplication
 import kotlinx.coroutines.CoroutineDispatcher
 
 /**
- * Gets a coroutine dispatcher from current context
+ * A coroutine dispatcher from current context
  *
  * @since 0.0.4
  * @author kingsthere
  * @see MinecraftScheduler
  */
-@WithApplication
-fun CoroutineDispatcher(): CoroutineDispatcher {
-    return currentApplication().context.getBean(CoroutineDispatcher::class)
-}
+@get:WithApplication
+@Deprecated("Please use async/sync MinecraftCoroutineDispatcher instead")
+val coroutineDispatcher: CoroutineDispatcher
+    get() = currentApplication().context.getBean(CoroutineDispatcher::class)
 
 /**
  * Gets an async minecraft coroutine dispatcher from current application
