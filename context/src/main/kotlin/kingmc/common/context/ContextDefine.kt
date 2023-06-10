@@ -1,5 +1,6 @@
 package kingmc.common.context
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import kingmc.util.KingMCDsl
 import kingmc.util.Lifecycle
 
@@ -19,7 +20,7 @@ object ContextDefiner {
     }
 
     fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): MutableMap<Int, Context> {
-        return value.computeIfAbsent(clazz) { HashMap() }
+        return value.computeIfAbsent(clazz) { Int2ObjectOpenHashMap(4) }
     }
 
     fun getContextFor(obj: Any): Context? = value[obj::class.java]?.get(System.identityHashCode(obj))
