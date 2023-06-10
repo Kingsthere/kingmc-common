@@ -43,7 +43,7 @@ annotation class MavenDependency(
     /**
      * The url of specifies repository of this maven dependency
      */
-    val repository: String = "{ kingmc.environment.maven-repository }",
+    val repository: String = "{kingmc.environment.maven-repository}",
 
     /**
      * The scope of this maven dependency, only dependencies scopped [scope] can apply
