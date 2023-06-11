@@ -60,7 +60,7 @@ annotation class InternalAPI
  * @author kingsthere
  */
 @Singleton
-@Retention
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.CLASS, AnnotationTarget.FILE
 )
@@ -99,7 +99,7 @@ annotation class Utility
  * @since 0.0.1
  * @author kingsthere
  */
-@Retention
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.CLASS
 )
@@ -114,7 +114,7 @@ annotation class Singleton
  * @author kingsthere
  * @since 0.0.1
  */
-@Retention
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.CLASS
 )
