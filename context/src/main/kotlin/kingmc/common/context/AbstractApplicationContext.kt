@@ -12,14 +12,14 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 /**
- * Generic implement for [ApplicationContext] to load
+ * An abstract implement for [ApplicationContext] to load
  * beans from [ClassSource][kingmc.common.structure.ClassSource]
  *
  * @since 0.0.1
  * @author kingsthere
  * @see ApplicationContext
  */
-abstract class GenericApplicationContext(override val properties: Properties, override val name: String = "unnamed") : ApplicationContext {
+abstract class AbstractApplicationContext(override val properties: Properties, override val name: String = "unnamed") : ApplicationContext {
     /**
      * Protected bean definitions
      *
@@ -30,7 +30,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
     val owningBeanDefinitions: MutableMap<String, BeanDefinition>
         get() {
             return this.protectedBeanDefinitions.toMutableMap().apply {
-                this@GenericApplicationContext.parents.forEach {
+                this@AbstractApplicationContext.parents.forEach {
                     it.asMap()
                         .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
                         .forEach { (name, bean) -> this[name] = bean }
@@ -96,7 +96,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
     /**
      * Get the lifecycle of this context
      */
-    override fun lifecycle(): Lifecycle<Runnable> =
+    override fun getLifecycle(): Lifecycle<Runnable> =
         lifecycle
 
     override fun remove(name: String) {
@@ -126,7 +126,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
      * @return is the bean exist
      */
     override fun <T : Any> hasBean(clazz: KClass<out T>): Boolean =
-        this.beanDefinitions.any { (it.value as? GenericBeanDefinition)?.beanClass?.isSubclassOf(clazz) == true }
+        this.beanDefinitions.any { (it.value as? ClassBeanDefinition)?.beanClass?.isSubclassOf(clazz) == true }
 
     /**
      * Check a bean with specified name is existed
@@ -154,7 +154,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
         var deprecatedBeanDefinition: BeanDefinition? = null
         var secondaryBeanDefinition: BeanDefinition? = null
         this.beanDefinitions.forEach { (_, definition) ->
-            if (definition is GenericBeanDefinition) {
+            if (definition is ClassBeanDefinition) {
                 if (definition.beanClass.isSubclassOf(clazz)) {
                     if (definition.primary) {
                         return getBeanInstance(definition) as T
@@ -178,7 +178,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
     override fun <T : Any> getBeans(clazz: KClass<out T>): List<T> {
         return buildList {
             beanDefinitions.forEach { (_, definition) ->
-                if (definition is GenericBeanDefinition) {
+                if (definition is ClassBeanDefinition) {
                     if (definition.beanClass.isSubclassOf(clazz)) {
                         @Suppress("UNCHECKED_CAST")
                         ((getBeanInstance(definition) as? T)?.let { add(it) })
@@ -268,12 +268,17 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
         val raw = try {
             getRawBeanInstance(beanDefinition)
         } catch (e: Exception) {
-            throw NoSuchBeanException("Unable to get bean instance ($beanDefinition)", e)
+            throw NoSuchBeanException("Unable to get/instantiate bean instance ($beanDefinition)", e)
         }
         return raw
     }
 
     protected open fun getRawBeanInstance(definition: BeanDefinition): Any {
+        if (definition is LateinitBeanDefinition) {
+            if (definition.lifecycle < this.lifecycle.cursor()) {
+                throw BeanInitializeException("This bean is not available since ${definition.lifecycle} (current ${this.lifecycle.cursor()})")
+            }
+        }
         if (definition is ScannedGenericBeanDefinition) {
             if (definition.isAbstract()) {
                 return getRawBeanInstance(definition.implementations().firstOrNull()
@@ -288,7 +293,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
                     return if (definition.context !== this) {
                         // If the shared bean is from other context
                         val sourceContext = definition.context
-                        if (sourceContext is GenericApplicationContext) {
+                        if (sourceContext is AbstractApplicationContext) {
                             ContextDefiner.runNotifyBeanToObject(sourceContext, definition.beanClass.java) { definition.beanClass.instance(sourceContext.instanceMap) }
                         } else {
                             sourceContext.getBeanInstance(definition)
@@ -321,7 +326,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
     override fun <T : Any> remove(type: KClass<out T>) {
         // Load bean name from the class
         this.protectedBeanDefinitions.forEach { (name, definition) ->
-            (definition as? GenericBeanDefinition)?.let {
+            (definition as? ClassBeanDefinition)?.let {
                 if (definition.beanClass.isSubclassOf(type)) {
                     this.protectedBeanDefinitions.remove(name)
                 }
@@ -356,7 +361,7 @@ abstract class GenericApplicationContext(override val properties: Properties, ov
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as GenericApplicationContext
+        other as AbstractApplicationContext
 
         if (name != other.name) return false
         if (protectedBeanDefinitions != other.protectedBeanDefinitions) return false

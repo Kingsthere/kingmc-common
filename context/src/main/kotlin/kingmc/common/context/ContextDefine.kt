@@ -51,6 +51,6 @@ val Any.context: Context
 @KingMCDsl
 val Any.contextLifecycle: Lifecycle<Runnable>
     get() {
-        return (context as? LifecycleContext)?.lifecycle()
+        return (context as? LifecycleContext)?.getLifecycle()
             ?: throw UnsupportedOperationException("Current context does not supported for lifecycle")
     }

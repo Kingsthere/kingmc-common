@@ -12,7 +12,7 @@ import kotlin.reflect.KFunction
  * @since 0.0.1
  * @author kingsthere
  */
-class AnnotatedGenericBeanDefinition(
+open class AnnotatedGenericBeanDefinition(
     beanClass: KClass<*>,
     override val context: Context,
     val configurationBean: BeanDefinition,
@@ -24,7 +24,7 @@ class AnnotatedGenericBeanDefinition(
     private val isAbstract: Boolean,
     override val deprecated: Boolean,
     override val primary: Boolean
-) : GenericBeanDefinition(beanClass) {
+) : ClassBeanDefinition(beanClass) {
 
     /**
      * Return `true` if this bean is a singleton

@@ -3,13 +3,13 @@ package kingmc.common.context.beans
 import kotlin.reflect.KClass
 
 /**
- * A generic implement of [BeanDefinition] exposed the class
+ * An abstract implement of [BeanDefinition] exposed the class
  * of the bean
  *
  * @since 0.0.1
  * @author kingsthere
  */
-abstract class GenericBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefinition {
+abstract class ClassBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefinition {
     private val implementations: MutableSet<BeanDefinition> = mutableSetOf()
 
     /**

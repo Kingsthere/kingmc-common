@@ -311,7 +311,7 @@ fun <E : Runnable> lifecycleBuilder(): Lifecycle.Builder<E> {
  *
  * The object that implement from this interface should
  * have a [Lifecycle] as the target to handle. Use method
- * [lifecycle] to get the target lifecycle it's handling,
+ * [getLifecycle] to get the target lifecycle it's handling,
  * the target lifecycle it's handling should is **immutable**,
  * and a [LifecycleHandler] should only handle **one lifecycle** in
  * **one instance**.
@@ -331,5 +331,5 @@ interface LifecycleHandler<T : Runnable> {
      *
      * @since 0.0.1
      */
-    fun lifecycle(): Lifecycle<T>
+    fun getLifecycle(): Lifecycle<T>
 }

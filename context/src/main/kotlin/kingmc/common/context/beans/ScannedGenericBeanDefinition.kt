@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * @since 0.0.1
  * @author kingsthere
  */
-class ScannedGenericBeanDefinition(
+open class ScannedGenericBeanDefinition(
     beanClass: KClass<*>,
     override val context: Context,
     override val annotations: List<Annotation>,
@@ -22,7 +22,7 @@ class ScannedGenericBeanDefinition(
     private val isAbstract: Boolean,
     override val deprecated: Boolean,
     override val primary: Boolean
-) : GenericBeanDefinition(beanClass) {
+) : ClassBeanDefinition(beanClass) {
     /**
      * Return `true` if this bean is a singleton
      */

@@ -161,7 +161,7 @@ fun Context.afterDispose() {
  */
 fun LifecycleContext.insertProcessBeanLifecycle(lifecycleLength: Int) {
     for (index in 0..lifecycleLength) {
-        this.lifecycle().insertPlan(index) {
+        this.getLifecycle().insertPlan(index) {
             try {
                 this.processBeans(index)
                 this.afterProcess(index)

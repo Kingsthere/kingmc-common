@@ -14,5 +14,5 @@ interface LifecycleContext : LifecycleHandler<Runnable>, Context {
     /**
      * Get the lifecycle of this context
      */
-    override fun lifecycle(): Lifecycle<Runnable>
+    override fun getLifecycle(): Lifecycle<Runnable>
 }

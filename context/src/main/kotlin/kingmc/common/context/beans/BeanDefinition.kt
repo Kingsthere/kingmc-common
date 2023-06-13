@@ -17,7 +17,7 @@ interface BeanDefinition {
      * The name of this bean
      *
      *
-     * **Note:** The name of beans must _unique_ in a context
+     * **Note:** The name of beans must be _unique_ in a context
      *
      * @since 0.0.1
      */

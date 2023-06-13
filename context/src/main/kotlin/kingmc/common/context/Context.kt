@@ -121,7 +121,7 @@ interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>,
     fun asMap(): MutableMap<String, BeanDefinition>
 
     /**
-     * Reject/Remove a bean from this container
+     * Remove a bean from this container
      *
      * @param T the type of bean
      * @return is the bean removed from this container successfully
@@ -131,7 +131,7 @@ interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>,
     fun <T : Any> remove(type: KClass<out T>)
 
     /**
-     * Reject/Remove a bean pointed by the name of that bean from this container
+     * Remove a bean pointed by the name of that bean from this container
      *
      * @param T the type of bean
      * @return is the bean removed from this container successfully

@@ -1,10 +1,7 @@
 package kingmc.common.context.initializer
 
 import io.github.classgraph.ClassGraph
-import kingmc.common.context.BeansUtil
-import kingmc.common.context.Context
-import kingmc.common.context.GenericApplicationContext
-import kingmc.common.context.HierarchicalContext
+import kingmc.common.context.*
 import kingmc.common.context.annotation.*
 import kingmc.common.context.beans.*
 import kingmc.common.context.beans.depends.DefaultDependencyResolver
@@ -27,12 +24,12 @@ import kotlin.reflect.full.isSubclassOf
 
 
 /**
- * A generic implementation of [ContextInitializer] allow to initialize [GenericApplicationContext]s
+ * A simple implementation of [ContextInitializer] allow to initialize [AbstractApplicationContext]s
  *
  * @since 0.0.5
  * @author kingsthere
  */
-open class GenericContextInitializer(override val context: HierarchicalContext) : HierarchicalContextInitializer {
+open class ApplicationContextInitializer(override val context: HierarchicalContext) : HierarchicalContextInitializer {
     val classGraph = ClassGraph()
 
     protected var filter: Predicate<BeanDefinition> = Predicate { bean ->
@@ -210,18 +207,35 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
         // Get the bean name
         val beanName: String = BeansUtil.getBeanName(beanClass)
 
+        val lateinit: Lateinit? = beanClass.getAnnotation()
+
         // Build and return the BeanDefinition
-        val beanDefinition = ScannedGenericBeanDefinition(
-            beanClass = beanClass,
-            context = context,
-            annotations = beanClass.annotations,
-            dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
-            scope = scope,
-            isAbstract = beanClass.isAbstract,
-            name = BeansUtil.getBeanName(beanClass),
-            deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
-            primary = beanClass.annotations.any { it.annotationClass == Primary::class }
-        )
+        val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
+            ScannedGenericBeanDefinition(
+                beanClass = beanClass,
+                context = context,
+                annotations = beanClass.annotations,
+                dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
+                scope = scope,
+                isAbstract = beanClass.isAbstract,
+                name = BeansUtil.getBeanName(beanClass),
+                deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
+                primary = beanClass.annotations.any { it.annotationClass == Primary::class }
+            )
+        } else {
+            LateinitScannedGenericBeanDefinition(
+                beanClass = beanClass,
+                context = context,
+                annotations = beanClass.annotations,
+                dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
+                scope = scope,
+                isAbstract = beanClass.isAbstract,
+                name = BeansUtil.getBeanName(beanClass),
+                deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
+                primary = beanClass.annotations.any { it.annotationClass == Primary::class },
+                lifecycle = lateinit.lifecycle
+            )
+        }
 
         this.whenBeanDefine(beanDefinition)
 
@@ -248,21 +262,40 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
                 it.name
             }
 
+            val lateinit: Lateinit? = it.getAnnotation()
+
             val beanClass = it.returnType.classifier as KClass<*>
 
-            val beanDefinition = AnnotatedGenericBeanDefinition(
-                beanClass = beanClass,
-                context = context,
-                configurationBean = configurationBean,
-                beanProvider = it,
-                annotations = beanClass.annotations,
-                dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
-                scope = BeanScope.PROTOTYPE,
-                isAbstract = false,
-                name = beanName,
-                deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
-                primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class }
-            )
+            val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
+                AnnotatedGenericBeanDefinition(
+                    beanClass = beanClass,
+                    context = context,
+                    configurationBean = configurationBean,
+                    beanProvider = it,
+                    annotations = beanClass.annotations,
+                    dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
+                    scope = BeanScope.PROTOTYPE,
+                    isAbstract = false,
+                    name = beanName,
+                    deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
+                    primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class }
+                )
+            } else {
+                LateinitAnnotatedGenericBeanDefinition(
+                    beanClass = beanClass,
+                    context = context,
+                    configurationBean = configurationBean,
+                    beanProvider = it,
+                    annotations = beanClass.annotations,
+                    dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
+                    scope = BeanScope.PROTOTYPE,
+                    isAbstract = false,
+                    name = beanName,
+                    deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
+                    primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class },
+                    lifecycle = lateinit.lifecycle
+                )
+            }
 
             this.whenBeanDefine(beanDefinition)
 
@@ -289,70 +322,60 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
      * @since 0.0.5
      * @author kingsthere
      */
-    fun populateBeans(context: Context, bean: BeanDefinition, instance: Any) {
+    fun populateBeans(context: ApplicationContext, bean: BeanDefinition, instance: Any) {
         // Get the properties that need to dependency injection
         bean.beanClass.findMutablePropertiesByAnnotation<Autowired>().forEach {
             try {
                 val annotation = it.getAnnotation<Autowired>()!!
+                val lateinit = it.getAnnotation<Lateinit>()
                 val type = it.returnType
                 val typeClass = it.returnType.classifier as KClass<*>
-                if (typeClass.isSubclassOf(List::class)) {
-
-                    // Populate the beans from container to a list
-                    val listElementType = type.arguments[0].type?.classifier
-                        ?: return@forEach
-                    // Get beans that is follow the element type of the list
-                    val populatedBeans = context.findBeansByType(listElementType as KClass<*>).map { bean -> context.getBeanInstance(bean) }
-                    // Wire beans by reflect
-                    it.setter.call(instance, populatedBeans)
-                } else if (typeClass.isSubclassOf(Set::class)) {
-
-                    // Populate the beans from container to a set
-                    val listElementType = type.arguments[0].type?.classifier
-                        ?: return@forEach
-                    // Get beans that is follow the element type of the set
-                    val populatedBeans = context.findBeansByType(listElementType as KClass<*>).map { bean -> context.getBeanInstance(bean) }
-                    // Wire beans by reflect
-                    it.setter.call(instance, populatedBeans.toSet())
-                } else if (typeClass.isSubclassOf(Array::class)) {
-
-                    // Populate the beans from container to a array
-                    val listElementType = type.arguments[0].type?.classifier
-                        ?: return@forEach
-                    // Get beans that is follow the element type of the array
-                    val populatedBeans = context.findBeansByType(listElementType as KClass<*>).map { bean -> context.getBeanInstance(bean) }
-                    // Wire beans by reflect
-                    it.setter.call(instance, populatedBeans.toTypedArray())
-                } else {
-                    // Load bean name of the bean that dependent to inject if required
-                    val beanName: String? = if (it.hasAnnotation<Qualifier>()) {
-                        it.getAnnotation<Qualifier>()!!.value
+                val inject = {
+                    if (typeClass.isSubclassOf(List::class)) {
+                        // Populate the beans from container to a list
+                        val listElementType = type.arguments[0].type?.classifier ?: throw PopulateBeansException("Unable to populate beans for $it")
+                        // Get beans that is follow the element type of the list
+                        val populatedBeans = context.findBeansByType(listElementType as KClass<*>).map { bean -> context.getBeanInstance(bean) }
+                        // Wire beans by reflect
+                        it.setter.call(instance, populatedBeans)
                     } else {
-                        null
-                    }
-                    val populatedBean = if (beanName != null) {
-                        // Load the bean that dependent to inject
-                        context.getBean(beanName)
-                    } else {
-                        // If the bean name is not specified then
-                        // populate the bean by the type which is
-                        // assignable
-                        val beanFound = context.findBeanByType(it.returnType.classifier as KClass<*>)
-                        if (beanFound != null) {
-                            context.getBeanInstance(beanFound)
+                        // Load bean name of the bean that dependent to inject if required
+                        val beanName: String? = if (it.hasAnnotation<Qualifier>()) {
+                            it.getAnnotation<Qualifier>()!!.value
                         } else {
                             null
                         }
-                    }
-                    // If the property is required the bean then check
-                    // if the bean is null then throw exception
-                    if (annotation.required) {
-                        if (populatedBean == null) {
-                            throw NoBeanDefFoundException("Could not find bean required by ${bean.beanClass.qualifiedName}.${it.name}", beanType = typeClass)
+                        val populatedBean = if (beanName != null) {
+                            // Load the bean that dependent to inject
+                            context.getBean(beanName)
+                        } else {
+                            // If the bean name is not specified then
+                            // populate the bean by the type which is
+                            // assignable
+                            val beanFound = context.findBeanByType(it.returnType.classifier as KClass<*>)
+                            if (beanFound != null) {
+                                context.getBeanInstance(beanFound)
+                            } else {
+                                null
+                            }
                         }
+                        // If the property is required the bean then check
+                        // if the bean is null then throw exception
+                        if (annotation.required) {
+                            if (populatedBean == null) {
+                                throw NoBeanDefFoundException("Could not find bean required by ${bean.beanClass.qualifiedName}.${it.name}", beanType = typeClass)
+                            }
+                        }
+                        // Wire beans by reflect
+                        it.setter.call(instance, populatedBean)
                     }
-                    // Wire beans by reflect
-                    it.setter.call(instance, populatedBean)
+                }
+
+                if (lateinit == null || lateinit.lifecycle == 0) {
+                    inject()
+                } else {
+                    val lifecycle = context.getLifecycle()
+                    lifecycle.insertPlan(lateinit.lifecycle, inject)
                 }
             } catch (e: Exception) {
                 throw PopulateBeansException("Unable to populate beans required by ${bean.beanClass.qualifiedName}.${it.name}", e)
@@ -368,7 +391,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
                 beanClass.allSuperclasses.forEach { superclass ->
                     val superBean = findBeanByClass(superclass)
                     if (superBean != null) {
-                        (superBean as GenericBeanDefinition).defineImplementation(it)
+                        (superBean as ClassBeanDefinition).defineImplementation(it)
                     }
                 }
             }
@@ -415,12 +438,12 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
     override fun invoke() {
         defineAbstractBeanImplementations()
 
-        (context as GenericApplicationContext).addElementCondition(elementFilter)
+        (context as AbstractApplicationContext).addElementCondition(elementFilter)
 
         // Register initializing beans into the context
         initializingBeans.values.forEach {
             if (isBeanAvailable(it)) {
-                (context as GenericApplicationContext).registerBeanDefinition(it)
+                (context as AbstractApplicationContext).registerBeanDefinition(it)
             }
         }
 
@@ -436,7 +459,7 @@ open class GenericContextInitializer(override val context: HierarchicalContext) 
             if (beanDefinition.isSingleton()) {
                 val beanInstance = context.getBeanInstance(beanDefinition)
                 try {
-                    populateBeans(context, beanDefinition, beanInstance)
+                    populateBeans(context as AbstractApplicationContext, beanDefinition, beanInstance)
                 } catch (populateBeansException: PopulateBeansException) {
                     populateBeansException.printStackTrace()
                 } catch (e: Exception) {

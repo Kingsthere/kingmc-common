@@ -1,8 +1,7 @@
 package kingmc.common.context
 
 /**
- * Represent an ioc container that stores all
- * codes(types, classes) in the application
+ * An ioc container integration integrated common features for applications
  *
  * @since 0.0.1
  * @author kingsthere
