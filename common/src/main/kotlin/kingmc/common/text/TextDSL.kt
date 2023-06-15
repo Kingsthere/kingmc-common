@@ -1,5 +1,6 @@
 package kingmc.common.text
 
+import kingmc.util.text.HoverEventDisplayable
 import kingmc.util.text.TextDisplayable
 
 /**

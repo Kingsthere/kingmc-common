@@ -1,4 +1,4 @@
-package kingmc.common.text
+package kingmc.util.text
 
 import net.kyori.adventure.text.event.HoverEvent
 
