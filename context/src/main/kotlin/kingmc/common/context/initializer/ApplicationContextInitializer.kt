@@ -447,6 +447,8 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
             }
         }
 
+        (context as AbstractApplicationContext).refresh()
+
         // Load processors
         try {
             context.loadProcessors()

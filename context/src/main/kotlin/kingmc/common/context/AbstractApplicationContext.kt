@@ -27,16 +27,17 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      */
     protected val protectedBeanDefinitions: MutableMap<String, BeanDefinition> = ConcurrentHashMap()
 
-    val owningBeanDefinitions: MutableMap<String, BeanDefinition>
-        get() {
-            return this.protectedBeanDefinitions.toMutableMap().apply {
-                this@AbstractApplicationContext.parents.forEach {
-                    it.asMap()
+    var owningBeanDefinitions: MutableMap<String, BeanDefinition> = computeOwningBeanDefinitions()
+
+    private fun computeOwningBeanDefinitions(): MutableMap<String, BeanDefinition> {
+        return this.protectedBeanDefinitions.toMutableMap().apply {
+            this@AbstractApplicationContext.parents.forEach {
+                it.asMap()
                         .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
                         .forEach { (name, bean) -> this[name] = bean }
-                }
             }
         }
+    }
 
     /**
      * The filter to filter elements
@@ -46,13 +47,24 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
     /**
      * All bean definitions, include the beans from parent context
      */
-    private val beanDefinitions: MutableMap<String, BeanDefinition>
-        get() = mutableMapOf<String, BeanDefinition>().apply {
+    private var beanDefinitions: MutableMap<String, BeanDefinition> = computeBeanDefinitions()
+
+    fun computeBeanDefinitions(): MutableMap<String, BeanDefinition> {
+        return HashMap<String, BeanDefinition>().apply {
             putAll(protectedBeanDefinitions)
             parents.forEach {
                 putAll(it.asMap())
             }
         }
+    }
+
+    /**
+     * Refreshes [owningBeanDefinitions] & [beanDefinitions]
+     */
+    fun refresh() {
+        owningBeanDefinitions = computeOwningBeanDefinitions()
+        beanDefinitions = computeBeanDefinitions()
+    }
 
     /**
      * The parents of this context
@@ -81,7 +93,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      *
      * @since 0.0.2
      */
-    internal fun registerBeanDefinition(beanDefinition: BeanDefinition) {
+    internal fun registerBeanDefinpition(beanDefinition: BeanDefinition) {
         this.protectedBeanDefinitions[beanDefinition.name] = beanDefinition
     }
     /**
