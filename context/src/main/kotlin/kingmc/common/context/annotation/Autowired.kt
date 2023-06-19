@@ -14,7 +14,7 @@ import kingmc.common.context.Context
  * @since 0.0.1
  * @author kingsthere
  */
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.CONSTRUCTOR)
 @Retention
 @MustBeDocumented
 annotation class Autowired(

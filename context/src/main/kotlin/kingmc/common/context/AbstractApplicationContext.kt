@@ -81,7 +81,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
     /**
      * The instance map to store singleton & protected class instances scoped in this context
      */
-    internal val instanceMap: InstanceMap = SingletonMap()
+    internal val instanceMap: InstanceMap = AutowireCapableSingletonMap(this)
 
     /**
      * The format context of this context

@@ -7,7 +7,7 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
 /**
- * Call a [function] with context, argument to call the function will wire from receiver context
+ * Call a [function] with context, argument(dependencies) to call the function will be injected from receiver context
  *
  * @receiver the context to call function
  * @param function the function to call
