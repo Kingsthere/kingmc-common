@@ -20,6 +20,28 @@ import kotlin.reflect.full.isSubclassOf
  * @see ApplicationContext
  */
 abstract class AbstractApplicationContext(override val properties: Properties, override val name: String = "unnamed") : ApplicationContext {
+
+    /**
+     * The parents of this context
+     */
+    protected val parents: MutableSet<Context> = HashSet()
+
+    /**
+     * The lifecycle of this context
+     */
+    private val lifecycle: Lifecycle<Runnable> =
+        lifecycleBuilder<Runnable>()
+        .build()!!
+
+    /**
+     * The instance map to store singleton & protected class instances scoped in this context
+     */
+    internal val instanceMap: InstanceMap = AutowireCapableSingletonMap(this)
+
+    /**
+     * The format context of this context
+     */
+     private val _formatContext: FormatContext = ContextFormatContext(this)
     /**
      * Protected bean definitions
      *
@@ -33,8 +55,8 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return this.protectedBeanDefinitions.toMutableMap().apply {
             this@AbstractApplicationContext.parents.forEach {
                 it.asMap()
-                        .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
-                        .forEach { (name, bean) -> this[name] = bean }
+                    .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
+                    .forEach { (name, bean) -> this[name] = bean }
             }
         }
     }
@@ -65,28 +87,6 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         owningBeanDefinitions = computeOwningBeanDefinitions()
         beanDefinitions = computeBeanDefinitions()
     }
-
-    /**
-     * The parents of this context
-     */
-    protected val parents: MutableSet<Context> = HashSet()
-
-    /**
-     * The lifecycle of this context
-     */
-    private val lifecycle: Lifecycle<Runnable> =
-        lifecycleBuilder<Runnable>()
-        .build()!!
-
-    /**
-     * The instance map to store singleton & protected class instances scoped in this context
-     */
-    internal val instanceMap: InstanceMap = AutowireCapableSingletonMap(this)
-
-    /**
-     * The format context of this context
-     */
-     private val _formatContext: FormatContext = ContextFormatContext(this)
 
     /**
      * Register a bean definition into this application context
