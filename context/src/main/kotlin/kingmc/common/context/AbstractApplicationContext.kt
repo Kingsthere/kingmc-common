@@ -93,7 +93,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      *
      * @since 0.0.2
      */
-    internal fun registerBeanDefinpition(beanDefinition: BeanDefinition) {
+    internal fun registerBeanDefinition(beanDefinition: BeanDefinition) {
         this.protectedBeanDefinitions[beanDefinition.name] = beanDefinition
     }
     /**
