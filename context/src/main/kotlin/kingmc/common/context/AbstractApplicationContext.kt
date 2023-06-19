@@ -37,11 +37,6 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      * The instance map to store singleton & protected class instances scoped in this context
      */
     internal val instanceMap: InstanceMap = AutowireCapableSingletonMap(this)
-
-    /**
-     * The format context of this context
-     */
-     private val _formatContext: FormatContext = ContextFormatContext(this)
     /**
      * Protected bean definitions
      *
@@ -79,6 +74,11 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
             }
         }
     }
+
+    /**
+     * The format context of this context
+     */
+    private val _formatContext: FormatContext = ContextFormatContext(this)
 
     /**
      * Refreshes [owningBeanDefinitions] & [beanDefinitions]
