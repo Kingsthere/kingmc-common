@@ -15,10 +15,10 @@ import kotlin.reflect.KParameter
  */
 fun <R> Context.callFunctionWithContext(function: KFunction<R>, ins: Any?): R {
     val parameters = function.parameters
-    if (parameters.size != 1) {
+    if (parameters.any { it.kind != KParameter.Kind.INSTANCE }) {
         val args: MutableMap<KParameter, Any?> = mutableMapOf()
         parameters.forEach {
-            if (it.index != 0) {
+            if (it.kind != KParameter.Kind.INSTANCE) {
                 val beanClass = it.type.classifier as KClass<*>
                 val beanName = it.getAnnotation<Qualifier>()?.value
                 args[it] = if (beanName != null) {

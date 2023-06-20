@@ -183,7 +183,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         } else if (deprecatedBeanDefinition != null) {
             getBeanInstance(deprecatedBeanDefinition!!) as T
         } else {
-            throw NoBeanDefFoundException("No bean definition class assignable of $clazz found")
+            throw NoBeanDefFoundException("No bean definition class assignable to $clazz found")
         }
     }
 
@@ -280,7 +280,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         val raw = try {
             getRawBeanInstance(beanDefinition)
         } catch (e: Exception) {
-            throw NoSuchBeanException("Unable to get/instantiate bean instance ($beanDefinition)", e)
+            throw BeanInstantiateException("Unable to get/instantiate bean instance ($beanDefinition)", e)
         }
         return raw
     }

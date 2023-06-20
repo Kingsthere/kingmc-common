@@ -9,7 +9,7 @@ package kingmc.common.context.beans
  * @since 0.0.1
  * @author kingsthere
  */
-class NoSuchBeanException : BeansException {
+class BeanInstantiateException : BeansException {
     constructor(message: String?) : super(message)
     constructor(message: String?, cause: Throwable?) : super(message, cause)
 }
