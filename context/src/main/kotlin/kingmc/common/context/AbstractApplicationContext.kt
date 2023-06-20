@@ -253,6 +253,33 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         }
     }
 
+    /**
+     * Get a bean definition with specified name in this container
+     * by the name of that bean
+     *
+     * @param name the bean name
+     * @see BeanDefinition.name
+     * @since 0.1.0
+     * @return the bean definition got
+     */
+    override fun getBeanDefinition(name: String): BeanDefinition? {
+        return beanDefinitions[name]
+    }
+
+    /**
+     * Get a bean definition with specified type in this container
+     * by the name of that bean
+     *
+     * @param clazz the bean class
+     * @param T the type of bean
+     * @see BeanDefinition.name
+     * @since 0.1.0
+     * @return the bean definition got
+     */
+    override fun getBeanDefinition(clazz: KClass<*>): BeanDefinition? {
+        return beanDefinitions.values.find { it.beanClass.isSubclassOf(clazz) }
+    }
+
     override fun getProtectedBeans(): List<BeanDefinition> {
         return protectedBeanDefinitions.values.toList()
     }

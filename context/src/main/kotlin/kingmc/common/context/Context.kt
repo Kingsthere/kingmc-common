@@ -72,13 +72,37 @@ interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>,
      * by the name of that bean
      *
      * @param name the bean name
-     * @param T the type of bean
-     * @see LoadedBean.name
+     * @see BeanDefinition.name
      * @since 0.0.1
      * @return the bean got
      */
     @Throws(BeansException::class)
     fun getBean(name: String): Any
+
+    /**
+     * Get a bean definition with specified name in this container
+     * by the name of that bean
+     *
+     * @param name the bean name
+     * @see BeanDefinition.name
+     * @since 0.1.0
+     * @return the bean definition got
+     */
+    @Throws(BeansException::class)
+    fun getBeanDefinition(name: String): BeanDefinition?
+
+    /**
+     * Get a bean definition with specified type in this container
+     * by the name of that bean
+     *
+     * @param clazz the bean class
+     * @param T the type of bean
+     * @see BeanDefinition.name
+     * @since 0.1.0
+     * @return the bean definition got
+     */
+    @Throws(BeansException::class)
+    fun getBeanDefinition(clazz: KClass<*>): BeanDefinition?
 
     /**
      * Gets a bean instance from [BeanDefinition]
@@ -97,7 +121,7 @@ interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>,
      *
      * @param name the bean name
      * @param T the type of bean
-     * @see LoadedBean.name
+     * @see BeanDefinition.name
      * @since 0.0.1
      * @return the bean got
      */
