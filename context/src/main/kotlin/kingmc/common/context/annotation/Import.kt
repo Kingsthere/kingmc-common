@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 @MustBeDocumented
 @Repeatable
 @Inherited
-annotation class Import (
+annotation class Import(
     /**
      * The class of the bean to import
      */

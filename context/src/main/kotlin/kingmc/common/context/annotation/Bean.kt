@@ -29,7 +29,7 @@ package kingmc.common.context.annotation
 @Target(AnnotationTarget.FUNCTION)
 @Retention
 @MustBeDocumented
-annotation class Bean (
+annotation class Bean(
     /**
      * The name of this bean
      *

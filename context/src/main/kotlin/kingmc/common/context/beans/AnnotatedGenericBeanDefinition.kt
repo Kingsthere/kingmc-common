@@ -1,7 +1,6 @@
 package kingmc.common.context.beans
 
 import kingmc.common.context.Context
-import kingmc.common.context.beans.depends.DependencyDescriptor
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -19,11 +18,11 @@ open class AnnotatedGenericBeanDefinition(
     val beanProvider: KFunction<*>,
     override val annotations: List<Annotation>,
     override val name: String,
-    override val dependencies: DependencyDescriptor,
     override val scope: BeanScope,
     private val isAbstract: Boolean,
     override val deprecated: Boolean,
-    override val primary: Boolean
+    override val primary: Boolean,
+    override val privacy: BeanPrivacy
 ) : ClassBeanDefinition(beanClass) {
 
     /**

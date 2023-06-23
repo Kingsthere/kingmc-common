@@ -17,7 +17,7 @@ import java.lang.annotation.Inherited
 @MustBeDocumented
 @Inherited
 @Extendable
-annotation class Component (
+annotation class Component(
     /**
      * The bean name of this type to the container, left
      * to default it will become the decapitalized name of the class

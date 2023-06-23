@@ -15,7 +15,7 @@ import java.lang.annotation.Inherited
 @MustBeDocumented
 @Inherited
 @Extended(Component::class)
-annotation class Service (
+annotation class Service(
     /**
      * The bean name of this type to the container, left
      * to default it will become the decapitalized name of the class

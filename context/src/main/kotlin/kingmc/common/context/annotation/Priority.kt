@@ -10,7 +10,7 @@ package kingmc.common.context.annotation
 @Retention
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.PROPERTY_GETTER)
 @MustBeDocumented
-annotation class Ordered(
+annotation class Priority(
     /**
      * The value
      *

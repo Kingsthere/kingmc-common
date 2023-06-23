@@ -1,21 +1,19 @@
 package kingmc.common.context.beans
 
 import kingmc.common.context.Context
-import kingmc.common.context.beans.depends.DependencyDescriptor
 import kingmc.util.errorprone.Immutable
 
 /**
  * A BeanDefinition describes an instance of a Bean that contains property
  * values, constructor parameter values, and more implementation information
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author kingsthere
  */
 @Immutable
 interface BeanDefinition {
     /**
      * The name of this bean
-     *
      *
      * **Note:** The name of beans must be _unique_ in a context
      *
@@ -31,18 +29,18 @@ interface BeanDefinition {
     val context: Context
 
     /**
-     * The dependencies of this bean
-     *
-     * @since 0.0.1
-     */
-    val dependencies: DependencyDescriptor
-
-    /**
      * The scope of this bean
      *
      * @since 0.0.2
      */
     val scope: BeanScope
+
+    /**
+     * The bean privacy of this bean
+     *
+     * @since 0.1.0
+     */
+    val privacy: BeanPrivacy
 
     /**
      * `true` if this bean is deprecated

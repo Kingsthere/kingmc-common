@@ -2,7 +2,6 @@ package kingmc.common.context.beans
 
 import kingmc.common.context.Context
 import kingmc.common.context.annotation.Component
-import kingmc.common.context.beans.depends.DependencyDescriptor
 import kotlin.reflect.KClass
 
 /**
@@ -17,11 +16,11 @@ open class ScannedGenericBeanDefinition(
     override val context: Context,
     override val annotations: List<Annotation>,
     override val name: String,
-    override val dependencies: DependencyDescriptor,
     override val scope: BeanScope,
     private val isAbstract: Boolean,
     override val deprecated: Boolean,
-    override val primary: Boolean
+    override val primary: Boolean,
+    override val privacy: BeanPrivacy
 ) : ClassBeanDefinition(beanClass) {
     /**
      * Return `true` if this bean is a singleton

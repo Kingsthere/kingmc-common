@@ -37,6 +37,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      * The instance map to store singleton & protected class instances scoped in this context
      */
     internal val instanceMap: InstanceMap = AutowireCapableSingletonMap(this)
+
     /**
      * Protected bean definitions
      *
@@ -50,7 +51,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return this.protectedBeanDefinitions.toMutableMap().apply {
             this@AbstractApplicationContext.parents.forEach {
                 it.asMap()
-                    .filter { (_, bean) -> bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE }
+                    .filter { (_, bean) -> (bean.scope == BeanScope.SINGLETON || bean.scope == BeanScope.PROTOTYPE) && bean.privacy != BeanPrivacy.PRIVATE }
                     .forEach { (name, bean) -> this[name] = bean }
             }
         }
@@ -70,7 +71,11 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return HashMap<String, BeanDefinition>().apply {
             putAll(protectedBeanDefinitions)
             parents.forEach {
-                putAll(it.asMap())
+                it.asMap().forEach { (name, bean) ->
+                    if (bean.privacy != BeanPrivacy.PRIVATE) {
+                        put(name, bean)
+                    }
+                }
             }
         }
     }
@@ -111,10 +116,6 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
     override fun getLifecycle(): Lifecycle<Runnable> =
         lifecycle
 
-    override fun remove(name: String) {
-        this.protectedBeanDefinitions.remove(name)
-    }
-
     /**
      * Test the condition of an element is available
      */
@@ -129,38 +130,12 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return _formatContext
     }
 
-    /**
-     * Check a bean with specified type is existed
-     * in this ioc container
-     *
-     * @param clazz the class of the bean
-     * @since 0.0.1
-     * @return is the bean exist
-     */
-    override fun <T : Any> hasBean(clazz: KClass<out T>): Boolean =
+    override fun hasBean(clazz: KClass<*>): Boolean =
         this.beanDefinitions.any { (it.value as? ClassBeanDefinition)?.beanClass?.isSubclassOf(clazz) == true }
 
-    /**
-     * Check a bean with specified name is existed
-     * in this ioc container
-     *
-     * @param name the class of the bean
-     * @since 0.0.1
-     * @return is the bean exist
-     */
     override fun hasBean(name: String): Boolean =
         this.beanDefinitions.containsKey(name)
 
-    /**
-     * Get a bean with specified type in this container
-     * by the type of that bean
-     *
-     * @param clazz the class
-     * @param T the type of bean
-     * @since 0.0.1
-     * @return the bean got, `null` if the bean
-     *         specified is not valid in this container
-     */
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> getBean(clazz: KClass<out T>): T {
         var deprecatedBeanDefinition: BeanDefinition? = null
@@ -200,34 +175,12 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         }
     }
 
-    /**
-     * Get a bean with specified name in this container
-     * by the name of that bean
-     *
-     * @param name the bean name
-     * @param T the type of bean
-     * @see LoadedBean.name
-     * @since 0.0.1
-     * @return the bean got, `null` if the bean
-     *         specified is not valid in this container
-     */
     override fun getBean(name: String): Any {
         val definition = this.beanDefinitions[name]
             ?: throw NoBeanDefFoundException("No bean definition named $name", beanName = name)
         return getBeanInstance(definition)
     }
 
-    /**
-     * Get a bean in this container
-     * by the name of that bean with required type
-     *
-     * @param name the bean name
-     * @param T the type of bean
-     * @see LoadedBean.name
-     * @since 0.0.1
-     * @return the bean got, `null` if the bean
-     *         specified is not valid in this container
-     */
     override fun <T : Any> getBean(name: String, requiredType: KClass<out T>): T {
         val definition = this.beanDefinitions[name]
             ?: throw NoBeanDefFoundException("No bean definition named $name")
@@ -235,47 +188,12 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return getBeanInstance(definition) as T
     }
 
-    /**
-     * Get all beans that in this container
-     * and return as a [Collection]
-     *
-     * @since 0.0.1
-     * @see Collection
-     * @return the beans got
-     */
-    override fun getBeans(): Collection<Any> {
-        return beanDefinitions.values.mapNotNull {
-            try {
-                getBeanInstance(it)
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
+    override fun getBeanDefinitions(): Collection<BeanDefinition> = beanDefinitions.values
 
-    /**
-     * Get a bean definition with specified name in this container
-     * by the name of that bean
-     *
-     * @param name the bean name
-     * @see BeanDefinition.name
-     * @since 0.1.0
-     * @return the bean definition got
-     */
     override fun getBeanDefinition(name: String): BeanDefinition? {
         return beanDefinitions[name]
     }
 
-    /**
-     * Get a bean definition with specified type in this container
-     * by the name of that bean
-     *
-     * @param clazz the bean class
-     * @param T the type of bean
-     * @see BeanDefinition.name
-     * @since 0.1.0
-     * @return the bean definition got
-     */
     override fun getBeanDefinition(clazz: KClass<*>): BeanDefinition? {
         return beanDefinitions.values.find { it.beanClass.isSubclassOf(clazz) }
     }
@@ -284,22 +202,10 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         return protectedBeanDefinitions.values.toList()
     }
 
-    /**
-     * Gets the owning beans in this context, owning beans include
-     * protected beans and beans inherited from parent that scoped `SINGLETON` or `PROTOTYPE`
-     *
-     * @since 0.0.5
-     * @author kingsthere
-     * @return the owning beans
-     */
     override fun getOwningBeans(): List<BeanDefinition> {
         return owningBeanDefinitions.values.toList()
     }
 
-    /**
-     * Return the beans defined in this context as
-     * a [Map]
-     */
     override fun asMap(): MutableMap<String, BeanDefinition> =
         this.beanDefinitions
 
@@ -362,15 +268,9 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         this.elementFilter = elementFilter.and(elementFilter)
     }
 
-    override fun <T : Any> remove(type: KClass<out T>) {
+    override fun remove(name: String) {
         // Load bean name from the class
-        this.protectedBeanDefinitions.forEach { (name, definition) ->
-            (definition as? ClassBeanDefinition)?.let {
-                if (definition.beanClass.isSubclassOf(type)) {
-                    this.protectedBeanDefinitions.remove(name)
-                }
-            }
-        }
+        this.protectedBeanDefinitions.remove(name)
     }
 
     /**

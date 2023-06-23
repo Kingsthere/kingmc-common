@@ -1,10 +1,8 @@
 package kingmc.common.context.initializer
 
-import io.github.classgraph.ClassGraph
 import kingmc.common.context.*
 import kingmc.common.context.annotation.*
 import kingmc.common.context.beans.*
-import kingmc.common.context.beans.depends.DefaultDependencyResolver
 import kingmc.common.context.condition.*
 import kingmc.common.context.process.afterDispose
 import kingmc.common.context.process.disposeBean
@@ -30,8 +28,6 @@ import kotlin.reflect.full.isSubclassOf
  * @author kingsthere
  */
 open class ApplicationContextInitializer(override val context: HierarchicalContext) : HierarchicalContextInitializer {
-    val classGraph = ClassGraph()
-
     protected var filter: Predicate<BeanDefinition> = Predicate { bean ->
         val annotations = bean.annotations
         // @ConditionalOnBean logic
@@ -209,30 +205,32 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
 
         val lateinit: Lateinit? = beanClass.getAnnotation()
 
+        val beanPrivacy: BeanPrivacy = beanClass.getAnnotation<Privacy>()?.privacy ?: BeanPrivacy.PUBLIC
+
         // Build and return the BeanDefinition
         val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
             ScannedGenericBeanDefinition(
                 beanClass = beanClass,
                 context = context,
                 annotations = beanClass.annotations,
-                dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
                 scope = scope,
                 isAbstract = beanClass.isAbstract,
                 name = BeansUtil.getBeanName(beanClass),
                 deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
-                primary = beanClass.annotations.any { it.annotationClass == Primary::class }
+                primary = beanClass.annotations.any { it.annotationClass == Primary::class },
+                privacy = beanPrivacy
             )
         } else {
             LateinitScannedGenericBeanDefinition(
                 beanClass = beanClass,
                 context = context,
                 annotations = beanClass.annotations,
-                dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
                 scope = scope,
                 isAbstract = beanClass.isAbstract,
                 name = BeansUtil.getBeanName(beanClass),
                 deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
                 primary = beanClass.annotations.any { it.annotationClass == Primary::class },
+                privacy = beanPrivacy,
                 lifecycle = lateinit.lifecycle
             )
         }
@@ -264,6 +262,8 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
 
             val lateinit: Lateinit? = it.getAnnotation()
 
+            val beanPrivacy: BeanPrivacy = it.getAnnotation<Privacy>()?.privacy ?: BeanPrivacy.PUBLIC
+
             val beanClass = it.returnType.classifier as KClass<*>
 
             val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
@@ -273,12 +273,12 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                     configurationBean = configurationBean,
                     beanProvider = it,
                     annotations = beanClass.annotations,
-                    dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
                     scope = BeanScope.PROTOTYPE,
                     isAbstract = false,
                     name = beanName,
                     deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
-                    primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class }
+                    primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class },
+                    privacy = beanPrivacy
                 )
             } else {
                 LateinitAnnotatedGenericBeanDefinition(
@@ -287,12 +287,12 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                     configurationBean = configurationBean,
                     beanProvider = it,
                     annotations = beanClass.annotations,
-                    dependencies = dependencyResolver.solveDependencyByClass(beanClass, beanName),
                     scope = BeanScope.PROTOTYPE,
                     isAbstract = false,
                     name = beanName,
                     deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
                     primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class },
+                    privacy = beanPrivacy,
                     lifecycle = lateinit.lifecycle
                 )
             }
@@ -489,9 +489,5 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
         context.afterDispose()
         // Close context
         context.close()
-    }
-
-    companion object {
-        val dependencyResolver = DefaultDependencyResolver()
     }
 }
