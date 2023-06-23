@@ -195,7 +195,6 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                 // not able to use kotlin reflection, then return null
                 return null
             } catch (e: ExceptionInInitializerError) {
-                e.printStackTrace()
                 return null
             }
         }
