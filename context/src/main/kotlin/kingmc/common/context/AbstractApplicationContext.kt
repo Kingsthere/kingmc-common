@@ -293,7 +293,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
     }
 
     override fun toString(): String {
-        return "GenericApplicationContext(beans=${beanDefinitions.size}, parents=$parents, name=$name)"
+        return "AbstractApplicationContext(beans=${beanDefinitions}, parents=$parents, name=$name)"
     }
 
     override fun equals(other: Any?): Boolean {
