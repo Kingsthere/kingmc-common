@@ -15,9 +15,15 @@ import java.util.concurrent.CopyOnWriteArraySet
  * @since 0.0.1
  * @author kingsthere
  */
-class ExtensionClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arrayOf(file.toURI().toURL()), parent) {
+class ExtensionClassLoader(private val _file: File, private val _parent: ClassLoader) : URLClassLoader(arrayOf(_file.toURI().toURL()), _parent) {
+    private val dependencyClassLoaders: MutableList<ExtensionClassLoader> = ArrayList()
+
     fun addToClassloaders() {
         loaders.add(this)
+    }
+
+    fun addDependency(extensionClassLoader: ExtensionClassLoader) {
+        dependencyClassLoaders.add(extensionClassLoader)
     }
 
     fun addPath(path: Path) {
@@ -45,14 +51,14 @@ class ExtensionClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arr
             return super.loadClass(name, resolve)
         } catch (var8: ClassNotFoundException) {
             if (checkOther) {
-                val var4: Iterator<*> = loaders.iterator()
+                val classLoaders: Iterator<*> = (loaders + dependencyClassLoaders).iterator()
                 while (true) {
                     var loader: ExtensionClassLoader
                     do {
-                        if (!var4.hasNext()) {
+                        if (!classLoaders.hasNext()) {
                             throw ClassNotFoundException(name)
                         }
-                        loader = var4.next() as ExtensionClassLoader
+                        loader = classLoaders.next() as ExtensionClassLoader
                     } while (loader === this)
                     try {
                         return loader.loadClass0(name, resolve, false)
@@ -69,11 +75,15 @@ class ExtensionClassLoader(file: File, parent: ClassLoader) : URLClassLoader(arr
         return findResource(name)
     }
 
+    override fun toString(): String {
+        return "ExtensionClassLoader(file=$_file, parent=$_parent)"
+    }
+
     companion object {
         private val loaders: MutableSet<ExtensionClassLoader?> = CopyOnWriteArraySet<ExtensionClassLoader?>()
 
         init {
-            // registerAsParallelCapable()
+             // registerAsParallelCapable()
         }
     }
 }

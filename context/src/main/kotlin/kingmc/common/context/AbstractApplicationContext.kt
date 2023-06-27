@@ -304,9 +304,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
 
         if (name != other.name) return false
         if (protectedBeanDefinitions != other.protectedBeanDefinitions) return false
-        if (parents != other.parents) return false
-
-        return true
+        return parents == other.parents
     }
 
     override fun hashCode(): Int {

@@ -195,6 +195,7 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                 // not able to use kotlin reflection, then return null
                 return null
             } catch (e: ExceptionInInitializerError) {
+                e.printStackTrace()
                 return null
             }
         }
@@ -356,10 +357,9 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                             // If the bean name is not specified then
                             // populate the bean by the type which is
                             // assignable
-                            val beanFound = context.findBeanByType(it.returnType.classifier as KClass<*>)
-                            if (beanFound != null) {
-                                context.getBeanInstance(beanFound)
-                            } else {
+                            try {
+                                context.getBean(it.returnType.classifier as KClass<*>)
+                            } catch (_: NoBeanDefFoundException) {
                                 null
                             }
                         }

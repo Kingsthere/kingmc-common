@@ -54,11 +54,10 @@ open class JarFileClassSource(val file: File, var classLoader: ClassLoader) : Cl
                 val classLoaded = classLoader.loadClass(it)
                 this.whenLoadClass(classLoaded)
                 return@mapNotNull classLoaded
+            } catch (e: NoClassDefFoundError) {
+                return@mapNotNull null
             } catch (e: Exception) {
                 throw ProjectInitializeException("Unable to load project", e)
-            } catch (e: NoClassDefFoundError) {
-                // Warn?
-                return@mapNotNull null
             }
         }
     }
