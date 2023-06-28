@@ -1,5 +1,6 @@
 package kingmc.util.annotation.impl
 
+import kingmc.util.annotation.RecursiveAnnotationException
 import kingmc.util.annotation.model.AnnotationTreeFactory
 import kotlin.reflect.KClass
 
@@ -15,10 +16,14 @@ object AnnotationTreeFactoryImpl : AnnotationTreeFactory {
      * @return `true` if [targetAnnotation] exists in [annotation]
      */
     override fun hasAnnotation(annotation: KClass<out Annotation>, targetAnnotation: KClass<out Annotation>): Boolean {
-        if (annotation == targetAnnotation) {
-            return true
+        try {
+            if (annotation == targetAnnotation) {
+                return true
+            }
+            val parentAnnotations = annotation.annotations.filter { it.annotationClass.qualifiedName !in IGNORED_ANNOTATIONS }
+            return parentAnnotations.any { hasAnnotation(it.annotationClass, targetAnnotation) }
+        } catch (e: StackOverflowError) {
+            throw RecursiveAnnotationException("Recursive annotation found", annotation)
         }
-        val parentAnnotations = annotation.annotations.filter { it.annotationClass.qualifiedName !in IGNORED_ANNOTATIONS }
-        return parentAnnotations.any { hasAnnotation(it.annotationClass, targetAnnotation) }
     }
 }
