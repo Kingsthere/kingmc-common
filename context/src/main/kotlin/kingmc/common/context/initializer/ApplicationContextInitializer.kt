@@ -312,9 +312,15 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
         if (configurationBean.beanClass.hasAnnotation<Import>()) {
             configurationBean.beanClass.getAnnotations<Import>().forEach { importAnnotation ->
                 importAnnotation.value.forEach { importValue ->
-                    val bean = defineBean(importValue.java, true)
-                        ?: throw IllegalStateException("Unable to import bean $importValue")
-                    defineBeansFromConfiguration(bean, true)
+
+                    defineBean(importValue.java, true)?.let { bean ->
+                        this.initializingBeans[bean.name] = bean
+                        this.scopedBeans[bean.name] = bean
+                        defineBeansFromConfiguration(bean, true).forEach { configuredBean ->
+                            this.initializingBeans[configuredBean.name] = configuredBean
+                            this.scopedBeans[configuredBean.name] = configuredBean
+                        }
+                    }
                 }
             }
         }

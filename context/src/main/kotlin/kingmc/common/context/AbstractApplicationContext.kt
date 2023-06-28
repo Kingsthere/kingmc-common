@@ -226,7 +226,14 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
         }
         if (definition is ScannedGenericBeanDefinition) {
             if (definition.isAbstract()) {
-                return getRawBeanInstance(definition.implementations().firstOrNull()
+                return getRawBeanInstance(definition.implementations().find {
+                    if (it.privacy == BeanPrivacy.PRIVATE) {
+                        if (it.context != this) {
+                            return@find false
+                        }
+                    }
+                    return@find true
+                }
                     ?: throw IllegalArgumentException("No implementation of this abstract bean found"))
             }
             when (definition.scope) {

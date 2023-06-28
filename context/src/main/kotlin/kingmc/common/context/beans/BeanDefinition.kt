@@ -75,5 +75,5 @@ interface BeanDefinition {
      * Return the implementation beans of this bean definition
      * if this bean is an abstract bean ([isAbstract])
      */
-    fun implementations(): Set<BeanDefinition>
+    fun implementations(): List<BeanDefinition>
 }

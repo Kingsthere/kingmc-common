@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * @author kingsthere
  */
 abstract class ClassBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefinition {
-    private val implementations: MutableSet<BeanDefinition> = mutableSetOf()
+    private val implementations: MutableList<BeanDefinition> = mutableListOf()
 
     /**
      * Define a bean implementation to this bean if this
@@ -20,7 +20,7 @@ abstract class ClassBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefi
         implementations.add(bean)
     }
 
-    override fun implementations(): Set<BeanDefinition> {
+    override fun implementations(): List<BeanDefinition> {
         if (isAbstract()) {
             return implementations
         } else {
