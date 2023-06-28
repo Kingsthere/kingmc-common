@@ -308,19 +308,14 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
             definedBeans.add(beanDefinition)
         }
 
-        println("Class: $configurationBean, has: ${configurationBean.beanClass.hasAnnotation<Import>()}")
         // @Import beans
         if (configurationBean.beanClass.hasAnnotation<Import>()) {
-            println("Class: ${configurationBean.beanClass} annotation: ${configurationBean.beanClass.getAnnotations<Import>()}")
             configurationBean.beanClass.getAnnotations<Import>().forEach { importAnnotation ->
                 importAnnotation.value.forEach { importValue ->
-
                     defineBean(importValue.java, true)?.let { bean ->
-                        println("Imported $bean")
                         this.initializingBeans[bean.name] = bean
                         this.scopedBeans[bean.name] = bean
                         defineBeansFromConfiguration(bean, true).forEach { configuredBean ->
-                            println("Imported configured $configuredBean")
                             this.initializingBeans[configuredBean.name] = configuredBean
                             this.scopedBeans[configuredBean.name] = configuredBean
                         }

@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * @author kingsthere
  */
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.ANNOTATION_CLASS)
-@Retention(AnnotationRetention.BINARY)
+@Retention
 @MustBeDocumented
 @Repeatable
 @Inherited
