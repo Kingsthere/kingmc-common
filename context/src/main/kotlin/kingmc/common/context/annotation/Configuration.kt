@@ -1,6 +1,5 @@
 package kingmc.common.context.annotation
 
-import kingmc.util.annotation.Extended
 import java.lang.annotation.Inherited
 
 /**
@@ -12,11 +11,11 @@ import java.lang.annotation.Inherited
  * @since 0.0.1
  * @author kingsthere
  */
-@Extended(Component::class)
 @Target(AnnotationTarget.CLASS)
 @Retention
 @MustBeDocumented
 @Inherited
+@Component("")
 annotation class Configuration(
     /**
      * The bean name of this type to the container, left

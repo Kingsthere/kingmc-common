@@ -1,7 +1,5 @@
 package kingmc.common.context.annotation
 
-import kingmc.util.annotation.Extendable
-
 /**
  * Use this annotation to present the name
  * of a bean to autowired a bean correctly from the container
@@ -17,7 +15,6 @@ import kingmc.util.annotation.Extendable
 @Retention
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER)
 @MustBeDocumented
-@Extendable
 annotation class Qualifier(
     /**
      * The name of the bean to acquire bean from

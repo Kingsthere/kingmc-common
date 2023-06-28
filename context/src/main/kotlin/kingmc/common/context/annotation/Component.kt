@@ -1,6 +1,5 @@
 package kingmc.common.context.annotation
 
-import kingmc.util.annotation.Extendable
 import java.lang.annotation.Inherited
 
 /**
@@ -16,7 +15,6 @@ import java.lang.annotation.Inherited
 @Retention
 @MustBeDocumented
 @Inherited
-@Extendable
 annotation class Component(
     /**
      * The bean name of this type to the container, left

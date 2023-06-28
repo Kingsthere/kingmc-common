@@ -14,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
  * A sync minecraft coroutine dispatcher
  */
 @OptIn(InternalCoroutinesApi::class)
-@Scope(BeanScope.SINGLETON)
+@Scope(scope = BeanScope.SINGLETON)
 @Component
 abstract class SyncMinecraftCoroutineDispatcher : CoroutineDispatcher(), CoroutineDispatcherWithApplication, Delay {
     abstract override fun dispatch(context: CoroutineContext, block: @WithApplication Runnable)

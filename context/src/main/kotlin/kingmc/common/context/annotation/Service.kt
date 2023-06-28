@@ -1,6 +1,5 @@
 package kingmc.common.context.annotation
 
-import kingmc.util.annotation.Extended
 import java.lang.annotation.Inherited
 
 /**
@@ -14,7 +13,7 @@ import java.lang.annotation.Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Inherited
-@Extended(Component::class)
+@Component
 annotation class Service(
     /**
      * The bean name of this type to the container, left
