@@ -29,7 +29,7 @@ interface Baffle<T> {
      * @param obj the baffle object to reset
      * @since 0.0.1
      */
-    fun reset(obj: T);
+    fun reset(obj: T)
 
     /**
      * Force update the cooldown of specifying

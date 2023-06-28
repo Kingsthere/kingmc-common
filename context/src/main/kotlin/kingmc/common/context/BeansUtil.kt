@@ -1,9 +1,9 @@
 package kingmc.common.context
 
-import kingmc.util.annotation.getAnnotation
-import kingmc.util.annotation.hasAnnotation
 import kingmc.common.context.annotation.Component
 import kingmc.util.Utility
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.hasAnnotation
 import java.util.*
 import kotlin.reflect.KClass
 

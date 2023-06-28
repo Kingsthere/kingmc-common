@@ -1,10 +1,10 @@
 package kingmc.common.context.beans.configuration
 
-import kingmc.util.annotation.hasAnnotation
 import kingmc.common.context.Context
 import kingmc.common.context.annotation.Configuration
 import kingmc.common.context.beans.BeanDefinition
 import kingmc.common.context.beans.beanClass
+import kingmc.util.annotation.hasAnnotation
 
 /**
  * Get all configuration beans that is present in this context

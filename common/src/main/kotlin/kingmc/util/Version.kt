@@ -81,9 +81,7 @@ class Version(source: CharSequence, val toString: String? = null) : Comparable<V
 
         other as Version
 
-        if (!version.contentEquals(other.version)) return false
-
-        return true
+        return version.contentEquals(other.version)
     }
 
     override fun hashCode(): Int {
@@ -118,9 +116,7 @@ class VersionRange(val start: Version = Version.OLDEST, val end: Version = Versi
         if (other !is VersionRange) return false
 
         if (start != other.start) return false
-        if (end != other.end) return false
-
-        return true
+        return end == other.end
     }
 
     override fun hashCode(): Int {

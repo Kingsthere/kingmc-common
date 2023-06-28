@@ -49,9 +49,7 @@ open class AnnotatedGenericBeanDefinition(
 
         other as AnnotatedGenericBeanDefinition
 
-        if (name != other.name) return false
-
-        return true
+        return name == other.name
     }
 
     override fun hashCode(): Int {

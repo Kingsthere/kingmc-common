@@ -39,17 +39,11 @@ class AnnotationTest {
     annotation class TestAnnotation3
 
     @TestAnnotation2("value2")
-    class TestClass1 {
-
-    }
+    class TestClass1
 
     @TestAnnotation1("value3")
-    class TestClass2 {
-
-    }
+    class TestClass2
 
     @TestAnnotation3
-    class TestClass3 {
-
-    }
+    class TestClass3
 }

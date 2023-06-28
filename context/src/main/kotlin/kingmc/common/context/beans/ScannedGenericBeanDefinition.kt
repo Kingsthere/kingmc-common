@@ -46,9 +46,7 @@ open class ScannedGenericBeanDefinition(
 
         other as ScannedGenericBeanDefinition
 
-        if (name != other.name) return false
-
-        return true
+        return name == other.name
     }
 
     override fun hashCode(): Int {

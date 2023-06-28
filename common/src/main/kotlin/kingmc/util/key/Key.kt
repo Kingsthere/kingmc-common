@@ -127,9 +127,7 @@ internal class KeyImpl(namespace: String, value: String) : Key {
         if (other !is KeyImpl) return false
 
         if (namespace != other.namespace) return false
-        if (value != other.value) return false
-
-        return true
+        return value == other.value
     }
 
     override fun hashCode(): Int {

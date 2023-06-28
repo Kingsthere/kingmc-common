@@ -44,9 +44,7 @@ class Dependency : AbstractXmlParser {
         if (groupId != other.groupId) return false
         if (artifactId != other.artifactId) return false
         if (version != other.version) return false
-        if (scope != other.scope) return false
-
-        return true
+        return scope == other.scope
     }
 
     override fun hashCode(): Int {

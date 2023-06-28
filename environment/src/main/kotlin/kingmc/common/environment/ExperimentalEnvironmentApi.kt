@@ -19,4 +19,4 @@ package kingmc.common.environment
 )
 @RequiresOptIn
 @MustBeDocumented
-annotation class ExperimentalEnvironmentApi()
+annotation class ExperimentalEnvironmentApi
