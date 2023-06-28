@@ -1,26 +1,21 @@
 package kingmc.util.annotation.model
 
+import kotlin.reflect.KClass
+
 /**
- * A superinterface to describe a node on annotation, it uses
- * tree structure to describe the model of an annotation
+ * A data class describe about an annotation node listed in [AnnotationContent]
  *
- * @since 0.0.7
+ * @since 0.1.0
  * @author kingsthere
  */
-interface AnnotationNode {
+data class AnnotationNode(
     /**
-     * [AnnotationNode] that this node is inherited from
+     * The annotation class of this node
      */
-    val inherited: List<AnnotationNode>
+    val annotation: KClass<out Annotation>,
 
     /**
-     * The attributes defined in this annotation
+     * The attributes of this node
      */
     val attributes: List<AnnotationAttribute>
-
-    /**
-     * The attributes defined in this annotation and [inherited]
-     * annotations
-     */
-    val declaredAttributes: List<AnnotationAttribute>
-}
+)

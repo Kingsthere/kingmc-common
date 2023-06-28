@@ -9,7 +9,7 @@ import net.sf.cglib.core.Predicate
  * @since 0.0.7
  * @author kingsthere
  */
-object KtilAnnotationNamingPolicy : NamingPolicy {
+object AnnotationNamingPolicy : NamingPolicy {
     override fun getClassName(prefix: String?, source: String, key: Any, names: Predicate): String {
         var prefix = prefix
         if (prefix == null) {
@@ -32,14 +32,14 @@ object KtilAnnotationNamingPolicy : NamingPolicy {
      * By default, returns "ByCGLIB"
      */
     private val tag: String
-        get() = "ByKtil"
+        get() = "ByKingMC"
 
     override fun hashCode(): Int {
         return tag.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is KtilAnnotationNamingPolicy && other.tag == tag
+        return other is AnnotationNamingPolicy && other.tag == tag
     }
 
         /**

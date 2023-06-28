@@ -1,23 +1,26 @@
 package kingmc.util.annotation.model
 
+import kotlin.reflect.KClass
+
 /**
- * A superinterface to describe how many attributes that is defined
- * in a [AnnotationNode] actually, if more [RawAnnotationAttribute] is declared
- * (in annotation) with aliases than a [AnnotationAttribute] describe more than
- * one raw annotation attributes
+ * A superinterface to describe an attributes that is defined from annotation class
  *
- * @since 0.0.7
+ * @since 0.1.0
  * @author kingsthere
- * @see AnnotationNode
  */
 interface AnnotationAttribute {
     /**
-     * The [RawAnnotationAttribute] this attribute describing
+     * The annotation class that this attribute belong to
      */
-    val values: List<RawAnnotationAttribute>
+    val annotation: KClass<out Annotation>
 
     /**
-     * To get the actual value from this attribute
+     * The name of this annotation attribute
      */
-    operator fun invoke(context: AnnotationContext): Any?
+    val name: String
+
+    /**
+     * The value of this annotation attribute
+     */
+    val value: Any?
 }
