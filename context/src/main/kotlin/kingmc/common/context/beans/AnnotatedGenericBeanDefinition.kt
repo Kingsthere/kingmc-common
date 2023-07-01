@@ -57,6 +57,6 @@ open class AnnotatedGenericBeanDefinition(
     }
 
     override fun toString(): String {
-        return "AnnotatedGenericBeanDefinition(name='$name',configurationBean='$beanClass',beanProvider='$beanProvider')"
+        return "AnnotatedGenericBeanDefinition(name='$name',configurationBean='$configurationBean',beanProvider='$beanProvider')"
     }
 }

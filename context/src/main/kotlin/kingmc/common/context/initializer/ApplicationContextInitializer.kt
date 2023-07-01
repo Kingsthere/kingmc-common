@@ -121,7 +121,7 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
     protected val sources: MutableList<Class<*>> = mutableListOf()
     protected val initializingBeans: MutableMap<String, BeanDefinition> =
         linkedMapOf()
-    protected val scopedBeans: MutableMap<String, BeanDefinition> =
+    protected val abstractBeans: MutableMap<String, BeanDefinition> =
         linkedMapOf()
 
     /**
@@ -156,10 +156,14 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
             try {
                 defineBean(clazz, false)?.let { bean ->
                     this.initializingBeans[bean.name] = bean
-                    this.scopedBeans[bean.name] = bean
+                    if (bean.isAbstract()) {
+                        this.abstractBeans[bean.name] = bean
+                    }
                     defineBeansFromConfiguration(bean).forEach { configuredBean ->
                         this.initializingBeans[configuredBean.name] = configuredBean
-                        this.scopedBeans[configuredBean.name] = configuredBean
+                        if (configuredBean.isAbstract()) {
+                            this.abstractBeans[configuredBean.name] = configuredBean
+                        }
                     }
                 }
             }
@@ -314,10 +318,14 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                 importAnnotation.value.forEach { importValue ->
                     defineBean(importValue.java, true)?.let { bean ->
                         this.initializingBeans[bean.name] = bean
-                        this.scopedBeans[bean.name] = bean
+                        if (bean.isAbstract()) {
+                            this.abstractBeans[bean.name] = bean
+                        }
                         defineBeansFromConfiguration(bean, true).forEach { configuredBean ->
                             this.initializingBeans[configuredBean.name] = configuredBean
-                            this.scopedBeans[configuredBean.name] = configuredBean
+                            if (bean.isAbstract()) {
+                                this.abstractBeans[configuredBean.name] = configuredBean
+                            }
                         }
                     }
                 }
@@ -397,8 +405,12 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
         initializingBeans.values.forEach {
             if (!it.isAbstract()) {
                 val beanClass = it.beanClass
-                beanClass.allSuperclasses.forEach { superclass ->
-                    val superBean = findBeanByClass(superclass)
+                if (it is AnnotatedBeanDefinition) {
+                    beanClass.allSuperclasses + beanClass
+                } else {
+                    beanClass.allSuperclasses
+                }.forEach { superclass ->
+                    val superBean = findAbstractBeanByClass(superclass)
                     if (superBean != null) {
                         (superBean as ClassBeanDefinition).defineImplementation(it)
                     }
@@ -425,8 +437,8 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
         return isBeanAvailable(bean)
     }
 
-    fun findBeanByClass(beanClass: KClass<*>): BeanDefinition? {
-        return scopedBeans.values.find { beanClass.isSubclassOf(it.beanClass) }
+    fun findAbstractBeanByClass(beanClass: KClass<*>): BeanDefinition? {
+        return abstractBeans.values.find { beanClass.isSubclassOf(it.beanClass) }
     }
 
     /**
