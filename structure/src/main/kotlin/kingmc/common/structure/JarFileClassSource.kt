@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream
  * @since 0.0.1
  * @author kingsthere
  */
-open class JarFileClassSource(val file: File, var classLoader: ClassLoader) : ClassSource {
+open class JarFileClassSource(val file: File, var classLoader: ClassLoader, val printExceptions: Boolean = false) : ClassSource {
 
     /**
      * Detected class names from [file]
@@ -55,6 +55,9 @@ open class JarFileClassSource(val file: File, var classLoader: ClassLoader) : Cl
                 this.whenLoadClass(classLoaded)
                 return@mapNotNull classLoaded
             } catch (e: NoClassDefFoundError) {
+                if (printExceptions) {
+                    e.printStackTrace()
+                }
                 return@mapNotNull null
             } catch (e: Exception) {
                 throw ProjectInitializeException("Unable to load project", e)
