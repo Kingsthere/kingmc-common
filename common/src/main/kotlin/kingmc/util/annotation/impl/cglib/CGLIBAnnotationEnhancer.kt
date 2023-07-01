@@ -2,6 +2,7 @@ package kingmc.util.annotation.impl.cglib
 
 import kingmc.util.annotation.AnnotationEnhancer
 import kingmc.util.annotation.impl.AnnotationContentFactoryImpl
+import kingmc.util.annotation.impl.IGNORED_ATTRIBUTES
 import kingmc.util.format.FormatContext
 import kingmc.util.format.Formatter
 import net.sf.cglib.proxy.Enhancer
@@ -33,7 +34,10 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
         val enhancer = Enhancer()
         val annotationContent = annotationContentFactory(annotation)
         enhancer.setSuperclass(templateClass.java)
-        enhancer.setCallback(MethodInterceptor { _, method, _, _ ->
+        enhancer.setCallback(MethodInterceptor { obj, method, args, proxy ->
+            if (method.name in IGNORED_ATTRIBUTES) {
+                return@MethodInterceptor proxy.invokeSuper(obj, args)
+            }
             val value = annotationContent.getAttribute(method.name)
             if (value is String) {
                 return@MethodInterceptor formatter.format(value, formatContext)
@@ -54,7 +58,10 @@ object CGLIBAnnotationEnhancer : AnnotationEnhancer {
         val enhancer = Enhancer()
         val annotationContent = annotationContentFactory(annotation)
         enhancer.setSuperclass(templateClass.java)
-        enhancer.setCallback(MethodInterceptor { _, method, _, _ ->
+        enhancer.setCallback(MethodInterceptor { obj, method, args, proxy ->
+            if (method.name in IGNORED_ATTRIBUTES) {
+                return@MethodInterceptor proxy.invokeSuper(obj, args)
+            }
             return@MethodInterceptor annotationContent.getAttribute(method.name)
         })
         return enhancer.create() as TTemplate

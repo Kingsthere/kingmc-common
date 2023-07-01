@@ -3,6 +3,7 @@ package kingmc.util.reflect
 import kingmc.util.annotation.hasAnnotation
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.full.functions
 
 /**
  * Find a function in a [KClass] by the
@@ -35,8 +36,7 @@ fun KClass<*>.hasFunction(name: String): Boolean {
  * @see KFunction
  */
 fun KClass<*>.findFunctions(name: String): Collection<KFunction<*>> =
-    this.members
-        .filterIsInstance<KFunction<*>>()
+    this.functions
         .filter { callable -> callable.name == name }
 
 /**
@@ -71,7 +71,6 @@ inline fun <reified T : Annotation> KClass<*>.functionExistByAnnotation(): Boole
  * @see KFunction
  */
 inline fun <reified T : Annotation> KClass<*>.findFunctionsByAnnotation(): Collection<KFunction<*>> =
-    this.members
-        .filterIsInstance<KFunction<*>>()
-        .filter { callable -> annotations.any { callable.hasAnnotation<T>() } }
+    this.functions
+        .filter { callable -> callable.hasAnnotation<T>() }
 

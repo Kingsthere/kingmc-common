@@ -16,3 +16,13 @@ val IGNORED_ANNOTATIONS = arrayOf(
     "java.lang.annotation.Repeatable",
     "java.lang.annotation.Retention",
 )
+
+/**
+ * Default ignored annotations attributes to prevent unnecessary annotations attributes such
+ * as [toString] or [hashCode], [equals]
+ */
+val IGNORED_ATTRIBUTES = arrayOf(
+    "toString",
+    "hashCode",
+    "equals"
+)
