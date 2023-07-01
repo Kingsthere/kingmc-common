@@ -40,6 +40,11 @@ interface Application {
     val name: String
 
     /**
+     * The application local map of this `Application`
+     */
+    val applicationLocalMap: ApplicationLocalMap
+
+    /**
      * Shutdown this application
      */
     fun shutdown()
