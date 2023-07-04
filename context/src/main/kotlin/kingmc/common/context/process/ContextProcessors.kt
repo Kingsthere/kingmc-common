@@ -11,9 +11,11 @@ import kingmc.util.InstantiateException
 import kingmc.util.annotation.hasAnnotation
 import java.util.*
 
-val Context.processors: MutableMap<Byte, MutableSet<BeanProcessor>> by lazy {
-    TreeMap(compareBy { it })
-}
+/**
+ * A shortcut to get [ProcessorContext.processors] of this context
+ */
+val Context.processors: MutableMap<Int, MutableSet<BeanProcessor>>
+    get() = (this as ProcessorContext).processors
 
 /**
  * Register a processor to this context
@@ -22,7 +24,7 @@ val Context.processors: MutableMap<Byte, MutableSet<BeanProcessor>> by lazy {
  * @see processors
  */
 fun Context.registerProcessor(beanProcessor: BeanProcessor) {
-    val batchProcessors = this.processors.computeIfAbsent(beanProcessor.priority) { mutableSetOf() }
+    val batchProcessors = this.processors.computeIfAbsent(beanProcessor.lifecycle) { TreeSet(compareByDescending { it.priority }) }
     batchProcessors.add(beanProcessor)
 }
 
@@ -87,14 +89,12 @@ fun Context.processBean(instance: Any, lifecycle: Int) {
     if (instance::class.hasAnnotation<IgnoreProcess>()) {
         return
     }
-    for (batchPriorityProcessor in processors) {
-        for (beanProcessor in batchPriorityProcessor.value) {
-            if (beanProcessor.lifecycle == lifecycle) {
-                try {
-                    beanProcessor.process(this, instance)
-                } catch (e: Exception) {
-                    throw BeanProcessingException("An exception occurred while processing bean $instance (lifecycle: $lifecycle processor: $beanProcessor)", e, instance)
-                }
+    for (beanProcessor in processors[lifecycle] ?: emptySet()) {
+        if (beanProcessor.lifecycle == lifecycle) {
+            try {
+                beanProcessor.process(this, instance)
+            } catch (e: Exception) {
+                throw BeanProcessingException("An exception occurred while processing bean $instance (lifecycle: $lifecycle processor: $beanProcessor)", e, instance)
             }
         }
     }
@@ -109,14 +109,12 @@ fun Context.processBean(instance: Any, lifecycle: Int) {
  * @see processBean
  */
 fun Context.afterProcess(lifecycle: Int) {
-    for (batchPriorityProcessor in processors) {
-        for (beanProcessor in batchPriorityProcessor.value) {
-            if (beanProcessor.lifecycle == lifecycle) {
-                try {
-                    beanProcessor.afterProcess(this)
-                } catch (e: Exception) {
-                    throw BeanProcessingException("An exception occurred while end processing by processor $beanProcessor (processor: $beanProcessor lifecycle: $lifecycle)", e, beanProcessor)
-                }
+    for (beanProcessor in processors[lifecycle] ?: emptySet()) {
+        if (beanProcessor.lifecycle == lifecycle) {
+            try {
+                beanProcessor.afterProcess(this)
+            } catch (e: Exception) {
+                throw BeanProcessingException("An exception occurred while end processing by processor $beanProcessor (processor: $beanProcessor lifecycle: $lifecycle)", e, beanProcessor)
             }
         }
     }
@@ -147,7 +145,7 @@ fun Context.disposeBean(instance: Any) {
 fun Context.afterDispose() {
     for (batchPriorityProcessor in processors) {
         for (beanProcessor in batchPriorityProcessor.value) {
-            beanProcessor.afterProcess(this)
+            beanProcessor.afterDispose(this)
         }
     }
 }
@@ -164,6 +162,24 @@ fun LifecycleContext.insertProcessBeanLifecycle(lifecycleLength: Int) {
         this.getLifecycle().insertPlan(index) {
             try {
                 this.processBeans(index)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
+
+/**
+ * Insert lifecycle for after process beans using the bean
+ * processor in this context
+ *
+ * @since 0.0.4
+ * @author kingsthere
+ */
+fun LifecycleContext.insertAfterProcessBeanLifecycle(lifecycleLength: Int) {
+    for (index in 0..lifecycleLength) {
+        this.getLifecycle().insertPlan(index) {
+            try {
                 this.afterProcess(index)
             } catch (e: Exception) {
                 e.printStackTrace()

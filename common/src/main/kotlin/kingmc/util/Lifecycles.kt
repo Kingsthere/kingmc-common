@@ -75,7 +75,7 @@ open class SimpleLifecycle<T : Runnable?>
     }
 
     override fun insertPlan(stage: Int, action: T) {
-        if (this.cursor >= stage) {
+        if (this.cursor > stage) {
             action?.run()
             return
         }
@@ -152,8 +152,6 @@ interface RepeatableRunnable : Runnable {
  * The lifecycle should be repeatable, use [Lifecycle.reset] to reset the lifecycle, so
  * when the lifecycle will run again from the start.
  *
- *
- * Also, you can use [LifecycleHandler] as the standard booster to boot lifecycle.
  *
  * @see LifecycleHandler
  * @implNote Most of the implements should support concurrent
@@ -304,18 +302,7 @@ fun <E : Runnable> lifecycleBuilder(): Lifecycle.Builder<E> {
 }
 
 /**
- * Represent an object that can handle any instance
- * of [Lifecycle], usually it represents to boot
- * up lifecycle to reach stages on times.
- *
- *
- * The object that implement from this interface should
- * have a [Lifecycle] as the target to handle. Use method
- * [getLifecycle] to get the target lifecycle it's handling,
- * the target lifecycle it's handling should is **immutable**,
- * and a [LifecycleHandler] should only handle **one lifecycle** in
- * **one instance**.
- *
+ * Represent an object that holds a [Lifecycle] instance
  *
  * @see Lifecycle
  * @see Runnable

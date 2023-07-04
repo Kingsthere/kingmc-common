@@ -2,11 +2,13 @@ package kingmc.common.context
 
 import kingmc.common.context.beans.*
 import kingmc.common.context.format.ContextFormatContext
+import kingmc.common.context.process.BeanProcessor
 import kingmc.util.*
 import kingmc.util.format.FormatContext
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
+import kotlin.collections.HashMap
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
@@ -25,6 +27,8 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      * The parents of this context
      */
     protected val parents: MutableSet<Context> = HashSet()
+
+    override val processors: MutableMap<Int, MutableSet<BeanProcessor>> = HashMap()
 
     /**
      * The lifecycle of this context

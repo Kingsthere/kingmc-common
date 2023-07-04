@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author kingsthere
  * @param T the kind of value this application local stores
  */
-class ApplicationLocal<T> {
+class ApplicationLocal<T>(val defaultValue: (() -> T)? = null) {
     companion object {
         /**
          * The next hash code to be given out. Updated atomically. Starts at
@@ -57,6 +57,11 @@ class ApplicationLocal<T> {
      */
     @WithApplication
     fun get(): T? {
+        if (defaultValue != null && currentApplication().applicationLocalMap.get<T>(applicationLocalHashCode) == null) {
+            val value = defaultValue.invoke()
+            set(value)
+            return value
+        }
         return currentApplication().applicationLocalMap.get(applicationLocalHashCode)
     }
 

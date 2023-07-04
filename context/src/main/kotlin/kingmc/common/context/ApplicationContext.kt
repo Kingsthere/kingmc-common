@@ -1,5 +1,7 @@
 package kingmc.common.context
 
+import kingmc.common.context.process.ProcessorContext
+
 /**
  * An ioc container integration integrated common features for applications
  *
@@ -7,7 +9,7 @@ package kingmc.common.context
  * @author kingsthere
  * @see Context
  */
-interface ApplicationContext : Context, ConditionCapableContext, HierarchicalContext, LifecycleContext {
+interface ApplicationContext : Context, ProcessorContext, ConditionCapableContext, HierarchicalContext, LifecycleContext {
     /**
      * The name of this application context
      */
