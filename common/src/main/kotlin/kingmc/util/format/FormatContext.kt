@@ -53,7 +53,7 @@ open class AbstractFormatContext(val parent: FormatContext? = null) : FormatCont
      * @return the argument got, or `null` if the argument with name [name] is not found
      */
     override fun getOrNull(name: String): FormatArgument<*>? {
-        return getImplemented(name) ?: parent?.get(name)
+        return getImplemented(name) ?: parent?.getOrNull(name)
     }
 
     /**

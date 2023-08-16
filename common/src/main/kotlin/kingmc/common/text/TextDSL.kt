@@ -65,7 +65,7 @@ fun StorageNBTText(builder: StorageNBTTextBuilder.() -> Unit): StorageNBTText = 
  * @since 0.0.7
  */
 fun Text(builder: LiteralTextBuilder.() -> Unit = {  }): Text
-    = Text.text(builder)
+        = Text.text(builder)
 
 /**
  * Builds a new [LiteralText] with default content set from

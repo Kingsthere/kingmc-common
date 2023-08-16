@@ -16,6 +16,9 @@ import kingmc.util.Utility
 @Throws(InvalidKeyException::class)
 fun keyOf(string: String): Key {
     val strings = string.split(":")
+    if (strings.size != 2) {
+        throw MalformedKeyException(string)
+    }
     return Key(strings[0], strings[1])
 }
 

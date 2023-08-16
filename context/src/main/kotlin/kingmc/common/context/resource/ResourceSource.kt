@@ -16,7 +16,7 @@ sealed class ResourceSource<TValue>(val valueClass: KClass<*>) {
      *
      * For example `default/config.yml`
      */
-    object JAR : ResourceSource<String>(String::class)
+    data object JAR : ResourceSource<String>(String::class)
 
     /**
      * URL - load resources from url
@@ -24,7 +24,8 @@ sealed class ResourceSource<TValue>(val valueClass: KClass<*>) {
      *
      * For example: `file://C:/Users/config.yml`
      */
-    object URL : ResourceSource<URL>(URL::class)
+    data object URL : ResourceSource<URL>(URL::class)
+
     companion object {
         fun values(): Array<ResourceSource<*>> {
             return arrayOf(JAR, URL)

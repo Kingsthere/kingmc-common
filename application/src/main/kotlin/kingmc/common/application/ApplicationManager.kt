@@ -1,7 +1,7 @@
 package kingmc.common.application
 
+import kingmc.util.InternalAPI
 import kingmc.util.KingMCDsl
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -20,10 +20,13 @@ interface ApplicationManager {
     fun bindApplicationToThread(application: Application?)
 
     companion object {
+        @OptIn(InternalAPI::class)
         fun currentOrNull(): Application? = applicationManager.currentOrNull()
 
+        @OptIn(InternalAPI::class)
         fun bindApplicationToThread(application: Application?) = applicationManager.bindApplicationToThread(application)
 
+        @OptIn(InternalAPI::class)
         fun current(): Application = applicationManager.currentOrNull() ?: throw IllegalStateException()
     }
 }
@@ -50,7 +53,8 @@ class ThreadLocalApplicationManager : ApplicationManager {
     }
 }
 
-fun <T> keepAndRestoreApplicationRefAfterRun(block: () -> T): T {
+@OptIn(InternalAPI::class)
+inline fun <T> keepAndRestoreApplicationRefAfterRun(block: () -> T): T {
     val currentApplication = applicationManager.currentOrNull()
     return try {
         block()
@@ -59,21 +63,13 @@ fun <T> keepAndRestoreApplicationRefAfterRun(block: () -> T): T {
     }
 }
 
-suspend fun <T> keepAndRestoreApplicationRefAfterRunSuspend(block: suspend () -> T): T {
-    val currentApplication = applicationManager.currentOrNull()
-    return try {
-        block()
-    } finally {
-        applicationManager.bindApplicationToThread(currentApplication)
-    }
-}
-
-internal val applicationManager: ApplicationManager by lazy {
+@InternalAPI
+val applicationManager: ApplicationManager by lazy {
     ThreadLocalApplicationManager()
 }
 
 /**
- * Run a block of action surround with application, the codes surrounded with `application()`
+ * Run a block of action surround with receiver's application, the codes surrounded with `application()`
  * should run like this
  * ```
  * // Application set to ApplicationManager
@@ -89,13 +85,13 @@ internal val applicationManager: ApplicationManager by lazy {
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-fun <R> Any.withApplication(action: @WithApplication Application.() -> R): R {
+inline fun <R> Any.withApplication(action: @WithApplication Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     return withApplication(this.application, action)
 }
 
 /**
- * Run a block of action surround with application, the codes surrounded with `application()`
+ * Run a block of action surround with the given application, the codes surrounded with `application()`
  * should run like this
  * ```
  * // Application set to ApplicationManager
@@ -112,65 +108,11 @@ fun <R> Any.withApplication(action: @WithApplication Application.() -> R): R {
  */
 @OptIn(ExperimentalContracts::class)
 @KingMCDsl
-fun <R> withApplication(application: Application, action: @WithApplication Application.() -> R): R {
+inline fun <R> withApplication(application: Application, action: @WithApplication Application.() -> R): R {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
-    val result: AtomicReference<R> = AtomicReference()
-    keepAndRestoreApplicationRefAfterRun {
+    return keepAndRestoreApplicationRefAfterRun {
         ApplicationManager.bindApplicationToThread(application)
-        result.set(application.action())
-    }
-    return result.get()
-}
-
-/**
- * Run a block of suspended action surround with application, the codes surrounded with `application()`
- * should run like this
- * ```
- * // Application set to ApplicationManager
- * withApplicationSuspend {
- *     suspendActionsWithApplication()
- * } // Application removed from ApplicationManager
- * ```
- *
- * Whether to use `suspendApplication {  }` to surround these operation depends on whether
- * the function involved in the code has a [WithApplication] annotation
- *
- * @param action the action to run with application set
- */
-@OptIn(ExperimentalContracts::class)
-@KingMCDsl
-suspend fun <R> Any.withApplicationSuspend(action: @WithApplication suspend Application.() -> R): R {
-    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
-    val application = this.application
-    return keepAndRestoreApplicationRefAfterRunSuspend {
-        ApplicationManager.bindApplicationToThread(application)
-        application.action()
-    }
-}
-
-/**
- * Run a block of suspended action surround with application, the codes surrounded with `application()`
- * should run like this
- * ```
- * // Application set to ApplicationManager
- * withApplicationSuspend {
- *     suspendActionsWithApplication()
- * } // Application removed from ApplicationManager
- * ```
- *
- * Whether to use `suspendApplication {  }` to surround these operation depends on whether
- * the function involved in the code has a [WithApplication] annotation
- *
- * @param application the application set to the ApplicationManager
- * @param action the action to run with application set
- */
-@OptIn(ExperimentalContracts::class)
-@KingMCDsl
-suspend fun <R> withApplicationSuspend(application: Application, action: @WithApplication suspend Application.() -> R): R {
-    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
-    return keepAndRestoreApplicationRefAfterRunSuspend {
-        ApplicationManager.bindApplicationToThread(application)
-        application.action()
+        action(application)
     }
 }
 

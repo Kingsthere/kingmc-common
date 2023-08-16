@@ -13,12 +13,12 @@ import kotlin.reflect.full.primaryConstructor
  * @author kingsthere
  */
 open class AutowireCapableSingletonMap(val context: Context) : SingletonMap() {
-    override fun <T : Any> invoke(clazz: KClass<out T>): T {
+    override fun <T : Any> createInstance(clazz: KClass<out T>): T {
         val primaryConstructor = clazz.primaryConstructor
         return if (primaryConstructor?.hasAnnotation<Autowired>() == true) {
             context.callFunctionWithContext(primaryConstructor, null)
         } else {
-            super.invoke(clazz)
+            super.createInstance(clazz)
         }
     }
 }

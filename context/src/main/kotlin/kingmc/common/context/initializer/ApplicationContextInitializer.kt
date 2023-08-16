@@ -214,6 +214,10 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
 
         val beanPrivacy: BeanPrivacy = beanClass.getAnnotation<Privacy>()?.privacy ?: BeanPrivacy.PUBLIC
 
+        val priority = beanClass.getAnnotation<Primary>()?.let {
+            Byte.MAX_VALUE
+        } ?: beanClass.getAnnotation<Priority>()?.value ?: 0
+
         // Build and return the BeanDefinition
         val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
             ScannedGenericBeanDefinition(
@@ -222,10 +226,11 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                 annotations = beanClass.annotations,
                 scope = scope,
                 isAbstract = beanClass.isAbstract,
-                name = BeansUtil.getBeanName(beanClass),
+                name = beanName,
                 deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
                 primary = beanClass.annotations.any { it.annotationClass == Primary::class },
-                privacy = beanPrivacy
+                privacy = beanPrivacy,
+                priority = priority
             )
         } else {
             LateinitScannedGenericBeanDefinition(
@@ -234,11 +239,12 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                 annotations = beanClass.annotations,
                 scope = scope,
                 isAbstract = beanClass.isAbstract,
-                name = BeansUtil.getBeanName(beanClass),
+                name = beanName,
                 deprecated = beanClass.annotations.any { it.annotationClass == Deprecated::class },
                 primary = beanClass.annotations.any { it.annotationClass == Primary::class },
                 privacy = beanPrivacy,
-                lifecycle = lateinit.lifecycle
+                lifecycle = lateinit.lifecycle,
+                priority = priority
             )
         }
 
@@ -275,6 +281,10 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
 
             val beanClass = it.returnType.classifier as KClass<*>
 
+            val priority = it.getAnnotation<Primary>()?.let {
+                Byte.MAX_VALUE
+            } ?: it.getAnnotation<Priority>()?.value ?: 0
+
             val beanDefinition = if (lateinit == null || lateinit.lifecycle == 0) {
                 AnnotatedGenericBeanDefinition(
                     beanClass = beanClass,
@@ -287,7 +297,8 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                     name = beanName,
                     deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
                     primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class },
-                    privacy = beanPrivacy
+                    privacy = beanPrivacy,
+                    priority = priority
                 )
             } else {
                 LateinitAnnotatedGenericBeanDefinition(
@@ -302,7 +313,8 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                     deprecated = beanClass.annotations.any { annotation -> annotation.annotationClass == Deprecated::class },
                     primary = beanClass.annotations.any { annotation -> annotation.annotationClass == Primary::class },
                     privacy = beanPrivacy,
-                    lifecycle = lateinit.lifecycle
+                    lifecycle = lateinit.lifecycle,
+                    priority = priority
                 )
             }
 
@@ -383,7 +395,7 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
                                 throw NoBeanDefFoundException("Could not find bean required by ${bean.beanClass.qualifiedName}.${it.name}", beanType = typeClass)
                             }
                         }
-                        // Wire beans by reflect
+                        // Populate bean by reflection
                         it.setter.call(instance, populatedBean)
                     }
                 }
@@ -403,16 +415,18 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
 
     private fun defineAbstractBeanImplementations() {
         initializingBeans.values.forEach {
-            if (!it.isAbstract()) {
-                val beanClass = it.beanClass
-                if (it is AnnotatedBeanDefinition) {
-                    beanClass.allSuperclasses + beanClass
-                } else {
-                    beanClass.allSuperclasses
-                }.forEach { superclass ->
-                    val superBean = findAbstractBeanByClass(superclass)
-                    if (superBean != null) {
-                        (superBean as ClassBeanDefinition).defineImplementation(it)
+            if (isBeanAvailable(it)) {
+                if (!it.isAbstract()) {
+                    val beanClass = it.beanClass
+                    if (it is AnnotatedBeanDefinition) {
+                        beanClass.allSuperclasses + beanClass
+                    } else {
+                        beanClass.allSuperclasses
+                    }.forEach { superclass ->
+                        val superBean = findAbstractBeanByClass(superclass)
+                        if (superBean != null) {
+                            (superBean as ClassBeanDefinition).defineImplementation(it)
+                        }
                     }
                 }
             }
@@ -500,7 +514,7 @@ open class ApplicationContextInitializer(override val context: HierarchicalConte
         // Set up a set with instances of
         // classes in the project specified
         context
-            .getProtectedBeans()
+            .getOwningBeans()
             .filter { it.isSingleton() }
             .forEach {
                 val beanInstance = context.getBeanInstance(it)

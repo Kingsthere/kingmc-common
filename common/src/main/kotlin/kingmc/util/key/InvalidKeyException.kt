@@ -5,7 +5,7 @@ package kingmc.util.key
  *
  * @since 0.0.1
  */
-class InvalidKeyException internal constructor(
+class InvalidKeyException(
     private val keyNamespace: String,
     private val keyValue: String,
     message: String?
@@ -28,9 +28,5 @@ class InvalidKeyException internal constructor(
      */
     fun keyValue(): String {
         return keyValue
-    }
-
-    companion object {
-        private const val serialVersionUID = -5413304087321449434L
     }
 }

@@ -56,8 +56,9 @@ interface Key : Comparable<Key>, Namespaced {
      * Returns the string representation of this key.
      *
      * @return the string representation
-     * @since 0.0.1
+     * @since 0.1.1
      */
+    @Deprecated("Use toString() instead")
     fun asString(): String
 
     override operator fun compareTo(other: Key): Int {
@@ -114,6 +115,7 @@ internal class KeyImpl(namespace: String, value: String) : Key {
         return value
     }
 
+    @Deprecated("Use toString() instead")
     override fun asString(): String {
         return asString(namespace, value)
     }

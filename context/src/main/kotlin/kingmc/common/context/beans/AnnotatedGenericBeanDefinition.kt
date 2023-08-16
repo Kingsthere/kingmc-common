@@ -22,7 +22,8 @@ open class AnnotatedGenericBeanDefinition(
     private val isAbstract: Boolean,
     override val deprecated: Boolean,
     override val primary: Boolean,
-    override val privacy: BeanPrivacy
+    override val privacy: BeanPrivacy,
+    override val priority: Byte
 ) : ClassBeanDefinition(beanClass) {
 
     /**

@@ -57,6 +57,12 @@ interface BeanDefinition {
     val primary: Boolean
 
     /**
+     * The priority of this bean definition
+     */
+    val priority: Byte
+        get() = 0
+
+    /**
      * Return `true` if this bean is a singleton
      */
     fun isSingleton(): Boolean
@@ -75,5 +81,5 @@ interface BeanDefinition {
      * Return the implementation beans of this bean definition
      * if this bean is an abstract bean ([isAbstract])
      */
-    fun implementations(): List<BeanDefinition>
+    fun implementations(): Collection<BeanDefinition>
 }

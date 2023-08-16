@@ -12,7 +12,7 @@ package kingmc.common.context.annotation
 @MustBeDocumented
 annotation class Priority(
     /**
-     * The value
+     * The priority of the bean
      *
      * @since 0.0.1
      */

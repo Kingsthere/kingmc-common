@@ -8,7 +8,6 @@ import kingmc.util.format.FormatContext
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
-import kotlin.collections.HashMap
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
@@ -49,6 +48,13 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      */
     protected val protectedBeanDefinitions: MutableMap<String, BeanDefinition> = ConcurrentHashMap()
 
+    /**
+     * Protected bean definitions cached by class
+     *
+     * @since 0.1.0
+     */
+    protected val protectedBeanDefinitionsByClass: MutableMap<KClass<*>, BeanDefinition> = ConcurrentHashMap()
+
     var owningBeanDefinitions: MutableMap<String, BeanDefinition> = computeOwningBeanDefinitions()
 
     private fun computeOwningBeanDefinitions(): MutableMap<String, BeanDefinition> {
@@ -71,6 +77,11 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      */
     private var beanDefinitions: MutableMap<String, BeanDefinition> = computeBeanDefinitions()
 
+    /**
+     * All bean definitions, include the beans from parent context cached by it class
+     */
+    private var beanDefinitionsByClass: MutableMap<KClass<*>, BeanDefinition> = computeBeanDefinitionsByClass()
+
     fun computeBeanDefinitions(): MutableMap<String, BeanDefinition> {
         return HashMap<String, BeanDefinition>().apply {
             putAll(protectedBeanDefinitions)
@@ -78,6 +89,19 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
                 it.asMap().forEach { (name, bean) ->
                     if (bean.privacy != BeanPrivacy.PRIVATE) {
                         put(name, bean)
+                    }
+                }
+            }
+        }
+    }
+
+    fun computeBeanDefinitionsByClass(): MutableMap<KClass<*>, BeanDefinition> {
+        return HashMap<KClass<*>, BeanDefinition>().apply {
+            putAll(protectedBeanDefinitionsByClass)
+            parents.forEach {
+                it.asMap().forEach { (_, bean) ->
+                    if (bean.privacy != BeanPrivacy.PRIVATE) {
+                        put(bean.beanClass, bean)
                     }
                 }
             }
@@ -95,6 +119,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
     fun refresh() {
         owningBeanDefinitions = computeOwningBeanDefinitions()
         beanDefinitions = computeBeanDefinitions()
+        beanDefinitionsByClass = computeBeanDefinitionsByClass()
     }
 
     /**
@@ -104,6 +129,7 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
      */
     internal fun registerBeanDefinition(beanDefinition: BeanDefinition) {
         this.protectedBeanDefinitions[beanDefinition.name] = beanDefinition
+        this.protectedBeanDefinitionsByClass[beanDefinition.beanClass] = beanDefinition
     }
     /**
      * Dispose a registered bean definition into this application context
@@ -142,25 +168,9 @@ abstract class AbstractApplicationContext(override val properties: Properties, o
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> getBean(clazz: KClass<out T>): T {
-        var deprecatedBeanDefinition: BeanDefinition? = null
-        var secondaryBeanDefinition: BeanDefinition? = null
-        this.beanDefinitions.forEach { (_, definition) ->
-            if (definition is ClassBeanDefinition) {
-                if (definition.beanClass.isSubclassOf(clazz)) {
-                    if (definition.primary) {
-                        return getBeanInstance(definition) as T
-                    } else if (!definition.deprecated) {
-                        secondaryBeanDefinition = definition
-                    } else {
-                        deprecatedBeanDefinition = definition
-                    }
-                }
-            }
-        }
-        return if (secondaryBeanDefinition != null) {
-            getBeanInstance(secondaryBeanDefinition!!) as T
-        } else if (deprecatedBeanDefinition != null) {
-            getBeanInstance(deprecatedBeanDefinition!!) as T
+        val beanDefinition = this.beanDefinitionsByClass[clazz]
+        return if (beanDefinition != null) {
+            getBeanInstance(beanDefinition) as T
         } else {
             throw NoBeanDefFoundException("No bean definition class assignable to $clazz found")
         }

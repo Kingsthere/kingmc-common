@@ -7,8 +7,8 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 /**
- * A [ApplicationCoroutineScope] for applications, when application shutdown this coroutine scope
- * automatically cancelled
+ * An `ApplicationCoroutineScope` is a coroutine scope implementation used by kingmc framework,
+ * when application shutdown this coroutine scope automatically cancelled
  *
  * @since 0.0.7
  * @author kingsthere

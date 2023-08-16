@@ -1,5 +1,6 @@
 package kingmc.common.context.beans
 
+import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -10,7 +11,7 @@ import kotlin.reflect.KClass
  * @author kingsthere
  */
 abstract class ClassBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefinition {
-    private val implementations: MutableList<BeanDefinition> = mutableListOf()
+    private val implementations: MutableSet<BeanDefinition> = TreeSet(compareByDescending { it.priority })
 
     /**
      * Define a bean implementation to this bean if this
@@ -20,7 +21,7 @@ abstract class ClassBeanDefinition(val beanClass: KClass<*>) : AnnotatedBeanDefi
         implementations.add(bean)
     }
 
-    override fun implementations(): List<BeanDefinition> {
+    override fun implementations(): Collection<BeanDefinition> {
         if (isAbstract()) {
             return implementations
         } else {

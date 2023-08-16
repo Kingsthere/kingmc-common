@@ -17,6 +17,7 @@ open class LateinitAnnotatedGenericBeanDefinition(
     primary: Boolean,
     privacy: BeanPrivacy,
     override val lifecycle: Int,
+    priority: Byte,
 ) : AnnotatedGenericBeanDefinition(
     beanClass,
     context,
@@ -28,5 +29,5 @@ open class LateinitAnnotatedGenericBeanDefinition(
     isAbstract,
     deprecated,
     primary,
-    privacy
+    privacy, priority
 ), LateinitBeanDefinition

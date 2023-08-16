@@ -13,7 +13,7 @@ import kingmc.common.context.Context
  * @since 0.0.7
  * @author kingsthere
  */
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
 @Retention
 @MustBeDocumented
 annotation class Primary

@@ -3,19 +3,20 @@ package kingmc.common.context
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import kingmc.util.KingMCDsl
 import kingmc.util.Lifecycle
+import java.util.*
 
 /**
  * A map define the context by the class loader of the classes
  */
 object ContextDefiner {
     val value: MutableMap<Class<*>, MutableMap<Int, Context>> = mutableMapOf()
-    val contextNotification: ThreadLocal<Context> = ThreadLocal()
+    val contextNotification: ThreadLocal<Stack<Context>> = ThreadLocal.withInitial { Stack() }
 
-    fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
-        contextNotification.set(context)
+    inline fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
+        contextNotification.get().push(context)
         val instance = block(context)
         getOrCreateBeanClassInstanceContexts(clazz)[System.identityHashCode(instance)] = context
-        contextNotification.remove()
+        contextNotification.get().pop()
         return instance
     }
 
@@ -37,7 +38,7 @@ object ContextDefiner {
 @KingMCDsl
 val Any.context: Context
     get() {
-        return checkNotNull(ContextDefiner.getContextFor(this) ?: ContextDefiner.contextNotification.get()) { "No context defined for $this" }
+        return checkNotNull(ContextDefiner.getContextFor(this) ?: ContextDefiner.contextNotification.get().peek()) { "No context defined for $this" }
     }
 
 /**

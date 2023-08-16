@@ -10,13 +10,18 @@ version = kingmc_version
 plugins {
     `maven-publish`
     signing
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.9.0"
 }
 
 allprojects {
     apply(plugin = "org.gradle.signing")
     apply(plugin = "org.gradle.maven-publish")
     apply(plugin = "org.jetbrains.kotlin.jvm")
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
 
     dependencies {
         // ASM
@@ -34,14 +39,14 @@ allprojects {
         api(group = "net.kyori", name = "adventure-text-serializer-gson", version = "4.11.0")
         api(group = "net.kyori", name = "adventure-text-serializer-legacy", version = "4.11.0")
         api(group = "com.google.code.gson", name = "gson", version = "2.9.0")
-        api(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = "1.6.4")
+        api(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = "1.7.3")
         api("org.yaml:snakeyaml:2.0")
-        api("com.github.ben-manes.caffeine:caffeine:2.9.1")
+        api("com.github.ben-manes.caffeine:caffeine:2.9.3")
         api("com.google.guava:guava:31.1-jre")
         api("it.unimi.dsi:fastutil:8.5.12")
         api("commons-io:commons-io:2.11.0")
 
-        val kotlinVersion = "1.8.10"
+        val kotlinVersion = "1.9.0"
         // Kotlin
         implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
         implementation(kotlin("reflect"))

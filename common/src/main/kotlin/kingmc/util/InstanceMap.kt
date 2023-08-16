@@ -59,6 +59,30 @@ open class SingletonMap : InstanceMap {
     protected val instances: MutableMap<KClass<out Any>, Any> = mutableMapOf()
 
     @Suppress("UNCHECKED_CAST")
+    protected open fun <T : Any> createInstance(clazz: KClass<out T>): T {
+        // Try to instantiate the class
+        if (clazz.simpleName == "Companion") {
+            // If the class is a companion class
+            return clazz.companionObjectInstance as T
+        }
+        // Get object instance if the class is an
+        // object (in kotlin)
+        clazz.objectInstance?.let {
+            instances[clazz] = it
+            return it
+        }
+        val constructorAccess: ConstructorAccess<out T> = ConstructorAccess.get(clazz.java)
+        // Instantiate the class with no-args constructor
+        val instantiated = constructorAccess.newInstance()
+        if (instantiated != null) {
+            instances[clazz] = instantiated
+            return instantiated
+        } else {
+            throw InstantiateException("Unable to instantiate class $clazz cause no-args constructor is not found")
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
     @Throws(InstantiateException::class)
     override fun <T : Any> invoke(clazz: KClass<out T>): T {
         if (instances.contains(clazz)) {
@@ -67,26 +91,9 @@ open class SingletonMap : InstanceMap {
             return instances[clazz] as T
         } else {
             try {
-                // Try to instantiate the class
-                if (clazz.simpleName == "Companion") {
-                    // If the class is a companion class
-                    return clazz.companionObjectInstance as T
-                }
-                // Get object instance if the class is an
-                // object (in kotlin)
-                clazz.objectInstance?.let {
-                    instances[clazz] = it
-                    return it
-                }
-                val constructorAccess: ConstructorAccess<out T> = ConstructorAccess.get(clazz.java)
-                // Instantiate the class with no-args constructor
-                val instantiated = constructorAccess.newInstance()
-                if (instantiated != null) {
-                    instances[clazz] = instantiated
-                    return instantiated
-                } else {
-                    throw InstantiateException("Unable to instantiate class $clazz cause no-args constructor is not found")
-                }
+                val instance = createInstance(clazz)
+                instances[clazz] = instance
+                return instance
             } catch (ex: NoClassDefFoundError) {
                 throw InstantiateException("Unable to instantiate class $clazz", ex)
             } catch (ex: ClassNotFoundException) {

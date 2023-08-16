@@ -14,5 +14,5 @@ object KingMC {
     /**
      * The version number of kingmc framework
      */
-    const val VERSION: String = "alpha-0.0.7"
+    const val VERSION: String = "alpha-0.1.1"
 }

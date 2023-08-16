@@ -14,6 +14,7 @@ open class LateinitScannedGenericBeanDefinition(
     primary: Boolean,
     privacy: BeanPrivacy,
     override val lifecycle: Int,
+    priority: Byte,
 ) : ScannedGenericBeanDefinition(
     beanClass,
     context,
@@ -23,5 +24,6 @@ open class LateinitScannedGenericBeanDefinition(
     isAbstract,
     deprecated,
     primary,
-    privacy
+    privacy,
+    priority
 ), LateinitBeanDefinition
