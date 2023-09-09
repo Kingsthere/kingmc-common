@@ -22,16 +22,20 @@ object ConditionOnClassMissing : Condition {
         val classes = annotation.getAttributeOrNull("classes") as Array<Any>? ?: emptyArray()
         val classLoader = beanSource.classLoader
 
-        return classnames.all { try {
-            classLoader.loadClass(it as String)
-            false
-        } catch (_: ClassNotFoundException) {
-            true
-        }} && classes.all { try {
-            classLoader.loadClass((it as AnnotationClassRef).name)
-            false
-        } catch (_: ClassNotFoundException) {
-            true
-        }}
+        return classnames.all {
+            try {
+                classLoader.loadClass(it as String)
+                false
+            } catch (_: ClassNotFoundException) {
+                true
+            }
+        } && classes.all {
+            try {
+                classLoader.loadClass((it as AnnotationClassRef).name)
+                false
+            } catch (_: ClassNotFoundException) {
+                true
+            }
+        }
     }
 }

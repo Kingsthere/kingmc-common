@@ -45,7 +45,8 @@ object Lifecycles {
  * @param priority the priority to run the execution
  * @param body the body of the execution to run
  */
-fun Lifecycle.onConst(priority: Byte = 0, name: String? = null, body: () -> Unit) = scheduleExecution(Lifecycles.CONST, Execution(priority, name, body))
+fun Lifecycle.onConst(priority: Byte = 0, name: String? = null, body: () -> Unit) =
+    scheduleExecution(Lifecycles.CONST, Execution(priority, name, body))
 
 /**
  * Schedule the given execution at [Lifecycles.INITIALIZE]
@@ -53,7 +54,8 @@ fun Lifecycle.onConst(priority: Byte = 0, name: String? = null, body: () -> Unit
  * @param priority the priority to run the execution
  * @param body the body of the execution to run
  */
-fun Lifecycle.onInitialize(priority: Byte = 0, name: String? = null, body: () -> Unit) = scheduleExecution(Lifecycles.INITIALIZE, Execution(priority, name, body))
+fun Lifecycle.onInitialize(priority: Byte = 0, name: String? = null, body: () -> Unit) =
+    scheduleExecution(Lifecycles.INITIALIZE, Execution(priority, name, body))
 
 /**
  * Schedule the given execution at [Lifecycles.LOAD]
@@ -61,7 +63,8 @@ fun Lifecycle.onInitialize(priority: Byte = 0, name: String? = null, body: () ->
  * @param priority the priority to run the execution
  * @param body the body of the execution to run
  */
-fun Lifecycle.onLoad(priority: Byte = 0, name: String? = null, body: () -> Unit) = scheduleExecution(Lifecycles.LOAD, Execution(priority, name, body))
+fun Lifecycle.onLoad(priority: Byte = 0, name: String? = null, body: () -> Unit) =
+    scheduleExecution(Lifecycles.LOAD, Execution(priority, name, body))
 
 /**
  * Schedule the given execution at [Lifecycles.ACTIVE]
@@ -69,7 +72,8 @@ fun Lifecycle.onLoad(priority: Byte = 0, name: String? = null, body: () -> Unit)
  * @param priority the priority to run the execution
  * @param body the body of the execution to run
  */
-fun Lifecycle.onActive(priority: Byte = 0, name: String? = null, body: () -> Unit) = scheduleExecution(Lifecycles.ACTIVE, Execution(priority, name, body))
+fun Lifecycle.onActive(priority: Byte = 0, name: String? = null, body: () -> Unit) =
+    scheduleExecution(Lifecycles.ACTIVE, Execution(priority, name, body))
 
 /**
  * Schedule the given execution at [Lifecycles.SHUTDOWN]
@@ -77,7 +81,8 @@ fun Lifecycle.onActive(priority: Byte = 0, name: String? = null, body: () -> Uni
  * @param priority the priority to run the execution
  * @param body the body of the execution to run
  */
-fun Lifecycle.onShutdown(priority: Byte = 0, name: String? = null, body: () -> Unit) = scheduleExecution(Lifecycles.SHUTDOWN, Execution(priority, name, body))
+fun Lifecycle.onShutdown(priority: Byte = 0, name: String? = null, body: () -> Unit) =
+    scheduleExecution(Lifecycles.SHUTDOWN, Execution(priority, name, body))
 
 /**
  * Create an instance of `Lifecycle` and return

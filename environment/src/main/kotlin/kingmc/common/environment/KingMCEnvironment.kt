@@ -1,6 +1,5 @@
 package kingmc.common.environment
 
-import kingmc.common.environment.maven.DependencyScope
 import kingmc.common.environment.maven.MavenDependency
 
 @MavenDependency(

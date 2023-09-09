@@ -42,8 +42,8 @@ object AnnotationNamingPolicy : NamingPolicy {
         return other is AnnotationNamingPolicy && tag == tag
     }
 
-        /**
-         * This allows testing collisions of `key.hashCode()`.
-         */
+    /**
+     * This allows testing collisions of `key.hashCode()`.
+     */
     private val STRESS_HASH_CODE = java.lang.Boolean.getBoolean("net.sf.cglib.test.stressHashCodes")
 }

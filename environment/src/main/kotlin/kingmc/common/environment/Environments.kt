@@ -9,7 +9,6 @@ import kingmc.common.environment.maven.model.Repository
 import kingmc.common.environment.maven.relocate.Relocate
 import kingmc.util.annotation.getAnnotationsWithFormattedProperty
 import kingmc.util.format.FormatContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.Future
@@ -22,13 +21,14 @@ import kotlin.reflect.KClass
  * @author kingsthere
  * @since 0.1.2
  */
-suspend fun DependencyDispatcher.installDependenciesSuspend(dependencyDeclarations: Iterable<DependencyDeclaration>) = coroutineScope {
-    launch {
-        dependencyDeclarations.forEach { dependency ->
-            installDependency(dependency)
+suspend fun DependencyDispatcher.installDependenciesSuspend(dependencyDeclarations: Iterable<DependencyDeclaration>) =
+    coroutineScope {
+        launch {
+            dependencyDeclarations.forEach { dependency ->
+                installDependency(dependency)
+            }
         }
     }
-}
 
 /**
  * Install all the given dependencies for this dependency dispatcher asynchronously
@@ -67,7 +67,10 @@ fun KClass<*>.loadDependencies(dependencyDispatcher: DependencyDispatcher, forma
  * @since 0.0.6
  */
 @OptIn(ExperimentalEnvironmentApi::class)
-fun KClass<*>.loadDependenciesAsync(dependencyDispatcher: DependencyDispatcher, formatContext: FormatContext): List<Future<*>> {
+fun KClass<*>.loadDependenciesAsync(
+    dependencyDispatcher: DependencyDispatcher,
+    formatContext: FormatContext
+): List<Future<*>> {
     val tasks = mutableListOf<Future<*>>()
     val relocations: MutableSet<JarRelocation> = mutableSetOf()
     getAnnotationsWithFormattedProperty<Relocate>(formatContext).forEach {
@@ -88,7 +91,10 @@ fun KClass<*>.loadDependenciesAsync(dependencyDispatcher: DependencyDispatcher, 
  * @since 0.0.6
  */
 @OptIn(ExperimentalEnvironmentApi::class)
-suspend fun KClass<*>.loadDependenciesSuspend(dependencyDispatcher: DependencyDispatcher, formatContext: FormatContext) = coroutineScope {
+suspend fun KClass<*>.loadDependenciesSuspend(
+    dependencyDispatcher: DependencyDispatcher,
+    formatContext: FormatContext
+) = coroutineScope {
     val relocations: MutableSet<JarRelocation> = mutableSetOf()
     getAnnotationsWithFormattedProperty<Relocate>(formatContext).forEach {
         relocations.add(JarRelocation(it.pattern.replace("!", ""), it.relocatedPattern))

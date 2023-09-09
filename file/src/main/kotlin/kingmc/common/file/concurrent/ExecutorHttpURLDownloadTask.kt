@@ -11,7 +11,6 @@ import java.net.URL
 import java.nio.ByteBuffer
 import java.nio.channels.Channels
 import java.nio.channels.ReadableByteChannel
-import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
 
@@ -30,6 +29,7 @@ class ExecutorHttpURLDownloadTask(
 ) : URLDownloadTask, SliceDownloadTask {
     @Volatile
     private var _progress: Long = 0
+
     @Volatile
     private var _length: Long = 0
 

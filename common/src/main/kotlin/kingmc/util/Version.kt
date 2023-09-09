@@ -27,9 +27,11 @@ class Version(source: CharSequence, val toString: String? = null) : Comparable<V
             2 -> {
                 intArrayOf(-1, args[0].toInt(), args[1].toInt())
             }
+
             3 -> {
                 intArrayOf(args[0].toInt(), args[1].toInt(), args[2].toInt())
             }
+
             else -> {
                 throw VersionFormatException("Incorrect version format $source")
             }

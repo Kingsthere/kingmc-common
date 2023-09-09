@@ -8,4 +8,10 @@ import java.io.File
  * @author kingsthere
  * @since 0.0.6
  */
-data class DownloadedDependency(val jar: File, val jarSha1: File, val pom: File, val pomSha1: File, val transitive: List<DownloadedDependency>)
+data class DownloadedDependency(
+    val jar: File,
+    val jarSha1: File,
+    val pom: File,
+    val pomSha1: File,
+    val transitive: List<DownloadedDependency>
+)

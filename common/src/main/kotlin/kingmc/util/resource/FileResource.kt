@@ -4,8 +4,7 @@ import java.io.File
 import java.io.InputStream
 import java.net.URL
 
-open class FileResource(val file: File)
-    : URLResource(file.toURI().toURL()) {
+open class FileResource(val file: File) : URLResource(file.toURI().toURL()) {
 
     /**
      * Gets this resource as a [URL] instance

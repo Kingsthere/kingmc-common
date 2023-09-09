@@ -1,6 +1,6 @@
 package kingmc.common.context
 
-import java.util.Properties
+import java.util.*
 
 /**
  * Extended `BeanSource` represents a bean source with customizable properties

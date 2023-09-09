@@ -20,7 +20,19 @@ open class AbstractScannedBeanDefinition(
     privacy: BeanPrivacy,
     priority: Byte,
     implementations: Collection<BeanDefinition>
-) : ScannedBeanDefinition(type, context, annotations, name, scope, deprecated, primary, privacy, priority, true, implementations) {
+) : ScannedBeanDefinition(
+    type,
+    context,
+    annotations,
+    name,
+    scope,
+    deprecated,
+    primary,
+    privacy,
+    priority,
+    true,
+    implementations
+) {
     /**
      * Return `true` if this bean is an abstract bean
      */

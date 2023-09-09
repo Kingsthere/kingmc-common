@@ -58,7 +58,12 @@ fun Collection<AnnotationInfo>.hasAnnotationInfoClass(targetAnnotation: ClassInf
  * Check if any of annotations in this collection is or inherited [targetAnnotationClassname]
  */
 fun Collection<AnnotationInfo>.hasAnnotationInfoClassname(targetAnnotationClassname: String): Boolean {
-    return any { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotationClassname) }
+    return any { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(
+            annotation.classInfo,
+            targetAnnotationClassname
+        )
+    }
 }
 
 /**
@@ -121,8 +126,10 @@ fun ClassMemberInfo.getAnnotationContentStatic(targetAnnotationClassname: String
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotation: ClassInfo) : AnnotationContent? {
-    val annotationFound = find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) } ?: return null
+fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotation: ClassInfo): AnnotationContent? {
+    val annotationFound =
+        find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
+            ?: return null
     return CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentFor(annotationFound)
 }
 
@@ -130,8 +137,13 @@ fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotation: ClassInfo)
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotationClassname: String) : AnnotationContent? {
-    val annotationFound = find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotationClassname) } ?: return null
+fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotationClassname: String): AnnotationContent? {
+    val annotationFound = find { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(
+            annotation.classInfo,
+            targetAnnotationClassname
+        )
+    } ?: return null
     return CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentFor(annotationFound)
 }
 
@@ -139,8 +151,10 @@ fun Collection<AnnotationInfo>.getAnnotationContent(targetAnnotationClassname: S
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotation: ClassInfo) : AnnotationContent? {
-    val annotationFound = find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) } ?: return null
+fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotation: ClassInfo): AnnotationContent? {
+    val annotationFound =
+        find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
+            ?: return null
     return CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentStaticFor(annotationFound)
 }
 
@@ -148,8 +162,13 @@ fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotation: Clas
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotationClassname: String) : AnnotationContent? {
-    val annotationFound = find { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotationClassname) } ?: return null
+fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotationClassname: String): AnnotationContent? {
+    val annotationFound = find { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(
+            annotation.classInfo,
+            targetAnnotationClassname
+        )
+    } ?: return null
     return CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentStaticFor(annotationFound)
 }
 
@@ -157,8 +176,9 @@ fun Collection<AnnotationInfo>.getAnnotationContentStatic(targetAnnotationClassn
  * Gets all annotation content for annotations that matches the [targetAnnotation] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotation: ClassInfo) : List<AnnotationContent> {
-    val annotationFound = filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
+fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotation: ClassInfo): List<AnnotationContent> {
+    val annotationFound =
+        filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
     return annotationFound.map { CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentFor(it) }
 }
 
@@ -166,8 +186,13 @@ fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotation: ClassInfo
  * Gets all annotation content for annotations that matches the [targetAnnotationClassname] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotationClassname: String) : List<AnnotationContent> {
-    val annotationFound = filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotationClassname) }
+fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotationClassname: String): List<AnnotationContent> {
+    val annotationFound = filter { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(
+            annotation.classInfo,
+            targetAnnotationClassname
+        )
+    }
     return annotationFound.map { CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentFor(it) }
 }
 
@@ -175,8 +200,9 @@ fun Collection<AnnotationInfo>.getAnnotationContents(targetAnnotationClassname: 
  * Gets the annotation contents for the annotation that matches the [targetAnnotation] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContentsStatic(targetAnnotation: ClassInfo) : List<AnnotationContent> {
-    val annotationFound = filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
+fun Collection<AnnotationInfo>.getAnnotationContentsStatic(targetAnnotation: ClassInfo): List<AnnotationContent> {
+    val annotationFound =
+        filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotation) }
     return annotationFound.map { CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentStaticFor(it) }
 }
 
@@ -184,7 +210,12 @@ fun Collection<AnnotationInfo>.getAnnotationContentsStatic(targetAnnotation: Cla
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this collection
  * of annotation info
  */
-fun Collection<AnnotationInfo>.getAnnotationContentsStatic(targetAnnotationClassname: String) : List<AnnotationContent> {
-    val annotationFound = filter { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation.classInfo, targetAnnotationClassname) }
+fun Collection<AnnotationInfo>.getAnnotationContentsStatic(targetAnnotationClassname: String): List<AnnotationContent> {
+    val annotationFound = filter { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(
+            annotation.classInfo,
+            targetAnnotationClassname
+        )
+    }
     return annotationFound.map { CLASS_GRAPH_ANNOTATION_ACCESSOR.createContentStaticFor(it) }
 }

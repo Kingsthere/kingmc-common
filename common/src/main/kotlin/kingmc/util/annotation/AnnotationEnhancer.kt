@@ -18,7 +18,12 @@ interface AnnotationEnhancer {
      *
      * @return the mocked annotation instantiated
      */
-    operator fun <TTemplate : Any> invoke(annotation: Annotation, templateClass: KClass<out TTemplate>, formatContext: FormatContext, formatter: Formatter = BracketStyle): TTemplate
+    operator fun <TTemplate : Any> invoke(
+        annotation: Annotation,
+        templateClass: KClass<out TTemplate>,
+        formatContext: FormatContext,
+        formatter: Formatter = BracketStyle
+    ): TTemplate
 
     /**
      * Invoke this mocker to instantiate an `Annotation` by [templateClass]

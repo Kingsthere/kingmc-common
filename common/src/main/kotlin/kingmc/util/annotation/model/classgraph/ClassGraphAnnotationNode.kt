@@ -3,7 +3,6 @@ package kingmc.util.annotation.model.classgraph
 import io.github.classgraph.ClassInfo
 import kingmc.util.annotation.model.AnnotationAttribute
 import kingmc.util.annotation.model.AnnotationNode
-import kotlin.reflect.KClass
 
 /**
  * A data class describe about an annotation from a [ClassInfo]

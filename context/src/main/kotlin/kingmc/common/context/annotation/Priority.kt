@@ -8,7 +8,13 @@ package kingmc.common.context.annotation
  * @since 0.0.1
  */
 @Retention
-@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.PROPERTY_GETTER)
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.PROPERTY_GETTER
+)
 @MustBeDocumented
 annotation class Priority(
     /**

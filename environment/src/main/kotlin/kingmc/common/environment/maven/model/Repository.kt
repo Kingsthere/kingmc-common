@@ -12,8 +12,9 @@ import org.w3c.dom.Element
  * @author kingsthere
  * @since 0.0.6
  */
-data class Repository(val url: String): AbstractXmlParser() {
+data class Repository(val url: String) : AbstractXmlParser() {
     constructor(node: Element) : this(find("url", node))
+
     override fun toString(): String {
         return url
     }

@@ -1,10 +1,8 @@
 package kingmc.common.context
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import kingmc.util.KingMCDsl
 import kingmc.util.lifecycle.Lifecycle
-import java.lang.IllegalStateException
 import java.util.*
 
 /**

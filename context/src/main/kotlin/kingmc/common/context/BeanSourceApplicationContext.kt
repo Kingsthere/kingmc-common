@@ -8,10 +8,12 @@ import kingmc.common.context.beans.*
 import kingmc.common.context.exception.*
 import kingmc.common.context.format.formatContexts
 import kingmc.common.context.process.*
-import kingmc.util.*
+import kingmc.util.InstanceMap
+import kingmc.util.PrototypeMap
 import kingmc.util.annotation.getAnnotation
 import kingmc.util.annotation.hasAnnotation
 import kingmc.util.format.FormatContext
+import kingmc.util.instance
 import kingmc.util.lifecycle.Execution
 import kingmc.util.lifecycle.Lifecycle
 import kingmc.util.reflect.findMutablePropertiesByAnnotation
@@ -183,7 +185,8 @@ open class BeanSourceApplicationContext(
                 val inject = {
                     if (typeClass.isSubclassOf(List::class)) {
                         // Populate the beans from container to a list
-                        val listElementType = type.arguments[0].type?.classifier as? KClass<*> ?: throw PopulateBeansException("Unable to populate beans for $it")
+                        val listElementType = type.arguments[0].type?.classifier as? KClass<*>
+                            ?: throw PopulateBeansException("Unable to populate beans for $it")
 
                         // Populate implementation beans
                         val populatedBeans = beanDefinitionsByClass[listElementType]
@@ -214,7 +217,11 @@ open class BeanSourceApplicationContext(
                         // if the bean is null then throw exception
                         if (annotation.required) {
                             if (populatedBean == null) {
-                                throw NoSuchBeanException("Could not find bean required by ${bean::class.qualifiedName}.${it.name}", beanType = typeClass, beanName = beanName)
+                                throw NoSuchBeanException(
+                                    "Could not find bean required by ${bean::class.qualifiedName}.${it.name}",
+                                    beanType = typeClass,
+                                    beanName = beanName
+                                )
                             }
                         }
                         // Populate bean by reflection
@@ -229,7 +236,10 @@ open class BeanSourceApplicationContext(
                     lifecycle.scheduleExecution(lateinit.lifecycle, Execution(1, "dependency_injection", inject))
                 }
             } catch (e: Exception) {
-                throw PopulateBeansException("Unable to populate beans required by ${bean::class.qualifiedName}.${it.name}", e)
+                throw PopulateBeansException(
+                    "Unable to populate beans required by ${bean::class.qualifiedName}.${it.name}",
+                    e
+                )
             }
         }
     }
@@ -342,8 +352,10 @@ open class BeanSourceApplicationContext(
         if (definition is ScannedBeanDefinition) {
             if (definition.isAbstract()) {
                 // Try to get implementation bean
-                return getRawBeanInstance(findImplementationBean(definition)
-                    ?: throw IllegalArgumentException("No implementation of this abstract bean found"))
+                return getRawBeanInstance(
+                    findImplementationBean(definition)
+                        ?: throw IllegalArgumentException("No implementation of this abstract bean found")
+                )
             }
             // Handle open beans
             if (definition.isOpen()) {
@@ -355,30 +367,48 @@ open class BeanSourceApplicationContext(
             when (definition.scope) {
                 BeanScope.SINGLETON -> {
                     // Instantiate the bean singleton instance isolated in this context
-                    return ContextDefiner.runNotifyBeanToObject(this, definition.type.java) { definition.type.instance(instanceMap) }
+                    return ContextDefiner.runNotifyBeanToObject(this, definition.type.java) {
+                        definition.type.instance(
+                            instanceMap
+                        )
+                    }
                 }
+
                 BeanScope.SHARED -> {
                     return if (definition.context !== this) {
                         // If the shared bean is from another context
                         val sourceContext = definition.context
                         if (sourceContext is BeanSourceApplicationContext) {
                             // Instantiate
-                            ContextDefiner.runNotifyBeanToObject(sourceContext, definition.type.java) { definition.type.instance(sourceContext.instanceMap) }
+                            ContextDefiner.runNotifyBeanToObject(
+                                sourceContext,
+                                definition.type.java
+                            ) { definition.type.instance(sourceContext.instanceMap) }
                         } else {
                             // Incompatible context
                             throw IllegalArgumentException("Incompatible context for $definition")
                         }
                     } else {
                         // Instantiate
-                        ContextDefiner.runNotifyBeanToObject(this, definition.type.java) { definition.type.instance(instanceMap) }
+                        ContextDefiner.runNotifyBeanToObject(this, definition.type.java) {
+                            definition.type.instance(
+                                instanceMap
+                            )
+                        }
                     }
                 }
+
                 BeanScope.GLOBAL -> {
                     return definition.type.instance(GlobalBeanInstanceMap)
                 }
+
                 else -> {
                     // Instantiate prototype bean
-                    return ContextDefiner.runNotifyBeanToObject(this, definition.type.java) { definition.type.instance(PrototypeMap) }
+                    return ContextDefiner.runNotifyBeanToObject(this, definition.type.java) {
+                        definition.type.instance(
+                            PrototypeMap
+                        )
+                    }
                 }
             }
         } else if (definition is AnnotatedBeanDefinition) {

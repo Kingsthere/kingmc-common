@@ -21,4 +21,5 @@ fun <R : Any> KClass<R>.findNoArgsConstructor(): KFunction<R>? =
  * @see KFunction
  */
 fun <R : Any> KClass<R>.newInstance(): R =
-    this.constructors.find { constructor -> constructor.parameters.isEmpty() }?.call() ?: throw IllegalArgumentException("No args constructor not defined")
+    this.constructors.find { constructor -> constructor.parameters.isEmpty() }?.call()
+        ?: throw IllegalArgumentException("No args constructor not defined")

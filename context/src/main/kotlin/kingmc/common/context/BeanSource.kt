@@ -14,6 +14,7 @@ interface BeanSource {
      * Start to load beans from this bean source
      */
     fun load()
+
     /**
      * Add a parent bean source to this bean source
      */

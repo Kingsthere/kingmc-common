@@ -3,7 +3,7 @@ package kingmc.common.context.process
 import kingmc.common.context.Context
 import kingmc.common.context.HierarchicalContext
 import kingmc.common.context.LifecycleContext
-import kingmc.common.context.beans.*
+import kingmc.common.context.beans.isDependencyInjectable
 import kingmc.common.context.exception.BeanProcessingException
 import kingmc.common.context.exception.ProcessorInitializeException
 import kingmc.util.InstantiateException

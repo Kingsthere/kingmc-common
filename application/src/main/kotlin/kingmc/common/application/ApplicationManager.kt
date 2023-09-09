@@ -1,9 +1,6 @@
 package kingmc.common.application
 
 import kingmc.common.context.Context
-import kingmc.common.context.LifecycleContext
-import kingmc.common.context.context
-import kingmc.common.context.contextLifecycle
 import kingmc.util.InternalAPI
 import kingmc.util.KingMCDsl
 import kingmc.util.lifecycle.Lifecycle
@@ -139,7 +136,8 @@ fun currentApplicationOrNull(): Application? =
  * @return application
  */
 fun currentApplication(): Application =
-    ApplicationManager.currentOrNull() ?: throw IllegalStateException("Application is not set, you must call application() before using this statement (Did you forget add application {  } before running this statement?)")
+    ApplicationManager.currentOrNull()
+        ?: throw IllegalStateException("Application is not set, you must call application() before using this statement (Did you forget add application {  } before running this statement?)")
 
 /**
  * Gets the current context of the current application

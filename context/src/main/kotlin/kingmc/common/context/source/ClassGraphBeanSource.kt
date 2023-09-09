@@ -13,7 +13,6 @@ import kingmc.util.annotation.getAnnotationContentsStatic
 import kingmc.util.annotation.hasAnnotationClassname
 import kingmc.util.annotation.model.AnnotationContent
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.reflect.jvm.kotlinFunction
 
 const val ANNOTATION_COMPONENT: String = "kingmc.common.context.annotation.Component"
@@ -93,7 +92,12 @@ open class ClassGraphBeanSource(
     ): Boolean {
         if (loadingBeanDefinition is ClassGraphLoadingAnnotatedBeanDefinition) {
             val sourceBean = loadingBeanDefinition.source
-            if (!testCondition(sourceBean, (sourceBean as ClassGraphLoadingBeanDefinition).annotations, testedLoadingBeanDefinition)) {
+            if (!testCondition(
+                    sourceBean,
+                    (sourceBean as ClassGraphLoadingBeanDefinition).annotations,
+                    testedLoadingBeanDefinition
+                )
+            ) {
                 testedLoadingBeanDefinition[loadingBeanDefinition] = false
                 return false
             }
@@ -113,7 +117,11 @@ open class ClassGraphBeanSource(
                 annotations.getAnnotationContentsStatic(ANNOTATION_CONDITIONAL).forEach { conditional ->
                     val condition =
                         (conditional.getAttribute("condition") as AnnotationClassRef).loadClass().kotlin.objectInstance as Condition
-                    if (!condition.test(loadingBeanDefinition, ClassGraphConditionContextImpl(this, getResult, conditional))) {
+                    if (!condition.test(
+                            loadingBeanDefinition,
+                            ClassGraphConditionContextImpl(this, getResult, conditional)
+                        )
+                    ) {
                         return@run false
                     }
                 }

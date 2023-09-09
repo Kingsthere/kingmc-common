@@ -43,4 +43,5 @@ open class ApplicationCoroutineScope @WithApplication internal constructor(
 fun ApplicationCoroutineScope(
     context: CoroutineContext = asyncMinecraftCoroutineDispatcher,
     application: Application = currentApplication(),
-): ApplicationCoroutineScope = ApplicationCoroutineScope(application, if (context[Job] != null) context else context + Job())
+): ApplicationCoroutineScope =
+    ApplicationCoroutineScope(application, if (context[Job] != null) context else context + Job())

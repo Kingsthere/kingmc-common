@@ -1,8 +1,6 @@
 package kingmc.common.context.delegate
 
-import kingmc.common.context.Context
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 
 /**
@@ -12,6 +10,6 @@ import kotlin.reflect.KProperty
  * @author kingsthere
  * @since 0.1.2
  */
-interface AutowiredDelegates<TBean : Any?>: ReadOnlyProperty<Any?, TBean> {
+interface AutowiredDelegates<TBean : Any?> : ReadOnlyProperty<Any?, TBean> {
 
 }

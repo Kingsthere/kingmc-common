@@ -14,7 +14,8 @@ fun getProperty(key: String): String = currentApplication().properties.getProper
  * @author kingsthere
  * @since 0.0.9
  */
-fun getPropertyOrElse(key: String, defaultValue: String): String = currentApplication().properties.getProperty(key, defaultValue)
+fun getPropertyOrElse(key: String, defaultValue: String): String =
+    currentApplication().properties.getProperty(key, defaultValue)
 
 /**
  * Gets a property or `null` from [currentApplication]

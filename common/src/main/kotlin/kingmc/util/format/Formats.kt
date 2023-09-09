@@ -78,7 +78,11 @@ fun String.formatWithContext(formatter: Formatter = BracketStyle, vararg argumen
  * @since 0.0.9
  * @see Formatter
  */
-fun String.formatWithContext(formatter: Formatter = BracketStyle, formatContext: FormatContext, vararg arguments: Any?): String {
+fun String.formatWithContext(
+    formatter: Formatter = BracketStyle,
+    formatContext: FormatContext,
+    vararg arguments: Any?
+): String {
     return this@formatWithContext.formatWithContext(
         formatter = formatter,
         context = formatContext.with(

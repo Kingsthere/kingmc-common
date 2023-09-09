@@ -11,7 +11,12 @@ abstract class AbstractFormatter(val startChar: Char, val endChar: Char) : Forma
         return FormatReader(string, startChar, endChar, formatContext).format()
     }
 
-    open class FormatReader(private val string: String, val startChar: Char, val endChar: Char, val formatContext: FormatContext) {
+    open class FormatReader(
+        private val string: String,
+        val startChar: Char,
+        val endChar: Char,
+        val formatContext: FormatContext
+    ) {
         private var _stringFormatting = string
 
         fun format(): String {
@@ -32,12 +37,14 @@ abstract class AbstractFormatter(val startChar: Char, val endChar: Char) : Forma
                 if (nest != 0) {
                     val value = scannedBuilder[found - 1]
                     if (value.size < nest) {
-                        value.add(nest - 1,
+                        value.add(
+                            nest - 1,
                             element = FormatGroupBuilder(
                                 StringBuilder(),
                                 index,
                                 index + 1
-                            ))
+                            )
+                        )
                     }
                     val builders = value.filterIndexed { valueIndex, _ -> valueIndex < nest }
                     builders.forEach {
@@ -55,7 +62,8 @@ abstract class AbstractFormatter(val startChar: Char, val endChar: Char) : Forma
             scanned.forEach { formatGroups ->
                 val reversed = formatGroups.asReversed()
                 reversed.forEachIndexed { index, formatGroup ->
-                    val formatArgument = formatContext.getOrNull(formatGroup.string.substring(1)) ?: return@forEachIndexed
+                    val formatArgument =
+                        formatContext.getOrNull(formatGroup.string.substring(1)) ?: return@forEachIndexed
                     val key = formatGroup.string + endChar
                     val value = formatArgument.value.toString()
                     _stringFormatting = _stringFormatting.replace(key, value)

@@ -1,6 +1,6 @@
 package kingmc.common.context
 
-import java.util.Properties
+import java.util.*
 
 /**
  * Indicates a property source, implement this interface for a bean will

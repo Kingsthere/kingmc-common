@@ -28,7 +28,7 @@ interface Context : FormatContextHolder, Iterable<BeanDefinition> {
      * @param clazz the class of the bean
      * @return `true` if a bean with the given class is available
      */
-    fun hasBean(clazz: KClass<*>) : Boolean
+    fun hasBean(clazz: KClass<*>): Boolean
 
     /**
      * Check if a bean with the given name is available in this context
@@ -39,7 +39,7 @@ interface Context : FormatContextHolder, Iterable<BeanDefinition> {
      * @param name the name of the bean
      * @return `true` if a bean with the given name is available
      */
-    fun hasBean(name: String) : Boolean
+    fun hasBean(name: String): Boolean
 
     /**
      * Check if any bean definition with class matches the given [clazz] exists
@@ -47,7 +47,7 @@ interface Context : FormatContextHolder, Iterable<BeanDefinition> {
      * @param clazz the class of bean definition to check
      * @return `true` if a bean definition with class matches it exists in this context
      */
-    fun hasBeanDefinition(clazz: KClass<*>) : Boolean
+    fun hasBeanDefinition(clazz: KClass<*>): Boolean
 
     /**
      * Check if any bean definition with class matches the given [name] exists
@@ -55,7 +55,7 @@ interface Context : FormatContextHolder, Iterable<BeanDefinition> {
      * @param name the name of bean definition to check
      * @return `true` if a bean definition with class matches exists in this context
      */
-    fun hasBeanDefinition(name: String) : Boolean
+    fun hasBeanDefinition(name: String): Boolean
 
     /**
      * Check if this context has the right access to the given bean

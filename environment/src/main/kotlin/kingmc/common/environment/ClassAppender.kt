@@ -30,7 +30,8 @@ class ClassAppender(
             val lookupBase = unsafe!!.staticFieldBase(lookupField)
             val lookupOffset = unsafe!!.staticFieldOffset(lookupField)
             lookup = unsafe!!.getObject(lookupBase, lookupOffset) as MethodHandles.Lookup
-        } catch (ignore: Throwable) {  }
+        } catch (ignore: Throwable) {
+        }
     }
 
     fun addPath(path: Path) {
@@ -48,6 +49,7 @@ class ClassAppender(
                 "jdk.internal.loader.ClassLoaders\$AppClassLoader" -> {
                     addURL(loader, ucp(loader.javaClass), file)
                 }
+
                 "net.minecraft.launchwrapper.LaunchClassLoader" -> {
                     val methodHandle = lookup!!.findVirtual(
                         URLClassLoader::class.java,
@@ -56,6 +58,7 @@ class ClassAppender(
                     )
                     methodHandle.invoke(loader, file.toURI().toURL())
                 }
+
                 else -> {
                     val ucpField: Field? = try {
                         URLClassLoader::class.java.getDeclaredField("ucp")

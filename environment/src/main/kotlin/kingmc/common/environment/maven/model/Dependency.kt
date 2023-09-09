@@ -57,7 +57,13 @@ class Dependency : AbstractXmlParser {
 }
 
 @Formatted
-fun dependency(groupId: String, artifactId: String, version: String, scope: DependencyScope, formatContext: FormatContext) =
+fun dependency(
+    groupId: String,
+    artifactId: String,
+    version: String,
+    scope: DependencyScope,
+    formatContext: FormatContext
+) =
     Dependency(
         groupId = formatContext.formatWithContext(groupId),
         artifactId = formatContext.formatWithContext(artifactId),

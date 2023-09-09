@@ -8,4 +8,5 @@ import kingmc.common.context.process.BeanProcessor
  * @author kingsthere
  * @since 0.0.2
  */
-class BeanProcessingException(message: String?, cause: Throwable?, val bean: Any?, val processor: BeanProcessor) : Exception(message, cause)
+class BeanProcessingException(message: String?, cause: Throwable?, val bean: Any?, val processor: BeanProcessor) :
+    Exception(message, cause)

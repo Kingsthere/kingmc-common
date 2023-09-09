@@ -2,7 +2,6 @@ package kingmc.common.context.annotation
 
 import kingmc.common.context.PropertyBeanSource
 import kingmc.common.context.beans.LoadingBeanDefinition
-import kingmc.common.context.source.ClassGraphBeanSource
 import kingmc.common.context.source.ClassGraphConditionContext
 
 /**

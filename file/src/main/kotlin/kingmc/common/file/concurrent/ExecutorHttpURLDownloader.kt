@@ -4,9 +4,7 @@ import kingmc.common.file.DownloadTask
 import kingmc.common.file.URLFileDownloader
 import java.io.File
 import java.net.URL
-import java.util.Collections
-import java.util.LinkedList
-import java.util.concurrent.Executor
+import java.util.*
 import java.util.concurrent.ExecutorService
 
 /**

@@ -23,7 +23,11 @@ class NoSuchBeanException : BeansException {
         this.beanName = beanName
         this.beanType = beanType
     }
-    constructor(message: String?, cause: Throwable?, beanName: String? = null, beanType: KClass<*>? = null) : super(message, cause) {
+
+    constructor(message: String?, cause: Throwable?, beanName: String? = null, beanType: KClass<*>? = null) : super(
+        message,
+        cause
+    ) {
         this.beanName = beanName
         this.beanType = beanType
     }

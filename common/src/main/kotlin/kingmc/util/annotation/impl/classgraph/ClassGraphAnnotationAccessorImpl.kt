@@ -47,7 +47,10 @@ object ClassGraphAnnotationAccessorImpl : ClassGraphAnnotationAccessor {
                 )
             }
         } catch (e: StackOverflowError) {
-            throw RecursiveAnnotationException("Recursive annotation found", annotation.fullyQualifiedDefiningMethodName)
+            throw RecursiveAnnotationException(
+                "Recursive annotation found",
+                annotation.fullyQualifiedDefiningMethodName
+            )
         }
     }
 
@@ -68,36 +71,56 @@ object ClassGraphAnnotationAccessorImpl : ClassGraphAnnotationAccessor {
         }
     }
 
-    private fun generateAnnotationNodeForRootAnnotation(annotation: AnnotationInfo, annotationClass: ClassInfo): ClassGraphAnnotationNode {
+    private fun generateAnnotationNodeForRootAnnotation(
+        annotation: AnnotationInfo,
+        annotationClass: ClassInfo
+    ): ClassGraphAnnotationNode {
         val attributes: MutableList<AnnotationAttribute> = mutableListOf()
         val parentAnnotations = annotationClass.annotationInfo.filter { it.classInfo.name !in IGNORED_ANNOTATIONS }
 
         // Scan annotation attributes from AnnotationInfo
         annotation.parameterValues.forEach { parameterValue ->
             // Add scanned annotation attribute to list
-            attributes.add(ClassGraphAnnotationAttributeImpl(annotationClass, parameterValue.name, parameterValue.value))
+            attributes.add(
+                ClassGraphAnnotationAttributeImpl(
+                    annotationClass,
+                    parameterValue.name,
+                    parameterValue.value
+                )
+            )
         }
 
         parentAnnotations.forEach { parentAnnotation ->
-            val parentAnnotationNode = generateAnnotationNodeForRootAnnotation(parentAnnotation, parentAnnotation.classInfo)
+            val parentAnnotationNode =
+                generateAnnotationNodeForRootAnnotation(parentAnnotation, parentAnnotation.classInfo)
             attributes.addAll(parentAnnotationNode.attributes)
         }
 
         return ClassGraphAnnotationNode(attributes, annotationClass)
     }
 
-    private fun generateAnnotationNodeForRootAnnotationStatic(annotation: AnnotationInfo, annotationClass: ClassInfo): ClassGraphAnnotationNode {
+    private fun generateAnnotationNodeForRootAnnotationStatic(
+        annotation: AnnotationInfo,
+        annotationClass: ClassInfo
+    ): ClassGraphAnnotationNode {
         val attributes: MutableList<AnnotationAttribute> = mutableListOf()
         val parentAnnotations = annotationClass.annotationInfo.filter { it.classInfo.name !in IGNORED_ANNOTATIONS }
 
         // Scan annotation attributes from AnnotationInfo
         annotation.parameterValues.forEach { parameterValue ->
             // Add scanned annotation attribute to list
-            attributes.add(StaticClassGraphAnnotationAttribute(annotationClass, parameterValue.name, parameterValue.value))
+            attributes.add(
+                StaticClassGraphAnnotationAttribute(
+                    annotationClass,
+                    parameterValue.name,
+                    parameterValue.value
+                )
+            )
         }
 
         parentAnnotations.forEach { parentAnnotation ->
-            val parentAnnotationNode = generateAnnotationNodeForRootAnnotationStatic(parentAnnotation, parentAnnotation.classInfo)
+            val parentAnnotationNode =
+                generateAnnotationNodeForRootAnnotationStatic(parentAnnotation, parentAnnotation.classInfo)
             attributes.addAll(parentAnnotationNode.attributes)
         }
 

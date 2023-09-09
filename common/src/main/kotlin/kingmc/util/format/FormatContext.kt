@@ -113,7 +113,10 @@ fun FormatContext(map: Map<String, FormatArgument<*>>): FormatContext = SimpleFo
  * @author kingsthere
  * @since 0.1.2
  */
-class SimpleFormatContext(val formatArguments: Map<String, FormatArgument<*>>, val parents: List<FormatContext> = LinkedList()) : FormatContext {
+class SimpleFormatContext(
+    val formatArguments: Map<String, FormatArgument<*>>,
+    val parents: List<FormatContext> = LinkedList()
+) : FormatContext {
     /**
      * Returns an iterator over the elements of this object.
      */

@@ -1,7 +1,10 @@
 package kingmc.util
 
 import io.github.classgraph.ClassGraph
-import kingmc.util.annotation.*
+import kingmc.util.annotation.getAnnotation
+import kingmc.util.annotation.getAnnotationContent
+import kingmc.util.annotation.hasAnnotation
+import kingmc.util.annotation.hasAnnotationClassname
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

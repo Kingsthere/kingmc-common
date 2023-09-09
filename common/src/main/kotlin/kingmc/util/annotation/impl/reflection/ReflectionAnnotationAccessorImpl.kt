@@ -43,14 +43,21 @@ object ReflectionAnnotationAccessorImpl : ReflectionAnnotationAccessor {
                 )
             }
         } catch (e: StackOverflowError) {
-            throw RecursiveAnnotationException("Recursive annotation found", annotation.qualifiedName ?: "anonymous object")
+            throw RecursiveAnnotationException(
+                "Recursive annotation found",
+                annotation.qualifiedName ?: "anonymous object"
+            )
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun generateAnnotationNodeForRootAnnotation(annotation: Annotation, annotationClass: KClass<out Annotation>): ClassAnnotationNode {
+    private fun generateAnnotationNodeForRootAnnotation(
+        annotation: Annotation,
+        annotationClass: KClass<out Annotation>
+    ): ClassAnnotationNode {
         val attributes: MutableList<AnnotationAttribute> = mutableListOf()
-        val parentAnnotations = annotationClass.annotations.filter { it.annotationClass.qualifiedName !in IGNORED_ANNOTATIONS }
+        val parentAnnotations =
+            annotationClass.annotations.filter { it.annotationClass.qualifiedName !in IGNORED_ANNOTATIONS }
 
         // Scan annotation attributes from memberProperties
         annotationClass.memberProperties.forEach { attributeDefinition ->
@@ -60,7 +67,8 @@ object ReflectionAnnotationAccessorImpl : ReflectionAnnotationAccessor {
         }
 
         parentAnnotations.forEach { parentAnnotation ->
-            val parentAnnotationNode = generateAnnotationNodeForRootAnnotation(parentAnnotation, parentAnnotation.annotationClass)
+            val parentAnnotationNode =
+                generateAnnotationNodeForRootAnnotation(parentAnnotation, parentAnnotation.annotationClass)
             attributes.addAll(parentAnnotationNode.attributes)
         }
 

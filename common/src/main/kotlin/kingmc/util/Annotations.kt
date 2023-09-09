@@ -4,7 +4,13 @@ package kingmc.util
  * A marker annotations for DSLs
  */
 @DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.TYPEALIAS,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY
+)
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class KingMCDsl

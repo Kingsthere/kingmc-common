@@ -1,6 +1,7 @@
 package kingmc.common.context.annotation
 
 import kotlin.reflect.KClass
+
 /**
  * A condition to check if the given bean is not present on the ioc container that injecting this bean
  *

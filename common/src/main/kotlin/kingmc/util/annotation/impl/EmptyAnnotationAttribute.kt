@@ -1,7 +1,6 @@
 package kingmc.util.annotation.impl
 
 import kingmc.util.annotation.model.AnnotationAttribute
-import kotlin.reflect.KClass
 
 data class EmptyAnnotationAttribute(
     override val name: String,

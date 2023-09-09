@@ -6,7 +6,12 @@ import kingmc.common.context.source.ClassGraphBeanSource
 import kingmc.common.context.source.ClassGraphConditionContext
 
 object ConditionOnBean : Condition {
-    private fun checkBeanName(bean: LoadingBeanDefinition, context: ConditionContext, beanSource: ClassGraphBeanSource, beanName: String): Boolean {
+    private fun checkBeanName(
+        bean: LoadingBeanDefinition,
+        context: ConditionContext,
+        beanSource: ClassGraphBeanSource,
+        beanName: String
+    ): Boolean {
         // Try to get the loading bean definition instance from beanSource
         // Return false if the bean with that name does not exist
         val loadingBeanDefinition = beanSource.getLoadingBeanDefinition(beanName) ?: return false

@@ -4,7 +4,7 @@ import com.electronwill.nightconfig.core.*
 import com.electronwill.nightconfig.core.file.CommentedFileConfig
 import com.electronwill.nightconfig.core.file.FileConfig
 import com.electronwill.nightconfig.core.file.FileConfigBuilder
-import java.util.Properties
+import java.util.*
 
 typealias NightConfigFormat<C> = ConfigFormat<C>
 typealias NightConfig = Config

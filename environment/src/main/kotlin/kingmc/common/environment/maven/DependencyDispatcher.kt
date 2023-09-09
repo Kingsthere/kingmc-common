@@ -26,7 +26,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.parsers.ParserConfigurationException
-import kotlin.collections.HashSet
 
 
 /**
@@ -42,7 +41,7 @@ class DependencyDispatcher(
     val classAppender: ClassAppender,
     val executorService: ExecutorService = DownloadExecutors(),
     val fileDownloader: URLFileDownloader = ExecutorHttpURLDownloader(16, executorService)
-): AbstractXmlParser() {
+) : AbstractXmlParser() {
 
     /**
      * Dependencies installed by this dependency dispatcher
@@ -61,14 +60,24 @@ class DependencyDispatcher(
     /**
      * Install the given [dependency] asynchronously
      */
-    fun installDependencyAsync(dependency: Dependency, repository: Repository, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope): Future<*> {
+    fun installDependencyAsync(
+        dependency: Dependency,
+        repository: Repository,
+        relocations: Collection<JarRelocation>,
+        vararg scopes: DependencyScope
+    ): Future<*> {
         return installDependencyAsync(DependencyDeclaration(dependency, repository, relocations, scopes))
     }
 
     /**
      * Install the [dependency] from specifies [repository]
      */
-    fun installDependency(dependency: Dependency, repository: Repository, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope) {
+    fun installDependency(
+        dependency: Dependency,
+        repository: Repository,
+        relocations: Collection<JarRelocation>,
+        vararg scopes: DependencyScope
+    ) {
         installDependency(DependencyDeclaration(dependency, repository, relocations, scopes))
     }
 
@@ -124,7 +133,11 @@ class DependencyDispatcher(
     /**
      * Download a [dependency] from specifies [repositories]
      */
-    fun downloadDependency(dependency: Dependency, repositories: Collection<Repository>, vararg scopes: DependencyScope): DownloadedDependency {
+    fun downloadDependency(
+        dependency: Dependency,
+        repositories: Collection<Repository>,
+        vararg scopes: DependencyScope
+    ): DownloadedDependency {
         val directory = createDependencyDirectory(root, dependency)
         // Create parent directory if not exists
         if (!directory.exists()) {
@@ -199,7 +212,8 @@ class DependencyDispatcher(
                 break
             } catch (ex: IOException) {
                 if (exception == null) {
-                    exception = IOException(String.format("Unable to find download for %s (%s)", dependency, repository.url))
+                    exception =
+                        IOException(String.format("Unable to find download for %s (%s)", dependency, repository.url))
                 }
                 exception.addSuppressed(ex)
             }

@@ -145,6 +145,7 @@ internal class KeyImpl(namespace: String, value: String) : Key {
                 .thenComparing { obj: Key -> obj.namespace() }
         const val NAMESPACE_PATTERN = "[a-z0-9_\\-.]+"
         const val VALUE_PATTERN = "[a-z0-9_\\-./]+"
+
         @VisibleForTesting
         fun namespaceValid(namespace: String): Boolean {
             var i = 0
