@@ -1,13 +1,15 @@
 package kingmc.common.application
 
 import kingmc.common.context.Context
+import kingmc.common.context.LifecycleContext
 import kingmc.util.ReloadableManager
 import kingmc.util.ReloadableScope
+import kingmc.util.lifecycle.Lifecycle
 import java.util.*
 
 /**
  * An application is the central class for using kingmc api, you
- * run the kingmc framework and all controls should be passed through
+ * run the kingmc framework, and all controls should be passed through
  * the [Application]. Application instances should be available everywhere,
  * such as separate extensions, drivers... they should all have an
  * isolated application, so kingmc can easily enable/disable them, for
@@ -18,12 +20,11 @@ import java.util.*
  *  + Commands
  *
  *
- * When a server have multiple extensions, this could prevent problems such as
- *  + Compatible
+ * When a server has multiple extensions, this could prevent compatible problems
+ * between them
  *
- * @since 0.0.2
  * @author kingsthere
- * @param TContext the type of context that loading this application
+ * @since 0.0.2
  */
 interface Application {
     /**
@@ -70,6 +71,13 @@ interface Application {
  */
 val Application.properties: Properties
     get() = this.context.properties
+
+/**
+ * Gets the lifecycle of this application
+ */
+val Application.lifecycle: Lifecycle
+    get() = (this.context as? LifecycleContext)?.getLifecycle()
+        ?: throw UnsupportedOperationException("Current context does not supported for lifecycle")
 
 /**
  * A shortcut to reload all `Reloadable`s that are registered in the [Application.reloadableManager]

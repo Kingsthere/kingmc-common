@@ -3,8 +3,8 @@ package kingmc.util
 /**
  * Thrown when trying to get [Version] but the format is incorrect
  *
- * @since 0.0.5
  * @author kingsthere
+ * @since 0.0.5
  */
 class VersionFormatException(message: String?) : Exception(message)
 
@@ -12,8 +12,8 @@ class VersionFormatException(message: String?) : Exception(message)
  * A utility class represents a version number for defining versions in specified
  * format
  *
- * @since 0.0.8
  * @author kingsthere
+ * @since 0.0.8
  */
 class Version(source: CharSequence, val toString: String? = null) : Comparable<Version> {
     private var version: IntArray
@@ -103,8 +103,8 @@ class Version(source: CharSequence, val toString: String? = null) : Comparable<V
 /**
  * A range of values of type `Version`
  *
- * @since 0.0.8
  * @author kingsthere
+ * @since 0.0.8
  */
 class VersionRange(val start: Version = Version.OLDEST, val end: Version = Version.LATEST) {
     operator fun contains(o: Version): Boolean {

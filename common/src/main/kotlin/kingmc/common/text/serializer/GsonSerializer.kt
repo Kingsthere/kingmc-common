@@ -9,8 +9,8 @@ typealias GsonComponentSerializer = GsonComponentSerializer
  * Current legacy component serializer to serialize
  * components to string
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 val gsonComponentSerializer = GsonComponentSerializer.builder()
@@ -19,8 +19,8 @@ val gsonComponentSerializer = GsonComponentSerializer.builder()
 /**
  * Serialize from [Text] to json string
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 fun Text.serializeFromTextToJson(): String =
@@ -29,8 +29,8 @@ fun Text.serializeFromTextToJson(): String =
 /**
  * Deserialize from json string to [Text]
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 fun String.deserializeFromJsonToText(): Text =

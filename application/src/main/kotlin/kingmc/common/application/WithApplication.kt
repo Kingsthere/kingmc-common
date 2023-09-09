@@ -4,8 +4,8 @@ package kingmc.common.application
  * A marker annotations for marking elements that must run with [Application], codeblocks calling elements
  * that marked must be surround by [withApplication]
  *
- * @since 0.0.5
  * @author kingsthere
+ * @since 0.0.5
  */
 @Retention
 @Target(

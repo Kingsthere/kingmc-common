@@ -25,8 +25,8 @@ import kotlin.reflect.full.companionObjectInstance
  * exampleClassInstance == exampleClassInstance2
  * ```
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @sample SingletonMap
  * @sample PrototypeMap
  */
@@ -86,7 +86,7 @@ open class SingletonMap : InstanceMap {
     @Throws(InstantiateException::class)
     override fun <T : Any> invoke(clazz: KClass<out T>): T {
         if (instances.contains(clazz)) {
-            // If the instance is already cached
+            // If the instance is already cached,
             // then return the cached instance
             return instances[clazz] as T
         } else {
@@ -148,8 +148,8 @@ object PrototypeMap : InstanceMap {
 /**
  * Instantiate a kotlin class by using [SingletonMap]
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  * @see SingletonMap
  */
 fun <T : Any> KClass<T>.instance(instanceMap: InstanceMap): T {
@@ -159,8 +159,8 @@ fun <T : Any> KClass<T>.instance(instanceMap: InstanceMap): T {
 /**
  * Thrown when an exception happened trying to instantiate a class
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 class InstantiateException : Exception {
     constructor(message: String?, cause: Throwable?) : super(message, cause)

@@ -3,12 +3,10 @@ package kingmc.common.logging
 import net.kyori.adventure.text.Component
 
 /**
- * A kingmc logger is an interface cross every
- * logger from different api (such as slf4j.Logger, java.util) together and use them
- * by the functions set in this interface
+ * A logger interface provided by kingmc
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 interface Logger {
     fun logInfo(msg: String)

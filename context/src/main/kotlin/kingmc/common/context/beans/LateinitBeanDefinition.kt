@@ -3,8 +3,8 @@ package kingmc.common.context.beans
 /**
  * A `BeanDefinition` exposed the lifecycle of this bean
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 interface LateinitBeanDefinition : BeanDefinition {
     /**

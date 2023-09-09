@@ -5,8 +5,7 @@ package kingmc.common.context.annotation
  * will be injected into the ioc container
  *
  *
- * You can inject beans into ioc container by
- * these ways: functions, property getter..., for example:
+ * You can inject beans into ioc container by functions, property getters, for example:
  * ```
  * // The owner class of function that registering beans
  * // must annotated with @Configuration
@@ -23,10 +22,10 @@ package kingmc.common.context.annotation
  * }
  * ```
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.1.1
  */
-@Target(AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
 @Retention
 @MustBeDocumented
 annotation class Bean(

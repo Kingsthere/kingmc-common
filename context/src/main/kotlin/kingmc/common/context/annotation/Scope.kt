@@ -11,14 +11,13 @@ import java.lang.annotation.Inherited
  * The `@Scope` annotation is not valid if you add it to the abstract bean declaration, and
  * note that the scope of the implementation bean should be [scope]
  *
- * @see Context
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
+ * @see Context
  */
 @Target(AnnotationTarget.CLASS)
 @Retention
 @MustBeDocumented
-@Inherited
 annotation class Scope(
     /**
      * The scope of this bean

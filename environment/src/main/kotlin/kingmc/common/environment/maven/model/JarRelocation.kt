@@ -7,8 +7,8 @@ import kingmc.util.format.formatWithContext
 /**
  * A data class represents a relocation
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 data class JarRelocation(
     /**
@@ -17,7 +17,7 @@ data class JarRelocation(
     val pattern: String,
 
     /**
-     * The relocated pattern after relocate
+     * The relocated pattern after relocating
      */
     val relocatedPattern: String
 )

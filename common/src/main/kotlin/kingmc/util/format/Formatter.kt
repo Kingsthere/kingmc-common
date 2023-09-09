@@ -5,8 +5,8 @@ import kingmc.util.SubclassSingleton
 /**
  * Interface indicates a formatter to format strings
  *
- * @since 0.0.4
  * @author kingsthere
+ * @since 0.0.4
  */
 @SubclassSingleton
 interface Formatter {

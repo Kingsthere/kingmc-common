@@ -13,7 +13,7 @@ import java.util.*
  *  + namespace
  *    - in most cases this should be your plugin or organization name</dd>
  *  + value
- *    - what this key leads to, e.g "translations" or "entity.firework_rocket.blast"</dd>
+ *    - what this key leads to, e.g. "translations" or "entity.firework_rocket.blast"</dd>
  *
  *
  *
@@ -25,14 +25,14 @@ import java.util.*
  *
  * Some examples of possible custom keys:
  *
- *  +  my_plugin:translations
- *  +  my_plugin:weapon.amazing-weapon_damage-attribute
- *  +  my_organization:music.song_1
- *  +  my_organization:item.magic_button
+ *  + my_plugin:translations
+ *  + my_plugin:weapon.amazing-weapon_damage-attribute
+ *  + my_organization:music.song_1
+ *  + my_organization:item.magic_button
  *
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @see Namespaced
  */
 interface Key : Comparable<Key>, Namespaced {

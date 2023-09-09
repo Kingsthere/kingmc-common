@@ -3,10 +3,10 @@ package kingmc.common.application
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * An utility class to create a isolated variable between applications
+ * A utility class to create an isolated variable between applications
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  * @param T the kind of value this application local stores
  */
 class ApplicationLocal<T>(val defaultValue: (() -> T)? = null) {

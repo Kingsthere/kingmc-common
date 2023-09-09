@@ -6,17 +6,16 @@ import kingmc.common.context.beans.BeanDefinition
  * Represent a context that could inherit from other
  * contexts
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 interface HierarchicalContext : Context {
     /**
-     * Gets the protected beans in this context, protected beans is
-     * the beans defined in this context by itself, not inherit from
-     * others
+     * Gets the protected beans in this context.
+     * Protected beans is the beans defined in this context by itself, not inherited from others
      *
-     * @since 0.0.3
      * @author kingsthere
+     * @since 0.0.3
      * @return the protected beans
      */
     fun getProtectedBeans(): List<BeanDefinition>
@@ -25,8 +24,11 @@ interface HierarchicalContext : Context {
      * Gets the owning beans in this context, owning beans include
      * protected beans and beans inherited from parent that scoped `SINGLETON` or `PROTOTYPE`
      *
-     * @since 0.0.5
+     * Owning beans means the beans that have an isolated instance for every context, and
+     * every context is responsible to handle bean instance belongs to that context
+     *
      * @author kingsthere
+     * @since 0.1.1
      * @return the owning beans
      */
     fun getOwningBeans(): List<BeanDefinition>
@@ -34,8 +36,8 @@ interface HierarchicalContext : Context {
     /**
      * Add a parent to this HierarchicalContext
      *
-     * @since 0.0.1
      * @author kingsthere
+     * @since 0.0.1
      * @param context the context to inherit from
      */
     fun inheritParent(context: Context)
@@ -44,8 +46,8 @@ interface HierarchicalContext : Context {
      * List all contexts that is inherited from
      * this HierarchicalContext and return as a [Set]
      *
-     * @since 0.0.1
      * @author kingsthere
+     * @since 0.0.1
      * @see Set
      * @see Context
      */

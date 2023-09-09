@@ -1,11 +1,11 @@
 package kingmc.util.exception
 
 /**
- * An interface is commonly used to handle exceptions in kingmc framework
+ * An interface is commonly used to handle exceptions in a kingmc framework
  *
  * @param TReceiver the receiver receives exceptions
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 interface ExceptionHandler<TReceiver : Any> {
     /**

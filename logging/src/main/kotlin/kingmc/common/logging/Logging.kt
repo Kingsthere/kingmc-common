@@ -3,18 +3,15 @@ package kingmc.common.logging
 import kingmc.common.application.Application
 import kingmc.common.application.WithApplication
 import kingmc.common.application.currentApplication
-import kingmc.common.application.formatContext
 import kingmc.util.KingMCDsl
-import kingmc.util.format.Formatted
-import kingmc.util.format.formatWithContext
 import net.kyori.adventure.text.Component
 import kotlin.reflect.KClass
 
 /**
  * The logger manager of current application
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 val Application.loggers
     get() = (this as LoggerCapableApplication).loggers
@@ -22,50 +19,50 @@ val Application.loggers
 /**
  * A Manager serves for logging in one application
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 interface LoggerManager {
     /**
-     * Provide a logger in current application
+     * Returns the default logger
      *
      * @since 0.0.9
      */
-    fun createLogger(): Logger
+    fun defaultLogger(): Logger
 
     /**
-     * Provide a named logger in current application
+     * Provide a named logger in the current application
      *
      * @since 0.0.9
      */
-    fun createLogger(name: String): Logger
+    fun defaultLogger(name: String): Logger
 
     /**
-     * Provide a logger from class in current application
+     * Provide a logger from class in the current application
      *
      * @since 0.0.9
      */
-    fun createLogger(clazz: Class<*>): Logger
+    fun defaultLogger(clazz: Class<*>): Logger
 
     /**
-     * Provide a logger from kotlin class in current application
+     * Provide a logger from kotlin class in the current application
      *
      * @since 0.0.9
      */
-    fun createLogger(clazz: KClass<*>): Logger
+    fun defaultLogger(clazz: KClass<*>): Logger
 }
 
 /**
- * Get the logger from current application
+ * Get the logger from the current application
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 @KingMCDsl
 @WithApplication
-fun Logger(): Logger {
+fun getLogger(): Logger {
     try {
-        return currentApplication().loggers.createLogger()
+        return currentApplication().loggers.defaultLogger()
     } catch (e: IllegalStateException) {
         throw LoggerInitializeException("Could not load logger, because the logger manager of current application is not set")
     }
@@ -74,159 +71,163 @@ fun Logger(): Logger {
 /**
  * Gets a named logger
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 @KingMCDsl
 @WithApplication
-fun Logger(name: String): Logger {
+fun getLogger(name: String): Logger {
     try {
-        return currentApplication().loggers.createLogger(name)
+        return currentApplication().loggers.defaultLogger(name)
     } catch (e: IllegalStateException) {
         throw LoggerInitializeException("Could not load logger, because the logger manager of current application is not set")
     }
 }
 
 /**
- * Log a info log [msg] from [Logger]
+ * Gets a logger for the given class
  *
+ * @author kingsthere
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun info(@Formatted msg: String) {
-    Logger().logInfo(msg.formatWithContext(context = currentApplication().formatContext))
+fun getLogger(clazz: KClass<*>): Logger {
+    try {
+        return currentApplication().loggers.defaultLogger(clazz)
+    } catch (e: IllegalStateException) {
+        throw LoggerInitializeException("Could not load logger, because the logger manager of current application is not set")
+    }
 }
 
 /**
- * Log a warn log [msg] from [Logger]
+ * Log a info log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun warn(@Formatted msg: String) {
-    Logger().logWarn(msg.formatWithContext(context = currentApplication().formatContext))
+fun info(msg: String) {
+    getLogger().logInfo(msg)
 }
 
 /**
- * Log a error log [msg] from [Logger]
+ * Log a warn log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun error(@Formatted msg: String) {
-    Logger().logError(msg.formatWithContext(context = currentApplication().formatContext))
+fun warn(msg: String) {
+    getLogger().logWarn(msg)
 }
 
 /**
- * Log a error log [msg] from [Logger]
+ * Log a error log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun error(@Formatted msg: String, throwable: Throwable) {
-    Logger().logError(msg.formatWithContext(context = currentApplication().formatContext), throwable)
+fun error(msg: String) {
+    getLogger().logError(msg)
 }
 
 /**
- * Log a debug log [msg] from [Logger]
+ * Log a error log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun debug(@Formatted msg: String) {
-    Logger().logDebug(msg.formatWithContext(context = currentApplication().formatContext))
+fun error(msg: String, throwable: Throwable) {
+    getLogger().logError(msg, throwable)
 }
 
 /**
- * Log a trace log [msg] from [Logger]
+ * Log a debug log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
-fun trace(@Formatted msg: String) {
-    Logger().logTrace(msg.formatWithContext(context = currentApplication().formatContext))
+fun debug(msg: String) {
+    getLogger().logDebug(msg)
 }
 
 /**
- * Log a info log [component] from [Logger]
+ * Log a trace log [msg] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
+@WithApplication
+fun trace(msg: String) {
+    getLogger().logTrace(msg)
+}
+
+/**
+ * Log a info log [component] from [getLogger]
+ *
+ * @since 0.0.9
+ */
+@KingMCDsl
 @WithApplication
 fun info(component: Component) {
-    Logger().logInfo(component)
+    getLogger().logInfo(component)
 }
 
 /**
- * Log a warn log [component] from [Logger]
+ * Log a warn log [component] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
 fun warn(component: Component) {
-    Logger().logWarn(component)
+    getLogger().logWarn(component)
 }
 
 /**
- * Log a error log [component] from [Logger]
+ * Log a error log [component] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
 fun error(component: Component) {
-    Logger().logError(component)
+    getLogger().logError(component)
 }
 
 /**
- * Log a error log [component] from [Logger]
+ * Log a error log [component] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
 fun error(component: Component, throwable: Throwable) {
-    Logger().logError(component, throwable)
+    getLogger().logError(component, throwable)
 }
 
 /**
- * Log a debug log [component] from [Logger]
+ * Log a debug log [component] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
 fun debug(component: Component) {
-    Logger().logDebug(component)
+    getLogger().logDebug(component)
 }
 
 /**
- * Log a trace log [component] from [Logger]
+ * Log a trace log [component] from [getLogger]
  *
  * @since 0.0.9
  */
 @KingMCDsl
-@Formatted
 @WithApplication
 fun trace(component: Component) {
-    Logger().logTrace(component)
+    getLogger().logTrace(component)
 }

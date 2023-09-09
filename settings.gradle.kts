@@ -13,7 +13,6 @@ pluginManagement {
 }
 
 include("common")
-include("structure")
 include("file")
 include("configure")
 include("context")

@@ -5,7 +5,7 @@ import kingmc.util.SingletonMap
 /**
  * InstanceMap extended to instantiate beans scoped [BeanScope.GLOBAL]
  *
- * @since 0.0.5
  * @author kingsthere
+ * @since 0.0.5
  */
 object GlobalBeanInstanceMap : SingletonMap()

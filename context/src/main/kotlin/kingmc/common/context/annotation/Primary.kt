@@ -9,9 +9,9 @@ import kingmc.common.context.Context
  * If the bean is indicated with `primary`, the context will prefer the `primary` beans
  * when getting beans from this context
  *
- * @see Context
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
+ * @see Context
  */
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
 @Retention

@@ -5,8 +5,8 @@ import kingmc.util.format.Formatted
 /**
  * Indicating a maven dependency needed to run this class
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
 @Target(AnnotationTarget.CLASS)
 @Retention

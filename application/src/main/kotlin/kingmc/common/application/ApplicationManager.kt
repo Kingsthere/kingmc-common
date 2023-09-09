@@ -1,7 +1,12 @@
 package kingmc.common.application
 
+import kingmc.common.context.Context
+import kingmc.common.context.LifecycleContext
+import kingmc.common.context.context
+import kingmc.common.context.contextLifecycle
 import kingmc.util.InternalAPI
 import kingmc.util.KingMCDsl
+import kingmc.util.lifecycle.Lifecycle
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -10,8 +15,8 @@ import kotlin.contracts.contract
  * A `ApplicationManager` is responsible for binding applications to current
  * thread and get bound application to current thread
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 interface ApplicationManager {
 
@@ -34,8 +39,8 @@ interface ApplicationManager {
 /**
  * Implemented [ApplicationManager] using [ThreadLocal]
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 class ThreadLocalApplicationManager : ApplicationManager {
     private val threadLocal = ThreadLocal<Application>()
@@ -63,6 +68,9 @@ inline fun <T> keepAndRestoreApplicationRefAfterRun(block: () -> T): T {
     }
 }
 
+/**
+ * The default application manager to kingmc framework
+ */
 @InternalAPI
 val applicationManager: ApplicationManager by lazy {
     ThreadLocalApplicationManager()
@@ -78,7 +86,7 @@ val applicationManager: ApplicationManager by lazy {
  * } // Application removed from ApplicationManager
  * ```
  *
- * Whether to use `application {  }` to surround these operation depends on whether
+ * Whether to use `application {  }` to surround these operations depends on whether
  * the function involved in the code has a [WithApplication] annotation
  *
  * @param action the action to run with application set
@@ -100,7 +108,7 @@ inline fun <R> Any.withApplication(action: @WithApplication Application.() -> R)
  * } // Application removed from ApplicationManager
  * ```
  *
- * Whether to use `application {  }` to surround these operation depends on whether
+ * Whether to use `application {  }` to surround these operations depends on whether
  * the function involved in the code has a [WithApplication] annotation
  *
  * @param application the application set to the ApplicationManager
@@ -132,3 +140,17 @@ fun currentApplicationOrNull(): Application? =
  */
 fun currentApplication(): Application =
     ApplicationManager.currentOrNull() ?: throw IllegalStateException("Application is not set, you must call application() before using this statement (Did you forget add application {  } before running this statement?)")
+
+/**
+ * Gets the current context of the current application
+ *
+ * @return context of the current application
+ */
+fun currentContext(): Context = currentApplication().context
+
+/**
+ * Gets the current context's lifecycle of the current application
+ *
+ * @return context's lifecycle of the current application
+ */
+fun currentLifecycle(): Lifecycle = currentApplication().lifecycle

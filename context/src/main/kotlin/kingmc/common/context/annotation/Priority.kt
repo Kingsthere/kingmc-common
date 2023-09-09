@@ -4,8 +4,8 @@ package kingmc.common.context.annotation
  * Represent a bean to inject to ioc container by order, the
  * order is higher the bean will inject more prioritized
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 @Retention
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.PROPERTY_GETTER)
@@ -16,5 +16,5 @@ annotation class Priority(
      *
      * @since 0.0.1
      */
-    val value: Byte
+    val priority: Byte
 )

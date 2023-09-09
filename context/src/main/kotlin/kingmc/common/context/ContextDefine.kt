@@ -1,12 +1,14 @@
 package kingmc.common.context
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import kingmc.util.KingMCDsl
-import kingmc.util.Lifecycle
+import kingmc.util.lifecycle.Lifecycle
+import java.lang.IllegalStateException
 import java.util.*
 
 /**
- * A map define the context by the class loader of the classes
+ * A map defines the context by the class loader of the classes
  */
 object ContextDefiner {
     val value: MutableMap<Class<*>, MutableMap<Int, Context>> = mutableMapOf()
@@ -28,29 +30,42 @@ object ContextDefiner {
 }
 
 /**
- * The context of current object that is instantiating this
+ * The context of the current object that is instantiating this
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @return the context this bean is in, throw an exception if this
  *         bean is not injected into any ioc container
  */
 @KingMCDsl
 val Any.context: Context
     get() {
-        return checkNotNull(ContextDefiner.getContextFor(this) ?: ContextDefiner.contextNotification.get().peek()) { "No context defined for $this" }
+        val context = ContextDefiner.getContextFor(this)
+        return if (context != null) {
+            context
+        } else {
+            val stack = ContextDefiner.contextNotification.get()
+            if (stack != null) {
+                if (stack.isEmpty()) {
+                    throw IllegalStateException("No context defined for $this")
+                }
+                stack.peek()
+            } else {
+                throw IllegalStateException("No context defined for $this")
+            }
+        }
     }
 
 /**
- * The lifecycle of this object's context is running
+ * The context's lifecycle of this object
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.1.2
  * @return the context this bean is in, throw an exception if this
  *         bean is not injected into any ioc container
  */
 @KingMCDsl
-val Any.contextLifecycle: Lifecycle<Runnable>
+val Any.contextLifecycle: Lifecycle
     get() {
         return (context as? LifecycleContext)?.getLifecycle()
             ?: throw UnsupportedOperationException("Current context does not supported for lifecycle")

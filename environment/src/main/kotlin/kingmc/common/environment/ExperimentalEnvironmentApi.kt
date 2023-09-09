@@ -3,8 +3,8 @@ package kingmc.common.environment
 /**
  * To mark a experimental environment api
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
 @Retention
 @Target(

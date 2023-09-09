@@ -11,8 +11,8 @@ package kingmc.common.context.annotation
  * tp it so the process of injecting dependencies to that field will postpone until the
  * specified lifecycle
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 @Retention
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)

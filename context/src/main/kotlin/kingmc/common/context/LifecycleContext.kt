@@ -1,18 +1,17 @@
 package kingmc.common.context
 
-import kingmc.util.Lifecycle
-import kingmc.util.LifecycleHandler
+import kingmc.util.lifecycle.Lifecycle
 
 /**
  * This superinterface indicating the subclasses context has
  * a [Lifecycle] to identity the stage where they are running
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
-interface LifecycleContext : LifecycleHandler<Runnable>, Context {
+interface LifecycleContext : Context {
     /**
      * Get the lifecycle of this context
      */
-    override fun getLifecycle(): Lifecycle<Runnable>
+    fun getLifecycle(): Lifecycle
 }

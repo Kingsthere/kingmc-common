@@ -1,11 +1,13 @@
 package kingmc.util.format
 
+import java.util.*
+
 /**
  * Represent a set of arguments that could be applied to
  * a string to format
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.1.2
  */
 interface FormatContext : Iterable<FormatArgument<*>> {
     /**
@@ -25,18 +27,100 @@ interface FormatContext : Iterable<FormatArgument<*>> {
 
     /**
      * Returns a new format context with all arguments hold by this format context and
-     * extra arguments from [formatContext]
+     * extra arguments from [formatContexts]
      */
-    fun with(formatContext: FormatContext): FormatContext
+    fun with(vararg formatContexts: FormatContext): FormatContext
+
+    /**
+     * Returns a new format context with all arguments hold by this format context and
+     * extra arguments from [formatContexts]
+     */
+    fun with(formatContexts: Iterable<FormatContext>): FormatContext
+
+    /**
+     * Returns a new format context with the given argument
+     */
+    fun with(argument: FormatArgument<*>): FormatContext
 }
 
 /**
- * A abstract [FormatContext] format implementation
+ * A utility superinterface for an object to hold
+ * a format context
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.3
  */
-open class AbstractFormatContext(val parent: FormatContext? = null) : FormatContext {
+fun interface FormatContextHolder {
+    /**
+     * Get the format context that this holder holding
+     */
+    fun getFormatContext(): FormatContext
+
+}
+
+/**
+ * Creates a `FormatContext` with no arguments
+ *
+ * @return format context created
+ */
+fun FormatContext(): FormatContext = SimpleFormatContext(
+    emptyMap()
+)
+
+/**
+ * Creates a `FormatContext` for the given list
+ *
+ * @param list the list of arguments to create format context
+ * @return format context created
+ */
+fun FormatContext(list: List<FormatArgument<*>>): FormatContext = SimpleFormatContext(
+    buildMap {
+        list.forEach {
+            put(it.name, it)
+        }
+    }
+)
+
+/**
+ * Creates a `FormatContext` for the given properties instance
+ *
+ * @param properties the properties to format arguments
+ * @return format context created
+ */
+fun FormatContext(properties: Properties): FormatContext = SimpleFormatContext(
+    buildMap {
+        properties.forEach { (key, value) -> put(key.toString(), FormatArgument(value, key.toString())) }
+    }
+)
+
+/**
+ * Creates a `FormatContext` for the given map
+ *
+ * @param map the map to format arguments
+ * @return format context created
+ */
+fun FormatContext(map: Map<String, FormatArgument<*>>): FormatContext = SimpleFormatContext(
+    buildMap {
+        map.forEach { (key, value) ->
+            put(key, value)
+        }
+    }
+)
+
+/**
+ * A simple implementation of `FormatContext`
+ *
+ * @author kingsthere
+ * @since 0.1.2
+ */
+class SimpleFormatContext(val formatArguments: Map<String, FormatArgument<*>>, val parents: List<FormatContext> = LinkedList()) : FormatContext {
+    /**
+     * Returns an iterator over the elements of this object.
+     */
+    override fun iterator(): Iterator<FormatArgument<*>> {
+        return formatArguments.values.iterator()
+    }
+
     /**
      * Gets a format argument by name
      *
@@ -44,7 +128,8 @@ open class AbstractFormatContext(val parent: FormatContext? = null) : FormatCont
      * @return the argument found
      */
     override fun get(name: String): FormatArgument<*> {
-        return getImplemented(name) ?: parent?.get(name) ?: throw UnsupportedFormatArgumentException("Argument with name $name is not found")
+        return formatArguments[name]
+            ?: throw UnsupportedFormatArgumentException("Format argument not found with the given name $name")
     }
 
     /**
@@ -53,73 +138,29 @@ open class AbstractFormatContext(val parent: FormatContext? = null) : FormatCont
      * @return the argument got, or `null` if the argument with name [name] is not found
      */
     override fun getOrNull(name: String): FormatArgument<*>? {
-        return getImplemented(name) ?: parent?.getOrNull(name)
+        return formatArguments[name]
     }
 
     /**
      * Returns a new format context with all arguments hold by this format context and
-     * extra arguments from [formatContext]
+     * extra arguments from [formatContexts]
      */
-    override fun with(formatContext: FormatContext): FormatContext {
-        return AbstractFormatContext(formatContext)
-    }
-
-    /**
-     * Returns an iterator over the elements of this object.
-     */
-    override fun iterator(): Iterator<FormatArgument<*>> {
-        throw UnsupportedOperationException()
-    }
-
-    open fun getImplemented(name: String): FormatArgument<*>? { return null }
-
-}
-
-/**
- * A utility superinterface for an object to hold
- * a format context
- *
- * @since 0.0.3
- * @author kingsthere
- */
-fun interface FormatContextHolder {
-    /**
-     * Get the format context that this holder holding
-     */
-    fun getFormatContext(): FormatContext
-}
-
-/**
- * Represent a mutable set of arguments that could be applied to
- * a string to format
- *
- * @since 0.0.3
- * @author kingsthere
- */
-interface MutableFormatContext : FormatContext, MutableList<FormatArgument<*>>
-
-/**
- * An implementation of [FormatContext] provide format arguments by a [list]
- *
- * @since 0.0.4
- * @author kingsthere
- */
-open class ListFormatArguments(open val arguments: List<FormatArgument<*>> = listOf(), parent: FormatContext? = null) :
-    AbstractFormatContext(parent) {
-
-    override fun getImplemented(name: String): FormatArgument<*>? {
-        return arguments.find { it.name == name }
+    override fun with(vararg formatContexts: FormatContext): FormatContext {
+        return SimpleFormatContext(this.formatArguments, this.parents.plus(formatContexts))
     }
 
     /**
      * Returns a new format context with all arguments hold by this format context and
-     * extra arguments from [formatContext]
+     * extra arguments from [formatContexts]
      */
-    override fun with(formatContext: FormatContext): FormatContext {
-        return ListFormatArguments(arguments, formatContext)
+    override fun with(formatContexts: Iterable<FormatContext>): FormatContext {
+        return SimpleFormatContext(this.formatArguments, this.parents.plus(formatContexts))
     }
 
-    override fun iterator(): Iterator<FormatArgument<*>> {
-        return arguments.iterator()
+    /**
+     * Returns a new format context with the given argument
+     */
+    override fun with(argument: FormatArgument<*>): FormatContext {
+        return SimpleFormatContext(this.formatArguments.plus(argument.name to argument), this.parents)
     }
 }

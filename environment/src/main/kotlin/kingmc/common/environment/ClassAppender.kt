@@ -1,7 +1,7 @@
 package kingmc.common.environment
 
-import kingmc.common.OpenAPI
-import kingmc.util.Utility
+import kingmc.common.logging.Logger
+import kingmc.util.AppendableURLClassLoader
 import sun.misc.Unsafe
 import java.io.File
 import java.lang.invoke.MethodHandles
@@ -12,10 +12,12 @@ import java.net.URLClassLoader
 import java.nio.file.Path
 
 /**
- * A utility class to appending urls into current classpath
+ * A utility class to appending urls into classpath
  */
-@Utility
-object ClassAppender {
+class ClassAppender(
+    val classLoader: ClassLoader,
+    val logger: Logger
+) {
     var lookup: MethodHandles.Lookup? = null
     var unsafe: Unsafe? = null
 
@@ -28,44 +30,51 @@ object ClassAppender {
             val lookupBase = unsafe!!.staticFieldBase(lookupField)
             val lookupOffset = unsafe!!.staticFieldOffset(lookupField)
             lookup = unsafe!!.getObject(lookupBase, lookupOffset) as MethodHandles.Lookup
-        } catch (ignore: Throwable) {
-        }
+        } catch (ignore: Throwable) {  }
     }
 
-    @JvmStatic
     fun addPath(path: Path) {
         try {
             val file = File(path.toUri().path)
-            val loader = OpenAPI.classLoader()
-            // Application
-            if (loader.javaClass.name == "jdk.internal.loader.ClassLoaders\$AppClassLoader") {
-                addURL(loader, ucp(loader.javaClass), file)
-            } else if (loader.javaClass.name == "net.minecraft.launchwrapper.LaunchClassLoader") {
-                val methodHandle = lookup!!.findVirtual(
-                    URLClassLoader::class.java,
-                    "addURL",
-                    MethodType.methodType(Void.TYPE, URL::class.java)
-                )
-                methodHandle.invoke(loader, file.toURI().toURL())
-            } else {
-                val ucpField: Field? = try {
-                    URLClassLoader::class.java.getDeclaredField("ucp")
-                } catch (e1: NoSuchFieldError) {
-                    ucp(loader.javaClass)
-                } catch (e1: NoSuchFieldException) {
-                    ucp(loader.javaClass)
+            val loader = classLoader
+            // For AppendableURLClassLoader
+            if (classLoader is AppendableURLClassLoader) {
+                classLoader.addPath(path)
+                return
+            }
+
+            // Other class loaders
+            when (loader.javaClass.name) {
+                "jdk.internal.loader.ClassLoaders\$AppClassLoader" -> {
+                    addURL(loader, ucp(loader.javaClass), file)
                 }
-                addURL(loader, ucpField, file)
+                "net.minecraft.launchwrapper.LaunchClassLoader" -> {
+                    val methodHandle = lookup!!.findVirtual(
+                        URLClassLoader::class.java,
+                        "addURL",
+                        MethodType.methodType(Void.TYPE, URL::class.java)
+                    )
+                    methodHandle.invoke(loader, file.toURI().toURL())
+                }
+                else -> {
+                    val ucpField: Field? = try {
+                        URLClassLoader::class.java.getDeclaredField("ucp")
+                    } catch (e1: NoSuchFieldError) {
+                        ucp(loader.javaClass)
+                    } catch (e1: NoSuchFieldException) {
+                        ucp(loader.javaClass)
+                    }
+                    addURL(loader, ucpField, file)
+                }
             }
         } catch (t: Throwable) {
-            t.printStackTrace()
+            logger.logError("An error occurred while trying to append path into classloader", t)
         }
     }
 
-    @JvmStatic
     fun isExists(path: String?): Boolean {
         return try {
-            Class.forName(path, false, OpenAPI.classLoader())
+            Class.forName(path, false, classLoader)
             true
         } catch (ignored: ClassNotFoundException) {
             false

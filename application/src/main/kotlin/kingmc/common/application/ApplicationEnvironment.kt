@@ -3,8 +3,8 @@ package kingmc.common.application
 /**
  * Represents an environment in which [Application] runs
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  * @see Application
  */
 interface ApplicationEnvironment {

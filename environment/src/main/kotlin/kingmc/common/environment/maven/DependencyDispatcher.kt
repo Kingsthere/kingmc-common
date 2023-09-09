@@ -1,9 +1,12 @@
 package kingmc.common.environment.maven
 
-import kingmc.common.application.WithApplication
 import kingmc.common.environment.AbstractXmlParser
-import kingmc.common.environment.ClassAppender.addPath
+import kingmc.common.environment.ClassAppender
+import kingmc.common.environment.DependencyDeclaration
 import kingmc.common.environment.maven.model.*
+import kingmc.common.file.URLFileDownloader
+import kingmc.common.file.concurrent.DownloadExecutors
+import kingmc.common.file.concurrent.ExecutorHttpURLDownloader
 import kingmc.common.logging.Logger
 import me.lucko.jarrelocator.JarRelocator
 import org.apache.commons.io.FileUtils
@@ -19,28 +22,69 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.ParseException
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Future
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.parsers.ParserConfigurationException
+import kotlin.collections.HashSet
 
 
 /**
  * A class responsible for dispatching maven dependencies
  *
  * @param root the root directory to store downloaded maven dependency files
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
-class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParser() {
+class DependencyDispatcher(
+    val root: File,
+    val logger: Logger,
+    val classAppender: ClassAppender,
+    val executorService: ExecutorService = DownloadExecutors(),
+    val fileDownloader: URLFileDownloader = ExecutorHttpURLDownloader(16, executorService)
+): AbstractXmlParser() {
+
     /**
-     * Install a [dependency] from specifies [repositories]
+     * Dependencies installed by this dependency dispatcher
      */
-    @WithApplication
-    fun installDependency(dependency: Dependency, repositories: Collection<Repository>, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope) {
+    val installedDependencies: MutableSet<DependencyDeclaration> = Collections.synchronizedSet(HashSet())
+
+    /**
+     * Install the given [dependencyDeclaration] asynchronously
+     */
+    fun installDependencyAsync(dependencyDeclaration: DependencyDeclaration): Future<*> {
+        return executorService.submit {
+            installDependency(dependencyDeclaration)
+        }
+    }
+
+    /**
+     * Install the given [dependency] asynchronously
+     */
+    fun installDependencyAsync(dependency: Dependency, repository: Repository, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope): Future<*> {
+        return installDependencyAsync(DependencyDeclaration(dependency, repository, relocations, scopes))
+    }
+
+    /**
+     * Install the [dependency] from specifies [repository]
+     */
+    fun installDependency(dependency: Dependency, repository: Repository, relocations: Collection<JarRelocation>, vararg scopes: DependencyScope) {
+        installDependency(DependencyDeclaration(dependency, repository, relocations, scopes))
+    }
+
+    /**
+     * Install the given [dependencyDeclaration] from specifies [repository]
+     */
+    fun installDependency(dependencyDeclaration: DependencyDeclaration) {
+        val relocations = dependencyDeclaration.relocations
+        val dependency = dependencyDeclaration.dependency
+        val repository = dependencyDeclaration.repository
+
         logger.logInfo("Installing dependency $dependency")
         fun injectClasspath(file: File, downloadedDependency: DownloadedDependency) {
             if (relocations.isEmpty()) {
                 logger.logInfo("Adding $file to classpath")
-                addPath(file.toPath())
+                classAppender.addPath(file.toPath())
             } else {
                 logger.logInfo("Relocating $dependency ($relocations)")
                 val relocated = File(file.path + "-" + relocations.hashCode() + ".jar")
@@ -64,20 +108,22 @@ class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParse
                     }
                 }
                 logger.logInfo("Adding $relocated to classpath")
-                addPath(relocated.toPath())
+                classAppender.addPath(relocated.toPath())
             }
             downloadedDependency.transitive.forEach {
                 injectClasspath(it.jar, it)
             }
         }
-        val downloadedDependency = downloadDependency(dependency, repositories, *scopes)
-        injectClasspath(downloadedDependency.jar, downloadedDependency)
+        if (dependencyDeclaration !in installedDependencies) {
+            val downloadedDependency = downloadDependency(dependency, setOf(repository), *dependencyDeclaration.scopes)
+            injectClasspath(downloadedDependency.jar, downloadedDependency)
+            installedDependencies.add(dependencyDeclaration)
+        }
     }
 
     /**
      * Download a [dependency] from specifies [repositories]
      */
-    @WithApplication
     fun downloadDependency(dependency: Dependency, repositories: Collection<Repository>, vararg scopes: DependencyScope): DownloadedDependency {
         val directory = createDependencyDirectory(root, dependency)
         // Create parent directory if not exists
@@ -116,7 +162,9 @@ class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParse
                     downloadFile(repository, dependency, pomSha1)
                 } catch (exception: IOException) {
                     try {
-                        val factory = DocumentBuilderFactory.newInstance()
+                        val factory = DocumentBuilderFactory.newInstance().apply {
+                            isIgnoringElementContentWhitespace = true
+                        }
                         val builder = factory.newDocumentBuilder()
                         val xml = builder.parse(pom)
                         try {
@@ -169,7 +217,9 @@ class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParse
     }
 
     fun getDependenciesFromPom(pom: File, vararg scopes: DependencyScope): Pom {
-        val factory = DocumentBuilderFactory.newInstance()
+        val factory = DocumentBuilderFactory.newInstance().apply {
+            isIgnoringElementContentWhitespace = true
+        }
         val builder = factory.newDocumentBuilder()
         val xml: Document = builder.parse(pom)
 
@@ -220,6 +270,21 @@ class DependencyDispatcher(val root: File, val logger: Logger): AbstractXmlParse
         )
         logger.logInfo("[${Thread.currentThread().name}] Downloading $dependency from $url to $out")
         FileUtils.copyURLToFile(url, out)
+    }
+
+    fun downloadFileAsync(repository: Repository, dependency: Dependency, out: File) {
+        val url = URL(
+            String.format(
+                "%s/%s/%s/%s/%s",
+                repository.url.removeSuffix("/"),
+                dependency.groupId.replace('.', '/'),
+                dependency.artifactId,
+                dependency.version,
+                out.name
+            )
+        )
+        logger.logInfo("[${Thread.currentThread().name}] Downloading $dependency from $url to $out")
+        fileDownloader.download(url, out).run()
     }
 
     /**

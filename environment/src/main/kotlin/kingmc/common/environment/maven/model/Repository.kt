@@ -9,8 +9,8 @@ import org.w3c.dom.Element
 /**
  * Represents a maven repository to download [Dependency] from
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
 data class Repository(val url: String): AbstractXmlParser() {
     constructor(node: Element) : this(find("url", node))

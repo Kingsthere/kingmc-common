@@ -3,12 +3,11 @@ package kingmc.common.application
 import java.lang.annotation.Inherited
 
 /**
- * Marker annotation for every instances that separated by applications, when the
+ * Marker annotation for every instance that separated by applications, when the
  * application of instances disposed, instances will dispose automatically
  *
- * @since 0.0.7
  * @author kingsthere
- * @see Domain
+ * @since 0.0.7
  */
 @Retention
 @Target(AnnotationTarget.CLASS)

@@ -3,8 +3,8 @@ package kingmc.util.format
 /**
  * Represent a single format argument
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 sealed interface FormatArgument<E> {
     /**

@@ -6,10 +6,10 @@ import kingmc.util.format.Formatter
 import kotlin.reflect.KClass
 
 /**
- * A superinterface to instantiate enhanced annotations using cglib or jdk runtime proxy
+ * A superinterface for instantiating enhanced annotations using cglib or jdk runtime proxy
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 interface AnnotationEnhancer {
     /**

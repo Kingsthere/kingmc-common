@@ -1,11 +1,8 @@
 package kingmc.common.context
 
 import kingmc.common.context.beans.BeanDefinition
-import kingmc.util.errorprone.CanIgnoreReturnValue
 import kingmc.util.format.FormatContextHolder
 import kingmc.util.format.Formatted
-import java.io.Closeable
-import java.io.Serializable
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -16,87 +13,103 @@ import kotlin.reflect.KClass
  * @since 0.1.0
  */
 @Formatted
-interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>, Closeable {
+interface Context : FormatContextHolder, Iterable<BeanDefinition> {
     /**
      * The properties of this context
      */
     val properties: Properties
 
     /**
-     * Check if a bean definition with class matches the specific [clazz] exists in this context
+     * Check if a bean with the given class is available in this context
      *
-     * @param clazz the class of bean definition to check
-     * @return `true` if a bean definition with class matches is exists in this context
+     * If the given bean is an abstract bean, it checks if there's any available implementation bean
+     * of the given abstract bean
+     *
+     * @param clazz the class of the bean
+     * @return `true` if a bean with the given class is available
      */
     fun hasBean(clazz: KClass<*>) : Boolean
 
     /**
-     * Check if a bean definition with class matches the specific [name] exists in this context
+     * Check if a bean with the given name is available in this context
      *
-     * @param name the name of bean definition to check
-     * @return `true` if a bean definition with class matches is exists in this context
+     * If the given bean is an abstract bean, it checks if there's any available implementation bean
+     * of the given abstract bean
+     *
+     * @param name the name of the bean
+     * @return `true` if a bean with the given name is available
      */
     fun hasBean(name: String) : Boolean
 
     /**
-     * Gets a bean instance from this context for specific class
+     * Check if any bean definition with class matches the given [clazz] exists
      *
-     * @param class the class to get bean instance for
-     * @return bean instance got
+     * @param clazz the class of bean definition to check
+     * @return `true` if a bean definition with class matches it exists in this context
      */
-    fun <T : Any> getBean(clazz: KClass<out T>): T
+    fun hasBeanDefinition(clazz: KClass<*>) : Boolean
 
     /**
-     * Gets all bean instances from this context for specific class
+     * Check if any bean definition with class matches the given [name] exists
      *
-     * @param class the class to get bean instance for
-     * @return bean instances got as a `List`
+     * @param name the name of bean definition to check
+     * @return `true` if a bean definition with class matches exists in this context
      */
-    fun <T : Any> getBeans(clazz: KClass<out T>): List<T>
+    fun hasBeanDefinition(name: String) : Boolean
 
     /**
-     * Gets a bean instance from this context for name of this bean definition
+     * Check if this context has the right access to the given bean
      *
-     * @param name the name to get bean instance for
-     * @return bean instance got
+     * @param beanDefinition the bean definition to check
+     * @return `true` if this context has the right access to the given bean
      */
-    fun getBean(name: String): Any
+    fun canAccess(beanDefinition: BeanDefinition): Boolean
+
+    /**
+     * Gets the bean instance with the class that matches the given class
+     *
+     * @param clazz the class to get bean instance for
+     * @return the bean instance of the bean with the given class, `null` if bean with the given class does not exist
+     *         in this context
+     */
+    fun <TBean : Any> getBean(clazz: KClass<out TBean>): TBean?
+
+    /**
+     * Gets the bean instance of the bean with the given name
+     *
+     * @param name the name of the bean
+     * @return the bean instance of the bean with the given name, `null` if the bean with the given name does
+     *         not exist in this context
+     */
+    fun getBean(name: String): Any?
 
 
     /**
-     * Gets a bean definition from this context for name of this bean definition
+     * Gets the bean definition with the given name
      *
-     * @param name the name to get bean instance for
-     * @return bean instance got, or `null` if no bean definition found with [name]
+     * @param name the name of the bean definition
+     * @return the bean definition with the given, `null` if the bean with the given name does
+     *         not exist in this context
      */
     fun getBeanDefinition(name: String): BeanDefinition?
 
 
     /**
-     * Gets a bean definition from this context for class of this bean definition
+     * Gets the bean definition with the given class
      *
-     * @param clazz the class to get bean instance for
-     * @return bean instance got, or `null` if no bean definition found with [clazz]
+     * @param clazz the class of the bean definition
+     * @return the bean definition with the given class, `null` if the bean with the given class does not exist
+     *         in this context
      */
     fun getBeanDefinition(clazz: KClass<*>): BeanDefinition?
 
     /**
-     * Gets a bean instance for given bean definition
+     * Gets the instance of the given bean definition from this context
      *
-     * @param beanDefinition BeanDefinition to get bean instance for
-     * @return bean instance got for specific bean definition
+     * @param beanDefinition the bean definition to instantiate
+     * @return bean instance instantiated from this context
      */
     fun getBeanInstance(beanDefinition: BeanDefinition): Any
-
-    /**
-     * Gets a bean instance from this context for name of this bean definition with
-     * specific type
-     *
-     * @param name the name to get bean instance for
-     * @param requiredType the type required for this bean instance
-     * @return bean instance got
-     */
-    fun <T : Any> getBean(name: String, requiredType: KClass<out T>): T
 
     /**
      * Gets all bean definitions defined in this context
@@ -104,16 +117,22 @@ interface Context : FormatContextHolder, Serializable, Iterable<BeanDefinition>,
     fun getBeanDefinitions(): Collection<BeanDefinition>
 
     /**
-     * Return the beans definitions defined in this context as a [Map]
+     * Return the bean definitions defined in this context as a [Map]
      */
-    fun asMap(): MutableMap<String, BeanDefinition>
+    fun asMap(): Map<String, BeanDefinition>
 
     /**
-     * Remove a bean pointed by the name of that bean from this container
-     *
-     * @parma name the name of the bean to remove
-     * @return is the bean removed from this container successfully
+     * Remove the given bean definition from this context
      */
-    @CanIgnoreReturnValue
-    fun remove(name: String)
+    fun remove(beanDefinition: BeanDefinition)
+
+    /**
+     * Dispose beans in this context
+     */
+    fun dispose()
+
+    /**
+     * Clear all beans that are registered in this context
+     */
+    fun clear()
 }

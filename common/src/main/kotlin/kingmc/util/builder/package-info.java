@@ -1,6 +1,6 @@
 /**
  * A package about the standard interface to
- * specify the builders designing mode.
+ * specify the builder designing mode.
  *
  * @author kingsthere
  * @since 0.0.1

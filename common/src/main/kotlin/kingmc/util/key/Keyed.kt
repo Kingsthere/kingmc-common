@@ -3,8 +3,8 @@ package kingmc.util.key
 /**
  * Something that has an associated [Key].
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @see Key
  * @see Namespaced
  */

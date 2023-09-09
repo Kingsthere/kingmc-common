@@ -3,8 +3,8 @@ package kingmc.common.application
 /**
  * A superinterface exposed the [Application] of subclasses
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 interface ApplicationExposedContext {
     /**

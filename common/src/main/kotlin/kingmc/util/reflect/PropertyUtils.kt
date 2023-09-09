@@ -9,8 +9,8 @@ import kotlin.reflect.KProperty
  * Find a property in a [KClass] by
  * the name of the property.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 fun KClass<*>.findProperty(name: String): KProperty<*>? {
     return this.members
@@ -22,8 +22,8 @@ fun KClass<*>.findProperty(name: String): KProperty<*>? {
  * Find a mutable property in a [KClass] by
  * the name of the property.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 fun KClass<*>.findMutableProperty(name: String): KMutableProperty<*>? {
     return this.members
@@ -35,8 +35,8 @@ fun KClass<*>.findMutableProperty(name: String): KMutableProperty<*>? {
  * Find a property in a [KClass] that
  * is annotated with any specified annotation.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 inline fun <reified T : Annotation> KClass<*>.findPropertyByAnnotation(): KProperty<*>? {
     return this.findPropertiesByAnnotation<T>().lastOrNull()
@@ -46,8 +46,8 @@ inline fun <reified T : Annotation> KClass<*>.findPropertyByAnnotation(): KPrope
  * Find a batch of property in a [KClass] that
  * is annotated with any specified annotation.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 inline fun <reified T : Annotation> KClass<*>.findPropertiesByAnnotation(): Collection<KProperty<*>> {
     return this.members
@@ -59,8 +59,8 @@ inline fun <reified T : Annotation> KClass<*>.findPropertiesByAnnotation(): Coll
  * Find a mutable property in a [KClass] that
  * is annotated with any specified annotation.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 inline fun <reified T : Annotation> KClass<*>.findMutablePropertyByAnnotation(): KMutableProperty<*>? {
     return this.findMutablePropertiesByAnnotation<T>().lastOrNull()
@@ -70,8 +70,8 @@ inline fun <reified T : Annotation> KClass<*>.findMutablePropertyByAnnotation():
  * Find a batch of mutable property in a [KClass] that
  * is annotated with any specified annotation.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  */
 inline fun <reified T : Annotation> KClass<*>.findMutablePropertiesByAnnotation(): Collection<KMutableProperty<*>> {
     return this.members

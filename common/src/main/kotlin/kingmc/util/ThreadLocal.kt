@@ -7,8 +7,8 @@ import kotlin.reflect.KProperty
  * Create a [ThreadLocal] from current thread that delegate this to
  * properties
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  * @param T the type of the thread-local variable
  */
 fun <T> threadLocal(): ReadWriteProperty<Any?, T?> =
@@ -17,8 +17,8 @@ fun <T> threadLocal(): ReadWriteProperty<Any?, T?> =
 /**
  * A delegate delegates a properties for using [ThreadLocal]
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  */
 class ThreadLocalDelegate<T> : ReadWriteProperty<Any?, T?> {
     /**

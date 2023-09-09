@@ -1,56 +1,72 @@
 package kingmc.common.context
 
 import kingmc.common.context.beans.BeanDefinition
-import kotlin.reflect.KAnnotatedElement
+import kingmc.common.context.exception.NoSuchBeanException
+
+/**
+ * Try to get the bean with the given name from this context, throw exception if the bean
+ * with the given name does not exist in this context
+ *
+ * @param name the name of the bean
+ * @author kingsthere
+ * @since 0.1.2
+ */
+fun Context.getBeanOrThrow(name: String): Any {
+    return getBean(name) ?: throw NoSuchBeanException("No such bean with name $name", beanName = name)
+}
+
+/**
+ * Try to get the bean with the given bean type from this context, throw exception if the
+ * bean with the given type does not exist in this context
+ *
+ * @param TBean the type of the bean
+ * @return the bean that matches the given type found
+ * @author kingsthere
+ * @since 0.1.2
+ */
+inline fun <reified TBean : Any> Context.getBeanOrThrow(): TBean {
+    val clazz = TBean::class
+    return getBean(clazz) ?: throw NoSuchBeanException(
+        "No such bean with class ${clazz.qualifiedName}",
+        beanType = clazz
+    )
+}
+
+/**
+ * Gets the bean source of this context
+ */
+val Context.beanSource: BeanSource
+    get() = (this as BeanSourceApplicationContext).beanSource
 
 /**
  * Check if a bean(definition) is protected
  *
+ * @author kingsthere
  * @since 0.0.4
- * @author kingsthere
  */
+@Deprecated("Just check beanDefinition.context", ReplaceWith("beanDefinition.context == this"))
 fun HierarchicalContext.isProtectedBean(beanDefinition: BeanDefinition): Boolean {
-    return this.getProtectedBeans().contains(beanDefinition)
+    return beanDefinition.context == this
 }
 
 /**
- * Check an element conditions by this context
+ * Try to find the best implementation bean for the given bean definition from this context
  *
- * @since 0.0.5
+ * @param beanDefinition the bean definition to find implementation bean for
+ * @return the bean implementation definition
  * @author kingsthere
+ * @since 0.1.2
  */
-fun Context.checkElementCondition(element: KAnnotatedElement): Boolean {
-    return if (this is ConditionCapableContext) {
-        testElementCondition(element)
-    } else {
-        true
-    }
-}
+fun Context.findImplementationBean(beanDefinition: BeanDefinition): BeanDefinition? =
+    beanDefinition.implementations().find { canAccess(it) }
 
 /**
- * Find a bean in this context by [T], returns `null` if this
- * context can't find any bean by [T]
+ * Try to find the best overridden bean for the given bean definition from this context
  *
- * @since 0.0.6
+ * @param beanDefinition the bean definition to find overridden bean for
+ * @return the bean overridden definition, or itself if no such bean overrides the given bean
  * @author kingsthere
- * @return The bean found
+ * @since 0.1.2
  */
-inline fun <reified T : Any> Context.findBean(): Any? {
-    val clazz = T::class
-    return if (hasBean(clazz)) {
-        getBean(clazz)
-    } else {
-        null
-    }
-}
-
-/**
- * Find all beans in this context by [T]
- *
- * @since 0.0.6
- * @author kingsthere
- * @return The bean found as a `List`
- */
-inline fun <reified T : Any> Context.findBeans(): List<Any> {
-    return getBeans(T::class)
-}
+fun Context.findOverriddenBean(beanDefinition: BeanDefinition): BeanDefinition =
+    beanDefinition.implementations().find { canAccess(it) } ?: beanDefinition

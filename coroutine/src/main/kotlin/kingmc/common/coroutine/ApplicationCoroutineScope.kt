@@ -10,8 +10,8 @@ import kotlin.coroutines.CoroutineContext
  * An `ApplicationCoroutineScope` is a coroutine scope implementation used by kingmc framework,
  * when application shutdown this coroutine scope automatically cancelled
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 open class ApplicationCoroutineScope @WithApplication internal constructor(
     val application: Application = currentApplication(),
@@ -32,12 +32,12 @@ open class ApplicationCoroutineScope @WithApplication internal constructor(
 }
 
 /**
- * Create an application coroutine scope for current application
+ * Create an application coroutine scope for the current application
  *
  * @param context the coroutine context for this scope
  * @param application the application for this scope
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 @WithApplication
 fun ApplicationCoroutineScope(

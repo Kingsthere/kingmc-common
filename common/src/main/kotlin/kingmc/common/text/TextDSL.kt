@@ -93,8 +93,8 @@ fun TranslatableText(builder: TranslatableTextBuilder.() -> Unit): TranslatableT
 /**
  * Appends a text from [textDisplayable] to this text
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.append(textDisplayable: TextDisplayable): TextBuilder<C, B> {
     return this.append(textDisplayable.asText())
@@ -103,8 +103,8 @@ fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.append(te
 /**
  * Appends multiple text from [textDisplayable] to this text
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.append(vararg textDisplayable: TextDisplayable): TextBuilder<C, B> {
     return this.append(textDisplayable.map { it.asText() })
@@ -113,8 +113,8 @@ fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.append(va
 /**
  * Sets the hover event of this text to [hoverEventDisplayable]
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.hoverEvent(hoverEventDisplayable: HoverEventDisplayable): TextBuilder<C, B> {
     return this.hoverEvent(hoverEventDisplayable.asHoverEvent())
@@ -123,7 +123,7 @@ fun <C : BuildableText<C, B>, B : TextBuilder<C, B>> TextBuilder<C, B>.hoverEven
 /**
  * A [Text] with empty contents
  *
- * @since 0.0.7
  * @author kingsthere
+ * @since 0.0.7
  */
 val TEXT_EMPTY: Text = Text()

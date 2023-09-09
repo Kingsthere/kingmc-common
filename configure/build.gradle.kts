@@ -20,7 +20,6 @@ repositories {
 dependencies {
     implementation(project(":common"))
 
-
     // The version of night config
     val nightConfig = "3.6.6"
     // Night config

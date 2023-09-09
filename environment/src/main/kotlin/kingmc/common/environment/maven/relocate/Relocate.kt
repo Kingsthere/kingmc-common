@@ -6,8 +6,8 @@ import kingmc.util.format.Formatted
 /**
  * Annotation to declare a relocation of a maven dependency
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
 @Target(AnnotationTarget.CLASS)
 @Retention
@@ -22,7 +22,7 @@ annotation class Relocate(
     val pattern: String,
 
     /**
-     * The relocated pattern after relocate
+     * The relocated pattern after relocating
      */
     @Formatted
     val relocatedPattern: String

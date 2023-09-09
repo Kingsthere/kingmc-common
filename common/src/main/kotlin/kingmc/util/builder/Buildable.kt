@@ -43,7 +43,7 @@ interface Buildable<R, B : Buildable.Builder<R>?> {
          * Configures `builder` using `consumer` and then builds.
          *
          * @param builder  the builder
-         * @param consumer the builder consume
+         * @param consumer the builder consumes
          * @param R        the type to be built
          * @param R        the builder type
          * @return the built thing

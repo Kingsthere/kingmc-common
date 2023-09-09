@@ -5,12 +5,12 @@ import kingmc.common.context.Context
 /**
  * Extended [Context] expose bean processors defined in this processor context
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 interface ProcessorContext : Context {
     /**
      * Processors declared in this processor context
      */
-    val processors: MutableMap<Int, MutableSet<BeanProcessor>>
+    val processors: MutableMap<Int, MutableList<BeanProcessor>>
 }

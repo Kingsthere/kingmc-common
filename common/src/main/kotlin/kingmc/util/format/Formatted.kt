@@ -1,11 +1,11 @@
 package kingmc.util.format
 
 /**
- * An annotation indicate an object that support the elements
+ * An annotation indicates an object that supports the elements
  * in that object supports to format
  *
- * @since 0.0.4
  * @author kingsthere
+ * @since 0.0.4
  */
 @Retention
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.VALUE_PARAMETER)

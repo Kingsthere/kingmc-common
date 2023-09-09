@@ -10,8 +10,8 @@ import org.w3c.dom.Element
 /**
  * Represents a dependency that needs to be downloaded and inject into the classpath
  *
- * @since 0.0.6
  * @author kingsthere
+ * @since 0.0.6
  */
 class Dependency : AbstractXmlParser {
     val groupId: String

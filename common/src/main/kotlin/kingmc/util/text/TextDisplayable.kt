@@ -6,8 +6,8 @@ import kingmc.common.text.Text
  * A superinterface represent an object that capable to convert
  * into a [Text]
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see Text
  */
 interface TextDisplayable {
@@ -22,7 +22,7 @@ val TEXT_NULL = Text("null")
 /**
  * Converts this object into a [Text] reference, if this object implements [TextDisplayable]
  * interface it will give the [TextDisplayable.asText] as result, otherwise it will return a
- * plain text with literal [toString] as result
+ * plain text with literal [toString] as a result
  *
  * @receiver object to convert as a text
  * @return text converted

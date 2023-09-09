@@ -1,5 +1,6 @@
 package kingmc.common.environment
 
+import kingmc.common.environment.maven.DependencyScope
 import kingmc.common.environment.maven.MavenDependency
 
 @MavenDependency(
@@ -48,13 +49,13 @@ import kingmc.common.environment.maven.MavenDependency
     version = "2.9.1"
 )
 @MavenDependency(
-    groupId = "org.yaml",
-    artifactId = "snakeyaml",
-    version = "2.0"
-)
-@MavenDependency(
     groupId = "io.github.classgraph",
     artifactId = "classgraph",
     version = "4.8.158"
+)
+@MavenDependency(
+    groupId = "org.jetbrains",
+    artifactId = "annotations",
+    version = "23.0.0",
 )
 object KingMCEnvironment

@@ -9,8 +9,8 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Extend [SingletonMap] provide instances implements dependency injection by @Autowired constructors
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 open class AutowireCapableSingletonMap(val context: Context) : SingletonMap() {
     override fun <T : Any> createInstance(clazz: KClass<out T>): T {

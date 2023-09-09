@@ -9,9 +9,9 @@ import java.util.zip.ZipInputStream
 /**
  * Extract this file as a .zip file
  *
- * @param to the directory to extract this file into
- * @since 0.0.2
+ * @param dest the directory to extract this file into
  * @author kingsthere
+ * @since 0.0.2
  */
 fun File.extractZip(dest: File) {
     val buffer = ByteArray(1024)

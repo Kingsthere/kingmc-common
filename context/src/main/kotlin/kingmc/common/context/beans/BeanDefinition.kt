@@ -1,21 +1,21 @@
 package kingmc.common.context.beans
 
+import com.google.errorprone.annotations.Immutable
 import kingmc.common.context.Context
-import kingmc.util.errorprone.Immutable
+import kotlin.reflect.KClass
 
 /**
- * A BeanDefinition describes an instance of a Bean that contains property
- * values, constructor parameter values, and more implementation information
+ * A `BeanDefinition` describes an instance of Bean, includes the common properties of bean
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.1
  */
 @Immutable
 interface BeanDefinition {
     /**
      * The name of this bean
      *
-     * **Note:** The name of beans must be _unique_ in a context
+     * **Note: ** The name of beans must be _unique_ in a context
      *
      * @since 0.0.1
      */
@@ -27,6 +27,13 @@ interface BeanDefinition {
      * @since 0.0.4
      */
     val context: Context
+
+    /**
+     * The class of this bean definition
+     *
+     * @since 0.1.1
+     */
+    val type: KClass<*>
 
     /**
      * The scope of this bean
@@ -63,14 +70,9 @@ interface BeanDefinition {
         get() = 0
 
     /**
-     * Return `true` if this bean is a singleton
+     * Returns `true` if this is an open bean
      */
-    fun isSingleton(): Boolean
-
-    /**
-     * Return `true` if this bean is a prototype
-     */
-    fun isPrototype(): Boolean
+    fun isOpen(): Boolean
 
     /**
      * Return `true` if this bean is an abstract bean

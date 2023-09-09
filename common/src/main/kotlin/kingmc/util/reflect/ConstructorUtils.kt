@@ -6,8 +6,8 @@ import kotlin.reflect.KFunction
 /**
  * Find a no-args constructor in a [KClass]
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 fun <R : Any> KClass<R>.findNoArgsConstructor(): KFunction<R>? =
@@ -16,8 +16,8 @@ fun <R : Any> KClass<R>.findNoArgsConstructor(): KFunction<R>? =
 /**
  * Instantiate current class using the default no-args constructor in a [KClass]
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 fun <R : Any> KClass<R>.newInstance(): R =

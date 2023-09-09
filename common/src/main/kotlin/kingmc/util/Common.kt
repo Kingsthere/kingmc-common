@@ -5,8 +5,8 @@ import java.util.function.Supplier
 /**
  * Package the supplier specified with [lazy]
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 fun <T> lazySupplier(supplier: () -> T): Supplier<T> {
     return object : Supplier<T> {

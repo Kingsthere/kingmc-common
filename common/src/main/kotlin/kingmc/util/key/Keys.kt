@@ -5,11 +5,10 @@ package kingmc.util.key
 import kingmc.util.Utility
 
 /**
- * Create a key by using the string with specify
- * format (**namespace:value**)
+ * Create a key by using the string with specified format (**namespace:value**)
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @param string the string to extract from
  * @return the key extract from string
  */
@@ -26,8 +25,8 @@ fun keyOf(string: String): Key {
  * Create a key by using current string with specify
  * format (**namespace:value**)
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @return the key extract from string
  */
 @Throws(InvalidKeyException::class)
@@ -37,8 +36,8 @@ fun String.toKey(): Key =
 /**
  * Convert this object to a [Key]
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @return the key converted to
  */
 @Throws(InvalidKeyException::class)

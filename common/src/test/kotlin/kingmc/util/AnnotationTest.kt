@@ -1,7 +1,7 @@
 package kingmc.util
 
-import kingmc.util.annotation.getAnnotation
-import kingmc.util.annotation.hasAnnotation
+import io.github.classgraph.ClassGraph
+import kingmc.util.annotation.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -14,11 +14,42 @@ class AnnotationTest {
     }
 
     @Test
+    fun testHasAnnotationClassGraph() {
+        val classes = ClassGraph()
+            .acceptClasses("kingmc.util.AnnotationTest\$TestClass1")
+            .acceptClasses("kingmc.util.AnnotationTest\$TestClass2")
+            .acceptClasses("kingmc.util.AnnotationTest\$TestClass3")
+            .enableAnnotationInfo()
+            .scan()
+        val testClass1 = classes.getClassInfo("kingmc.util.AnnotationTest\$TestClass1")
+        val testClass2 = classes.getClassInfo("kingmc.util.AnnotationTest\$TestClass2")
+        val testClass3 = classes.getClassInfo("kingmc.util.AnnotationTest\$TestClass3")
+        Assertions.assertTrue(testClass1.hasAnnotationClassname("kingmc.util.AnnotationTest\$TestAnnotation1"))
+        Assertions.assertFalse(testClass2.hasAnnotationClassname("kingmc.util.AnnotationTest\$TestAnnotation2"))
+        Assertions.assertFalse(testClass3.hasAnnotationClassname("kingmc.util.AnnotationTest\$TestAnnotation1"))
+    }
+
+    @Test
     fun testAnnotationAttribute() {
         val annotation = TestClass1::class.getAnnotation<TestAnnotation1>()!!
         Assertions.assertTrue(annotation.arg1 == "value1")
         val annotation2 = TestClass2::class.getAnnotation<TestAnnotation1>()!!
         Assertions.assertTrue(annotation2.arg1 == "value3")
+    }
+
+    @Test
+    fun testHasAnnotationAttributeClassGraph() {
+        val classes = ClassGraph()
+            .acceptClasses("kingmc.util.AnnotationTest\$TestClass1")
+            .acceptClasses("kingmc.util.AnnotationTest\$TestClass2")
+            .enableAnnotationInfo()
+            .scan()
+        val testClass1 = classes.getClassInfo("kingmc.util.AnnotationTest\$TestClass1")
+        val testClass2 = classes.getClassInfo("kingmc.util.AnnotationTest\$TestClass2")
+        val annotation = testClass1.getAnnotationContent("kingmc.util.AnnotationTest\$TestAnnotation1")!!
+        Assertions.assertTrue(annotation.getAttribute("arg1") == "value1")
+        val annotation2 = testClass2.getAnnotationContent("kingmc.util.AnnotationTest\$TestAnnotation1")!!
+        Assertions.assertTrue(annotation2.getAttribute("arg1") == "value3")
     }
 
     @Retention

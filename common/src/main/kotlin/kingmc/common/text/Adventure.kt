@@ -1,9 +1,5 @@
 /**
- * Utility things for minecraft uses in kingmc
- * audience api about **chat**
- *
- * @since 0.0.3
- * @author kingsthere
+ * Alias adventure api stuff to prevent class name colliding
  */
 
 package kingmc.common.text
@@ -45,7 +41,7 @@ typealias KeybindTextBuilder = KeybindComponent.Builder
 typealias BinaryTagHolder = BinaryTagHolder
 
 /*
-Aliases from minimessage
+Aliases from mini-message
 to kingmc
  */
 typealias MiniMessage = MiniMessage

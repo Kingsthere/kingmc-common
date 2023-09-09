@@ -7,8 +7,8 @@ import com.google.gson.GsonBuilder
  * A class responsible for providing [Gson] instances to serialize/deserialize
  * json texts
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 object StandardGson : GsonProvider {
     /**

@@ -5,8 +5,8 @@ import kingmc.common.context.beans.BeanPrivacy
 /**
  * An annotation declared the privacy of the bean
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 @Retention
 @Target(

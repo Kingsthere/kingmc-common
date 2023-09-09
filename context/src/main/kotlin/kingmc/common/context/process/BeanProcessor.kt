@@ -1,21 +1,21 @@
 package kingmc.common.context.process
 
 import kingmc.common.context.Context
-import kingmc.util.Lifecycle
+import kingmc.util.lifecycle.Lifecycle
 
 /**
  * A BeanLoader to process bean when a bean is loaded into an [Context],
  * notice that the bean processors must be defined as a **singleton bean**
  * otherwise the bean processor won't work
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  * @see Context
  */
 interface BeanProcessor {
     /**
      * The lifecycle where this processor start to work, this
-     * only work when you use it to process a [LifecycleContext]
+     * only work when you use it to process a `LifecycleContext`
      *
      * @see Lifecycle
      */

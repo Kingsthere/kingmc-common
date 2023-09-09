@@ -1,17 +1,15 @@
 package kingmc.common.context.beans
 
-import kotlin.reflect.KClass
-
 /**
  * Get the annotations defined in this bean if this bean
- * definition is extended from [AnnotatedBeanDefinition]
+ * definition is extended from [AnnotationAwareBeanDefinition]
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 val BeanDefinition.annotations: List<Annotation>
     get() {
-        return if (this is AnnotatedBeanDefinition) {
+        return if (this is AnnotationAwareBeanDefinition) {
             this.annotations
         } else {
             emptyList()
@@ -19,26 +17,10 @@ val BeanDefinition.annotations: List<Annotation>
     }
 
 /**
- * Get the bean class defined in this bean if this bean
- * definition is extended from [ClassBeanDefinition]
- *
- * @since 0.0.3
- * @author kingsthere
- */
-val BeanDefinition.beanClass: KClass<out Any>
-    get() {
-        return if (this is ClassBeanDefinition) {
-            this.beanClass
-        } else {
-            throw UnsupportedOperationException()
-        }
-    }
-
-/**
  * Get the lifecycle of this bean definition
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 val BeanDefinition.lifecycle: Int
     get() {

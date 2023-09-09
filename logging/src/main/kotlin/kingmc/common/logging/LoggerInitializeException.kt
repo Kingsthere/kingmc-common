@@ -1,9 +1,9 @@
 package kingmc.common.logging
 
 /**
- * Thrown when a unhandled exception happened while a logger initialize
+ * Thrown when an unhandled exception happened while a logger initializes
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 class LoggerInitializeException(message: String?) : RuntimeException(message)

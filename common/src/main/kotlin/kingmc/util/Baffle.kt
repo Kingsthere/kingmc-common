@@ -10,8 +10,8 @@ import kotlin.time.Duration
  * and count them isolated by the specifying duration
  * cooldown
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 interface Baffle<T> {
     /**
@@ -33,7 +33,7 @@ interface Baffle<T> {
 
     /**
      * Force update the cooldown of specifying
-     * baffle object into zero
+     * a baffle object into zero
      *
      * @param obj the object to update
      * @since 0.0.1

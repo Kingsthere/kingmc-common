@@ -5,11 +5,11 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Standard game tick utilities, in minecraft a game
- * tick is equals to 0.05 second, 20 game tick equals 1
+ * tick is equals to 0.05 second, 20 game ticks equal 1
  * second
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 @Utility
 object Ticks {

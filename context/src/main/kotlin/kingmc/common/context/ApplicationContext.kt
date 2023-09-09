@@ -5,11 +5,11 @@ import kingmc.common.context.process.ProcessorContext
 /**
  * An ioc container integration integrated common features for applications
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  * @see Context
  */
-interface ApplicationContext : Context, ProcessorContext, ConditionCapableContext, HierarchicalContext, LifecycleContext {
+interface ApplicationContext : Context, ProcessorContext, HierarchicalContext, LifecycleContext {
     /**
      * The name of this application context
      */

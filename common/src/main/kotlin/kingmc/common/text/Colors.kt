@@ -12,8 +12,8 @@ typealias HSVLike = HSVLike
 /**
  * Generate a hex color from [String]
  *
- * @since 0.0.4
  * @author kingsthere
+ * @since 0.0.4
  */
 fun generateHexColorFromString(string: String): String {
     val md: MessageDigest = try { MessageDigest.getInstance("MD5") } catch (var3: NoSuchAlgorithmException) { throw InternalError("MD5 not supported", var3) }

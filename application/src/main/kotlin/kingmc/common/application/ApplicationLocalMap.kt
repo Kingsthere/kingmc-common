@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * A map in `Application` used to store values for `ApplicationLocal` instances
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  * @see ApplicationLocal
  */
 class ApplicationLocalMap {

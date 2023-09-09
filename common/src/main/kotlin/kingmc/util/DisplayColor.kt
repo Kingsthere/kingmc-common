@@ -4,8 +4,8 @@ package kingmc.util
  * A utility enum class describe simple colors in
  * minecraft
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 @Utility
 enum class DisplayColor(val colorCode: String) {
@@ -35,7 +35,7 @@ enum class DisplayColor(val colorCode: String) {
 /**
  * The color char in minecraft java (\u00A7)
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  */
 const val COLOR_CHAR = '\u00A7'

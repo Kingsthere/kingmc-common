@@ -9,8 +9,8 @@ import kotlin.reflect.full.functions
  * Find a function in a [KClass] by the
  * name of the callable.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 fun KClass<*>.findFunction(name: String): KFunction<*>? =
@@ -19,8 +19,8 @@ fun KClass<*>.findFunction(name: String): KFunction<*>? =
 /**
  * Check if a class has a function
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 fun KClass<*>.hasFunction(name: String): Boolean {
@@ -31,8 +31,8 @@ fun KClass<*>.hasFunction(name: String): Boolean {
  * Find a batch of function in a [KClass] by the
  * annotation of the callable.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 fun KClass<*>.findFunctions(name: String): Collection<KFunction<*>> =
@@ -43,8 +43,8 @@ fun KClass<*>.findFunctions(name: String): Collection<KFunction<*>> =
  * Find a function in a [KClass] by the
  * name of the callable.
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 inline fun <reified T : Annotation> KClass<*>.findFunctionByAnnotation(): KFunction<*>? =
@@ -54,8 +54,8 @@ inline fun <reified T : Annotation> KClass<*>.findFunctionByAnnotation(): KFunct
  * Check if a class has a function that is annotated
  * with specified annotation
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 inline fun <reified T : Annotation> KClass<*>.functionExistByAnnotation(): Boolean {
@@ -66,8 +66,8 @@ inline fun <reified T : Annotation> KClass<*>.functionExistByAnnotation(): Boole
  * Find a batch of function in a [KClass] by the
  * annotation of the callable
  *
- * @since 0.1
  * @author kingsthere
+ * @since 0.1
  * @see KFunction
  */
 inline fun <reified T : Annotation> KClass<*>.findFunctionsByAnnotation(): Collection<KFunction<*>> =

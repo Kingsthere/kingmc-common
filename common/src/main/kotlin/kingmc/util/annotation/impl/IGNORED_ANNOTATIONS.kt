@@ -4,6 +4,8 @@ package kingmc.util.annotation.impl
  * Default ignored annotations to prevent unnecessary annotations scanned by [AnnotationContentFactoryImpl]
  */
 val IGNORED_ANNOTATIONS = arrayOf(
+    "kotlin.SinceKotlin",
+    "kotlin.Metadata",
     "kotlin.annotation.Retention",
     "kotlin.annotation.Target",
     "kotlin.annotation.MustBeDocumented",
@@ -15,10 +17,11 @@ val IGNORED_ANNOTATIONS = arrayOf(
     "java.lang.annotation.Target",
     "java.lang.annotation.Repeatable",
     "java.lang.annotation.Retention",
+    "com.google.common.annotations.GwtCompatible",
 )
 
 /**
- * Default ignored annotations attributes to prevent unnecessary annotations attributes such
+ * Default ignored annotation attributes to prevent unnecessary annotations attributes such
  * as [toString] or [hashCode], [equals]
  */
 val IGNORED_ATTRIBUTES = arrayOf(

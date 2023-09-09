@@ -1,7 +1,7 @@
 package kingmc.util.key
 
 /**
- * This exception is thrown when trying to cast a invalid string to [Key] instance
+ * This exception is thrown when trying to cast an invalid string to [Key] instance
  *
  * @since 0.0.1
  */

@@ -8,8 +8,8 @@ import java.util.regex.Pattern
 /**
  * Encode string to a unicodes
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 fun String.encodeUnicode(): String {
     val utfBytes: CharArray = this.toCharArray()
@@ -29,8 +29,8 @@ val unicodePattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))")!!
 /**
  * Decode unicodes from this string
  *
- * @since 0.0.1
  * @author kingsthere
+ * @since 0.0.1
  */
 fun String.decodeUnicode(): String {
     val matcher: Matcher = unicodePattern.matcher(this)

@@ -3,8 +3,8 @@ package kingmc.common.context.beans
 /**
  * To mark a experimental bean api
  *
- * @since 0.0.4
  * @author kingsthere
+ * @since 0.0.4
  */
 @Retention
 @Target(

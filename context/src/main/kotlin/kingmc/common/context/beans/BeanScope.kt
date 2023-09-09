@@ -1,10 +1,10 @@
 package kingmc.common.context.beans
 
 /**
- * A enum determining the scope of a bean
+ * An enum determining the scope of a bean
  *
- * @since 0.0.2
  * @author kingsthere
+ * @since 0.0.2
  */
 enum class BeanScope {
     /**

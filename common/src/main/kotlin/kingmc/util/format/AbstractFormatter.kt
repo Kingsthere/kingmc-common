@@ -3,8 +3,8 @@ package kingmc.util.format
 /**
  * An abstract `Formatter` implementation
  *
- * @since 0.0.9
  * @author kingsthere
+ * @since 0.0.9
  */
 abstract class AbstractFormatter(val startChar: Char, val endChar: Char) : Formatter {
     override fun format(string: String, formatContext: FormatContext): String {

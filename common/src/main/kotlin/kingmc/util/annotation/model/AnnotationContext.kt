@@ -1,12 +1,11 @@
 package kingmc.util.annotation.model
 
 /**
- * A data class describe the full content of an annotation (include attributes inherited)
+ * A data class describes the full content of an annotation (include attributes inherited)
  *
- * @property nodes single annotation nodes in this annotation content
  * @constructor create a new annotation content with specific nodes
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 data class AnnotationContent(
     val node: AnnotationNode
@@ -21,6 +20,16 @@ data class AnnotationContent(
         node.attributes.find { attribute -> attribute.name == name }?.let { attribute ->
             return attribute.value!!
         }
-        throw IllegalStateException("No attribute named $name found")
+        throw IllegalArgumentException("No attribute named $name found")
+    }
+
+    /**
+     * Get an attribute for this annotation content or `null`
+     *
+     * @param name the name of the annotation attribute
+     * @return attribute value got
+     */
+    fun getAttributeOrNull(name: String): Any? {
+        return node.attributes.find { attribute -> attribute.name == name }?.value
     }
 }

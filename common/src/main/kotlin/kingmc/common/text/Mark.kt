@@ -7,7 +7,7 @@ package kingmc.common.text
  *
  * A message could contain a set of tags
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  */
 interface Mark

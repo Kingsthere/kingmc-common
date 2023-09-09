@@ -9,8 +9,8 @@ typealias LegacyComponentSerializer = LegacyComponentSerializer
  * Current legacy component serializer to serialize
  * components to string
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 val legacyComponentSerializer = LegacyComponentSerializer.builder()
@@ -20,8 +20,8 @@ val legacyComponentSerializer = LegacyComponentSerializer.builder()
 /**
  * Serialize from a [Text] to legacy string
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 fun Text.serializeFromTextToLegacy(): String =
@@ -30,8 +30,8 @@ fun Text.serializeFromTextToLegacy(): String =
 /**
  * Deserialize from a legacy string to [Text]
  *
- * @since 0.0.3
  * @author kingsthere
+ * @since 0.0.3
  * @see LegacyComponentSerializer
  */
 fun String.deserializeFromLegacyToText(): Text =

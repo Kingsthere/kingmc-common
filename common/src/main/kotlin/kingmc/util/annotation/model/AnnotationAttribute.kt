@@ -1,19 +1,12 @@
 package kingmc.util.annotation.model
 
-import kotlin.reflect.KClass
-
 /**
- * A superinterface to describe an attributes that is defined from annotation class
+ * A superinterface to describe attributes that are defined from an annotation
  *
- * @since 0.1.0
  * @author kingsthere
+ * @since 0.1.0
  */
 interface AnnotationAttribute {
-    /**
-     * The annotation class that this attribute belong to
-     */
-    val annotation: KClass<out Annotation>
-
     /**
      * The name of this annotation attribute
      */

@@ -8,12 +8,12 @@ package kingmc.common.context.annotation
  * The fields that annotated with [Qualifier] should also annotate
  * with [Autowired]
  *
- * @see Component
  * @author kingsthere
  * @since 0.0.1
+ * @see Component
  */
 @Retention
-@Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.VALUE_PARAMETER)
 @MustBeDocumented
 annotation class Qualifier(
     /**

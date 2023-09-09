@@ -20,8 +20,8 @@ interface Reloadable {
  * A manager responsible for handling [Reloadable], `ReloadableManager` differentiate
  * [Reloadable]s by a [ReloadableScope], so it can reload multiple [Reloadable]s at the same time
  *
- * @since 0.1.1
  * @author kingsthere
+ * @since 0.1.1
  */
 class ReloadableManager {
     private val _registeredReloadable: Multimap<ReloadableScope, Reloadable> = ArrayListMultimap.create(4, 8)
@@ -56,8 +56,8 @@ class ReloadableManager {
 /**
  * A `ReloadableScope` is an identifier used for differentiate [Reloadable]s
  *
- * @since 0.1.1
  * @author kingsthere
+ * @since 0.1.1
  */
 interface ReloadableScope {
     /**

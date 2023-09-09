@@ -50,6 +50,7 @@ allprojects {
         // Kotlin
         implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
         implementation(kotlin("reflect"))
+        compileOnly("com.google.errorprone:error_prone_annotations:2.11.0")
         testImplementation("commons-io:commons-io:2.11.0")
         // Junit test
         testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
@@ -159,5 +160,4 @@ dependencies {
     api(project(":environment"))
     api(project(":file"))
     api(project(":logging"))
-    api(project(":structure"))
 }
