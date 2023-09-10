@@ -1,19 +1,19 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kingmc_version: String by project
 val ossrhUsername: String by project
 val ossrhPassword: String by project
-
-group = "net.kingmc"
-version = kingmc_version
 
 plugins {
     `maven-publish`
     signing
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version KOTLIN_VERSION
 }
 
 allprojects {
+    group = "net.kingmc"
+    version = KINGMC_VERSION
+
+    apply(plugin = "java")
     apply(plugin = "org.gradle.signing")
     apply(plugin = "org.gradle.maven-publish")
     apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -24,34 +24,22 @@ allprojects {
     }
 
     dependencies {
-        // ASM
-        implementation("org.ow2.asm:asm:9.4")
-        implementation("org.ow2.asm:asm-util:9.4")
-        implementation("org.ow2.asm:asm-commons:9.4")
-        implementation("io.github.classgraph:classgraph:4.8.158")
-        api("com.esotericsoftware:reflectasm:1.11.9")
+        api(Libs.CLASSGRAPH)
+        api(Libs.REFLECTASM)
+        implementation(Libs.CGLIB)
 
-        // Cglib
-        implementation("cglib:cglib:3.3.0")
+        api(Libs.ADVENTURE_API)
+        api(Libs.ADVENTURE_TEXT_MINIMESSAGE)
+        api(Libs.ADVENTURE_TEXT_SERIALIZER_GSON)
+        api(Libs.ADVENTURE_TEXT_SERIALIZER_LEGACY)
+        api(Libs.GSON)
+        api(Libs.KOTLIN_STDLIB)
+        api(Libs.KOTLIN_REFLECT)
+        api(Libs.KOTLINX_COROUTINE_CORE_JVM)
+        api(Libs.COMMONS_IO)
+        api(Libs.TROVE4J)
+        api(Libs.ERRORPRONE)
 
-        api(group = "net.kyori", name = "adventure-api", version = "4.11.0")
-        api(group = "net.kyori", name = "adventure-text-minimessage", version = "4.11.0")
-        api(group = "net.kyori", name = "adventure-text-serializer-gson", version = "4.11.0")
-        api(group = "net.kyori", name = "adventure-text-serializer-legacy", version = "4.11.0")
-        api(group = "com.google.code.gson", name = "gson", version = "2.9.0")
-        api(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = "1.7.3")
-        api("org.yaml:snakeyaml:2.0")
-        api("com.github.ben-manes.caffeine:caffeine:2.9.3")
-        api("com.google.guava:guava:31.1-jre")
-        api("it.unimi.dsi:fastutil:8.5.12")
-        api("commons-io:commons-io:2.11.0")
-
-        val kotlinVersion = "1.9.0"
-        // Kotlin
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-        implementation(kotlin("reflect"))
-        compileOnly("com.google.errorprone:error_prone_annotations:2.11.0")
-        testImplementation("commons-io:commons-io:2.11.0")
         // Junit test
         testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
     }
@@ -79,10 +67,6 @@ allprojects {
 
         publications {
             create<MavenPublication>("kingmc") {
-//                groupId = "net.kingmc"
-//                artifactId = "common"
-//                version = version.toString()
-
                 pom {
                     name.set("KingMC Common")
                     packaging = "jar"
@@ -125,6 +109,12 @@ allprojects {
         sign(publishing.publications["kingmc"])
     }
 
+    sourceSets {
+        main {
+            java.srcDirs("src/main/kotlin", "src/main/java")
+        }
+    }
+
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
@@ -146,18 +136,15 @@ allprojects {
 
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
+dependencies {
+    api(project(":${rootProject.name}-api"))
+    api(project(":${rootProject.name}-application"))
+    api(project(":${rootProject.name}-context"))
+    api(project(":${rootProject.name}-coroutine"))
+    api(project(":${rootProject.name}-configure"))
+    api(project(":${rootProject.name}-environment"))
+    api(project(":${rootProject.name}-file"))
+    api(project(":${rootProject.name}-logging"))
 }
 
-dependencies {
-    api(project(":application"))
-    api(project(":common"))
-    api(project(":context"))
-    api(project(":coroutine"))
-    api(project(":configure"))
-    api(project(":environment"))
-    api(project(":file"))
-    api(project(":logging"))
-}
+extra["kotlin.code.style"] = "official"

@@ -1,9 +1,8 @@
-rootProject.name = "common"
+rootProject.name = "kingmc-common"
 
 pluginManagement {
     plugins {
         id("net.kingmc.gradle-plugin") version "0.0.4"
-        kotlin("jvm") version "1.9.0"
     }
     repositories {
         mavenLocal()
@@ -11,11 +10,12 @@ pluginManagement {
     }
 }
 
-include("common")
-include("file")
-include("configure")
-include("context")
-include("logging")
-include("coroutine")
-include("application")
-include("environment")
+val prefix = rootProject.name
+include(":$prefix-api")
+include(":$prefix-file")
+include(":$prefix-configure")
+include(":$prefix-context")
+include(":$prefix-logging")
+include(":$prefix-coroutine")
+include(":$prefix-application")
+include(":$prefix-environment")
