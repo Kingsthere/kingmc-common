@@ -1,7 +1,6 @@
 package kingmc.util
 
-import com.google.common.collect.ArrayListMultimap
-import com.google.common.collect.Multimap
+import java.util.LinkedList
 
 /**
  * A marker interface to mark the classes that is [Reloadable]
@@ -24,7 +23,7 @@ interface Reloadable {
  * @since 0.1.1
  */
 class ReloadableManager {
-    private val _registeredReloadable: Multimap<ReloadableScope, Reloadable> = ArrayListMultimap.create(4, 8)
+    private val _registeredReloadable: MutableMap<ReloadableScope, MutableList<Reloadable>> = HashMap()
 
     /**
      * Register the given [Reloadable] into this reloadable manager
@@ -33,7 +32,8 @@ class ReloadableManager {
      * @param scope the scope to the registering [Reloadable]
      */
     fun register(reloadable: Reloadable, scope: ReloadableScope = ReloadableScope.Default) {
-        _registeredReloadable.put(scope, reloadable)
+        val list = _registeredReloadable.computeIfAbsent(scope) { LinkedList() }
+        list.add(reloadable)
     }
 
     /**
@@ -42,14 +42,16 @@ class ReloadableManager {
      * @param scope the `ReloadableScope` instance to determine [Reloadable]s to reload
      */
     fun reload(scope: ReloadableScope) {
-        _registeredReloadable.get(scope).forEach(Reloadable::reload)
+        _registeredReloadable[scope]?.forEach(Reloadable::reload)
     }
 
     /**
      * Reload all [Reloadable]s that are registered in this reloadable manager
      */
     fun reloadAll() {
-        _registeredReloadable.values().forEach(Reloadable::reload)
+        _registeredReloadable.values.forEach {
+            it.forEach(Reloadable::reload)
+        }
     }
 }
 

@@ -55,12 +55,12 @@ abstract class AbstractXmlParser {
         @JvmStatic
         @Throws(ParseException::class)
         private fun replaceVariables(text: String, pom: Element): String {
-            var text = text
-            val matcher = SUBSTITUTION_PATTERN.matcher(text)
+            var result = text
+            val matcher = SUBSTITUTION_PATTERN.matcher(result)
             while (matcher.find()) {
-                text = matcher.replaceFirst(getReplacement(matcher.group(1), pom))
+                result = matcher.replaceFirst(getReplacement(matcher.group(1), pom))
             }
-            return text
+            return result
         }
 
         /**

@@ -1,6 +1,7 @@
 package kingmc.common.context
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import gnu.trove.map.TIntObjectMap
+import gnu.trove.map.hash.TIntObjectHashMap
 import kingmc.util.KingMCDsl
 import kingmc.util.lifecycle.Lifecycle
 import java.util.*
@@ -9,19 +10,19 @@ import java.util.*
  * A map defines the context by the class loader of the classes
  */
 object ContextDefiner {
-    val value: MutableMap<Class<*>, MutableMap<Int, Context>> = mutableMapOf()
+    val value: MutableMap<Class<*>, TIntObjectMap<Context>> = mutableMapOf()
     val contextNotification: ThreadLocal<Stack<Context>> = ThreadLocal.withInitial { Stack() }
 
     inline fun runNotifyBeanToObject(context: Context, clazz: Class<*>, block: (Context) -> Any): Any {
         contextNotification.get().push(context)
         val instance = block(context)
-        getOrCreateBeanClassInstanceContexts(clazz)[System.identityHashCode(instance)] = context
+        getOrCreateBeanClassInstanceContexts(clazz).put(System.identityHashCode(instance), context)
         contextNotification.get().pop()
         return instance
     }
 
-    fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): MutableMap<Int, Context> {
-        return value.computeIfAbsent(clazz) { Int2ObjectOpenHashMap(4) }
+    fun getOrCreateBeanClassInstanceContexts(clazz: Class<*>): TIntObjectMap<Context> {
+        return value.computeIfAbsent(clazz) { TIntObjectHashMap(2) }
     }
 
     fun getContextFor(obj: Any): Context? = value[obj::class.java]?.get(System.identityHashCode(obj))
