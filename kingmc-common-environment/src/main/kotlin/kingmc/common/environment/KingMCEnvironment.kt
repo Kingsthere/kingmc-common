@@ -33,16 +33,6 @@ import kingmc.common.environment.maven.MavenDependency
     version = "2.9.0"
 )
 @MavenDependency(
-    groupId = "it.unimi.dsi",
-    artifactId = "fastutil",
-    version = "8.5.12"
-)
-@MavenDependency(
-    groupId = "com.google.guava",
-    artifactId = "guava",
-    version = "31.1-jre"
-)
-@MavenDependency(
     groupId = "com.github.ben-manes.caffeine",
     artifactId = "caffeine",
     version = "2.9.1"
