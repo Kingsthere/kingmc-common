@@ -268,7 +268,7 @@ open class ClassGraphBeanSource(
                     annotations = (loadingBeanDefinition as ClassGraphLoadingBeanDefinition).annotations,
                     testedLoadingBeanDefinition = testedLoadingBeanDefinitions
                 )
-            }.also { println(it) }
+            }
             .map { it.value.finishLoading(context) } // Map to`BeanDefinition`
     }
 

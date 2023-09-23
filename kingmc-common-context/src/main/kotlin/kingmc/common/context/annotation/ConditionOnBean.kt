@@ -22,7 +22,6 @@ object ConditionOnBean : Condition {
         }
 
         // Check the condition for given bean
-        println("Bean: $loadingBeanDefinition available: ${context.isBeanAvailable(loadingBeanDefinition)}")
         if (!context.isBeanAvailable(loadingBeanDefinition)) {
             return false
         }
@@ -42,7 +41,6 @@ object ConditionOnBean : Condition {
      */
     @Suppress("UNCHECKED_CAST")
     override fun test(bean: LoadingBeanDefinition, context: ConditionContext): Boolean {
-        println("Checking $bean")
         val beanSource = context.getBeanSource()
         // Validate
         require(context is ClassGraphConditionContext)
@@ -53,7 +51,6 @@ object ConditionOnBean : Condition {
         val beanClasses = annotation.getAttributeOrNull("beanClasses") as Array<Any>? ?: emptyArray()
         val beanNames = annotation.getAttributeOrNull("beanNames") as Array<Any>? ?: emptyArray()
 
-        println("Bean: $bean Bean classes: ${beanClasses.joinToString()}")
         for (beanClass in beanClasses) {
             val beanName = beanSource.getBeanName(beanClass as AnnotationClassRef)
             if (!checkBeanName(bean, context, beanSource, beanName)) {

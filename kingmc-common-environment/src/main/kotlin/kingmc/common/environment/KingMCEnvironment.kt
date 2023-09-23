@@ -33,14 +33,14 @@ import kingmc.common.environment.maven.MavenDependency
     version = "2.9.0"
 )
 @MavenDependency(
-    groupId = "com.github.ben-manes.caffeine",
-    artifactId = "caffeine",
-    version = "2.9.1"
-)
-@MavenDependency(
     groupId = "io.github.classgraph",
     artifactId = "classgraph",
     version = "4.8.158"
+)
+@MavenDependency(
+    groupId = "net.sf.trove4j",
+    artifactId = "trove4j",
+    version = "3.0.3"
 )
 @MavenDependency(
     groupId = "org.jetbrains",
