@@ -12,6 +12,7 @@ import kingmc.util.annotation.getAnnotationContent
 import kingmc.util.annotation.getAnnotationContentsStatic
 import kingmc.util.annotation.hasAnnotationClassname
 import kingmc.util.annotation.model.AnnotationContent
+import kingmc.util.annotation.model.classgraph.ClassGraphAnnotationNode
 import java.util.*
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -55,16 +56,21 @@ open class ClassGraphBeanSource(
             }
 
             // Load bean from classInfo
-            val result = loadAndRememberScannedBeans(classInfo, true)?.first ?: return@forEach
+            try {
+                val result = loadAndRememberScannedBeans(classInfo, true)?.first ?: return@forEach
 
-            // If the loading classInfo is declared as a bean
-            getInheritedBeans(classInfo).forEach {
-                // Load inherited beans
-                val implemented = loadAndRememberScannedBeans(it)?.first ?: getLoadingBeanDefinition(getBeanName(it))
-                if (implemented is ClassGraphLoadingScannedBeanDefinition) {
-                    // Add implementation to inherited bean
-                    implemented.addImplementation(result)
+                // If the loading classInfo is declared as a bean
+                getInheritedBeans(classInfo).forEach {
+                    // Load inherited beans
+                    val implemented = loadAndRememberScannedBeans(it)?.first ?: getLoadingBeanDefinition(getBeanName(it))
+                    if (implemented is ClassGraphLoadingScannedBeanDefinition) {
+                        // Add implementation to inherited bean
+                        implemented.addImplementation(result)
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@forEach
             }
         }
     }
@@ -94,7 +100,7 @@ open class ClassGraphBeanSource(
             val sourceBean = loadingBeanDefinition.source
             if (!testCondition(
                     sourceBean,
-                    (sourceBean as ClassGraphLoadingBeanDefinition).annotations,
+                    (sourceBean as ClassGraphLoadingBeanDefinition).annotations.directOnly(),
                     testedLoadingBeanDefinition
                 )
             ) {
@@ -108,7 +114,7 @@ open class ClassGraphBeanSource(
             val getResult: (LoadingBeanDefinition) -> Boolean = {
                 testCondition(
                     loadingBeanDefinition = it,
-                    annotations = (it as ClassGraphLoadingBeanDefinition).annotations,
+                    annotations = (it as ClassGraphLoadingBeanDefinition).annotations.directOnly(),
                     testedLoadingBeanDefinition = testedLoadingBeanDefinition
                 )
             }
@@ -228,7 +234,7 @@ open class ClassGraphBeanSource(
     fun getBeanName(classInfo: ClassInfo): String {
         return if (classInfo.hasAnnotationClassname(ANNOTATION_COMPONENT)) {
             // Name specified by @Component
-            val name = classInfo.getAnnotationContent(ANNOTATION_COMPONENT)!!.getAttribute("name") as String
+            val name = classInfo.getAnnotationContent(ANNOTATION_COMPONENT)!!.getAttributeOrElse("name", "") as String
             name.ifEmpty {
                 // Default bean name from class (simpleName of class with first letter lowercase)
                 getDefaultBeanName(classInfo)
@@ -265,7 +271,7 @@ open class ClassGraphBeanSource(
             .filter { (_, loadingBeanDefinition) -> // Test bean condition
                 return@filter testCondition(
                     loadingBeanDefinition = loadingBeanDefinition,
-                    annotations = (loadingBeanDefinition as ClassGraphLoadingBeanDefinition).annotations,
+                    annotations = (loadingBeanDefinition as ClassGraphLoadingBeanDefinition).annotations.directOnly(),
                     testedLoadingBeanDefinition = testedLoadingBeanDefinitions
                 )
             }

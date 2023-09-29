@@ -79,7 +79,7 @@ object ClassGraphAnnotationAccessorImpl : ClassGraphAnnotationAccessor {
         val parentAnnotations = annotationClass.annotationInfo.filter { it.classInfo.name !in IGNORED_ANNOTATIONS }
 
         // Scan annotation attributes from AnnotationInfo
-        annotation.parameterValues.forEach { parameterValue ->
+        annotation.getParameterValues(true).forEach { parameterValue ->
             // Add scanned annotation attribute to list
             attributes.add(
                 ClassGraphAnnotationAttributeImpl(

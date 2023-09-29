@@ -32,4 +32,14 @@ data class AnnotationContent(
     fun getAttributeOrNull(name: String): Any? {
         return node.attributes.find { attribute -> attribute.name == name }?.value
     }
+
+    /**
+     * Get an attribute for this annotation content or return the given value
+     *
+     * @param name the name of the annotation attribute
+     * @return attribute value got
+     */
+    fun getAttributeOrElse(name: String, def: Any): Any {
+        return getAttributeOrNull(name) ?: def
+    }
 }

@@ -42,7 +42,7 @@ open class BeanSourceApplicationContext(
     /**
      * Processors in this context
      */
-    override val processors: MutableMap<Int, MutableList<BeanProcessor>> = HashMap(5)
+    override val processors: MutableMap<Int, MutableList<BeanProcessor>> = HashMap<Int, MutableList<BeanProcessor>>(5)
 
     /**
      * The lifecycle of this context
@@ -69,13 +69,16 @@ open class BeanSourceApplicationContext(
     protected val protectedBeanDefinitionsByClass: MutableMap<KClass<*>, BeanDefinition> = ConcurrentHashMap()
 
     /**
-     * Load this context from the bean source, this method should only called once
+     * Load this context from the bean source, this method should only call once
      */
     fun load() {
         beanSource.finishLoading(this).forEach {
             registerBeanDefinition(it)
         }
         refresh()
+        parents.forEach { parent -> inheritProcessors(parent) }
+        loadProcessors()
+        populateBeans()
     }
 
     var owningBeanDefinitions: MutableMap<String, BeanDefinition> = computeOwningBeanDefinitions()
@@ -143,11 +146,6 @@ open class BeanSourceApplicationContext(
         beanDefinitions = computeBeanDefinitions()
         beanDefinitionsByClass = computeBeanDefinitionsByClass()
         _formatContext = FormatContext().with(formatContexts)
-    }
-
-    init {
-        loadProcessors()
-        populateBeans()
     }
 
     // TODO Resources api for context
@@ -315,12 +313,12 @@ open class BeanSourceApplicationContext(
         return beanDefinitions.values.find { it.type.isSubclassOf(clazz) }
     }
 
-    override fun getProtectedBeans(): List<BeanDefinition> {
-        return protectedBeanDefinitions.values.toList()
+    override fun getProtectedBeans(): Collection<BeanDefinition> {
+        return protectedBeanDefinitions.values
     }
 
-    override fun getOwningBeans(): List<BeanDefinition> {
-        return owningBeanDefinitions.values.toList()
+    override fun getOwningBeans(): Collection<BeanDefinition> {
+        return owningBeanDefinitions.values
     }
 
     override fun asMap(): MutableMap<String, BeanDefinition> =
@@ -343,7 +341,7 @@ open class BeanSourceApplicationContext(
 
         // Check lateinit
         if (definition is LateinitBeanDefinition) {
-            if (definition.lifecycle < this.lifecycle.cursor) {
+            if (definition.lifecycle > this.lifecycle.cursor) {
                 throw LateinitBeanException("This bean is not available since ${definition.lifecycle} (current ${this.lifecycle.cursor})")
             }
         }

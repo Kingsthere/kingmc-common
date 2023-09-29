@@ -18,7 +18,7 @@ interface HierarchicalContext : Context {
      * @since 0.0.3
      * @return the protected beans
      */
-    fun getProtectedBeans(): List<BeanDefinition>
+    fun getProtectedBeans(): Collection<BeanDefinition>
 
     /**
      * Gets the owning beans in this context, owning beans include
@@ -31,7 +31,7 @@ interface HierarchicalContext : Context {
      * @since 0.1.1
      * @return the owning beans
      */
-    fun getOwningBeans(): List<BeanDefinition>
+    fun getOwningBeans(): Collection<BeanDefinition>
 
     /**
      * Add a parent to this HierarchicalContext

@@ -13,25 +13,25 @@ val CLASS_GRAPH_ANNOTATION_ACCESSOR: ClassGraphAnnotationAccessor = ClassGraphAn
  * Check if this class is annotated with the given annotation
  */
 fun ClassInfo.hasAnnotationClass(targetAnnotation: ClassInfo) =
-    this.annotations.hasAnnotationClass(targetAnnotation)
+    this.annotations.directOnly().hasAnnotationClass(targetAnnotation)
 
 /**
  * Check if this class member is annotated with the given annotation
  */
 fun ClassMemberInfo.hasAnnotationClass(targetAnnotation: ClassInfo) =
-    this.annotationInfo.hasAnnotationInfoClass(targetAnnotation)
+    this.annotationInfo.directOnly().hasAnnotationInfoClass(targetAnnotation)
 
 /**
  * Check if this class is annotated with the given annotation
  */
 fun ClassInfo.hasAnnotationClassname(targetAnnotationClassname: String) =
-    this.annotations.hasAnnotationClassname(targetAnnotationClassname)
+    this.annotations.directOnly().hasAnnotationClassname(targetAnnotationClassname)
 
 /**
  * Check if this class member is annotated with the given annotation
  */
 fun ClassMemberInfo.hasAnnotationClassname(targetAnnotationClassname: String) =
-    this.annotationInfo.hasAnnotationInfoClassname(targetAnnotationClassname)
+    this.annotationInfo.directOnly().hasAnnotationInfoClassname(targetAnnotationClassname)
 
 /**
  * Check if any of annotations in this collection is or inherited [targetAnnotation]
@@ -44,7 +44,9 @@ fun Collection<ClassInfo>.hasAnnotationClass(targetAnnotation: ClassInfo): Boole
  * Check if any of annotations in this collection is or inherited [targetAnnotationClassname]
  */
 fun Collection<ClassInfo>.hasAnnotationClassname(targetAnnotationClassname: String): Boolean {
-    return any { annotation -> CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation, targetAnnotationClassname) }
+    return any { annotation ->
+        CLASS_GRAPH_ANNOTATION_ACCESSOR.hasAnnotation(annotation, targetAnnotationClassname)
+    }
 }
 
 /**
@@ -71,56 +73,56 @@ fun Collection<AnnotationInfo>.hasAnnotationInfoClassname(targetAnnotationClassn
  * class info
  */
 fun ClassInfo.getAnnotationContent(targetAnnotation: ClassInfo) =
-    this.annotationInfo.getAnnotationContent(targetAnnotation)
+    this.annotationInfo.directOnly().getAnnotationContent(targetAnnotation)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this
  * class info
  */
 fun ClassInfo.getAnnotationContent(targetAnnotationClassname: String) =
-    this.annotationInfo.getAnnotationContent(targetAnnotationClassname)
+    this.annotationInfo.directOnly().getAnnotationContent(targetAnnotationClassname)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this
  * class info
  */
 fun ClassMemberInfo.getAnnotationContent(targetAnnotation: ClassInfo) =
-    this.annotationInfo.getAnnotationContent(targetAnnotation)
+    this.annotationInfo.directOnly().getAnnotationContent(targetAnnotation)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this
  * class info
  */
 fun ClassMemberInfo.getAnnotationContent(targetAnnotationClassname: String) =
-    this.annotationInfo.getAnnotationContent(targetAnnotationClassname)
+    this.annotationInfo.directOnly().getAnnotationContent(targetAnnotationClassname)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this
  * class info
  */
 fun ClassInfo.getAnnotationContentStatic(targetAnnotation: ClassInfo) =
-    this.annotationInfo.getAnnotationContentStatic(targetAnnotation)
+    this.annotationInfo.directOnly().getAnnotationContentStatic(targetAnnotation)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this
  * class info
  */
 fun ClassInfo.getAnnotationContentStatic(targetAnnotationClassname: String) =
-    this.annotationInfo.getAnnotationContentStatic(targetAnnotationClassname)
+    this.annotationInfo.directOnly().getAnnotationContentStatic(targetAnnotationClassname)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this
  * class info
  */
 fun ClassMemberInfo.getAnnotationContentStatic(targetAnnotation: ClassInfo) =
-    this.annotationInfo.getAnnotationContentStatic(targetAnnotation)
+    this.annotationInfo.directOnly().getAnnotationContentStatic(targetAnnotation)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotationClassname] from this
  * class info
  */
 fun ClassMemberInfo.getAnnotationContentStatic(targetAnnotationClassname: String) =
-    this.annotationInfo.getAnnotationContentStatic(targetAnnotationClassname)
+    this.annotationInfo.directOnly().getAnnotationContentStatic(targetAnnotationClassname)
 
 /**
  * Gets the annotation content for the annotation that matches the [targetAnnotation] from this collection
